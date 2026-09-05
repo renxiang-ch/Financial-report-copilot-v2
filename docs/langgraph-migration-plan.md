@@ -97,11 +97,10 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
    langsmith
    ```
    保留 `openai` `pgvector` `psycopg2-binary` `rank-bm25` `sentence-transformers` `langfuse`。全部 **pin 精确版本**（LangGraph API 变化快）。
-3. 目录结构：
+3. 目标目录结构（**实际 Phase 0 与此有出入**，见下方注）：
    ```
    src/copilot/
      tools/            # Phase 1 标准化重构；Phase 0 先放 v1 原样拷贝
-       _v1_frozen/     # v1 agent/tools.py 原样拷贝，供 v1_loop 用，只读
      orchestration/
        v1_loop/        # v1 agent.py 原样拷贝并冻结，仅作行为基线
        graph/
@@ -114,6 +113,9 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
      ingestion/
      eval/             # 移植 v1 harness + A/B + 新 Tier
    ```
+   > **实际（2026-09-05）**：v1 代码原样拷成 `copilot.agent`（不是 `_v1_frozen/` 子目录），
+   > `orchestration/v1_loop.py` 是一行 shim。`orchestration/graph/` 的 Phase 0a stub 已删
+   > —— 用户要先学 LangGraph 再用，Phase 2 从零重建。deps 仍 pin。
 4. 移植 eval harness（Tier 1–3、router/retrieval probes）到新仓库，**跑通 v1_loop**（用 `_v1_frozen` 工具），记录 baseline 分数与 latency/token。
 5. 写 `eval/ab_compare.py`：同一批问题分别过 v1_loop 和 graph，输出端到端 diff（答案、引用、拒答、耗时、token）。
 

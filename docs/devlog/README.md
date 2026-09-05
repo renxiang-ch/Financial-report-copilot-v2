@@ -17,7 +17,8 @@
 
 - **当前里程碑**：**Phase 0 完成**（0a=001, 0b=003）；track-1（通用 Agent 基线）本轮完成（002 补记 2/3）
 - **上次停止点**：Phase 0b 做完 —— DB 灌全量 v1 快照 + embed 16342 chunks；`pytest` **143/0**（8 个 DB 失败转绿）；**v1_loop baseline 三 harness 全 100%**（Tier1/2/3、retrieval、refusal、router 全 100%，grounding 0 flagged），精确复现 v1 发布结果，成本 $0.055。三方对比第一版见 003 Learning。第一个 commit `e4f5d88` 已推到 `github.com/renxiang-ch/Financial-report-copilot-v2`；Phase 0b 的改动**未 commit**
-- **下一步动作**：（a）commit Phase 0b（devlog 003 + eval-history + v2_v1loop_*.json + .gitignore 若动过）。（b）开 **Phase 1 — 工具层标准化重构**：先定 plan 里"待确认设计点"清单。（c）可选：`v1_loop@strong`（gpt-5.6-sol 重跑，用户暂缓）
+- **2026-09-05 追加**：应用户要求删除 Phase 0a 的 LangGraph stub（`orchestration/graph/`），项目里在用户学完框架前不出现 LangChain/LangGraph 的*使用*；deps 保留。`ab_compare` graph 侧改为硬编码 STUB。pytest 143/0 不变
+- **下一步动作**：（a）Phase 1 设计决策：plan 里"待确认设计点"我给了 8 条推荐（D1 信封 / D2 错误类型 / D3 粒度 / D4 resolve 层 / D5-8），等用户确认。（b）`v1_loop@strong` 用户已明确不做（v1_loop 已 100%，无 headroom）。（c）`eval_set_v2/defects/multiturn` 过 v1_loop 尚未做（可选）
 - **阻塞项**：无
 
 ---
@@ -62,7 +63,7 @@
 |------|------|
 | `src/copilot/agent/` | v1 原样拷贝，**冻结只读**，两套编排／基线共用的行为真源 |
 | `src/copilot/orchestration/v1_loop.py` | 一行 shim，re-export `copilot.agent.agent.ask`，给冻结基线一个干净名字 |
-| `src/copilot/orchestration/graph/` | LangGraph 新实现（Phase 0：stub） |
+| `src/copilot/orchestration/graph/` | **已删**（2026-09-05）—— Phase 0a 的 LangGraph stub 移除，等用户学完框架再于 Phase 2 重建。deps 仍 pin 在 pyproject 供 REPL 学习 |
 | `src/copilot/tools/` | Phase 1 标准化工具库占位，尚未开始 |
 | `src/copilot/eval/ab_compare.py` | v1_loop vs graph 的端到端 A/B 脚本 |
 | `src/copilot/eval/generic_scoring.py` | 通用 agent 基线的打分器，按题目 `type`/`scoring` 路由，复用 `harness.py`/`harness_tier3.py` 的判分函数 |
