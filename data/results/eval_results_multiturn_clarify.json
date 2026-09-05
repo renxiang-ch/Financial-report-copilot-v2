@@ -1,0 +1,1602 @@
+{
+  "dataset": "data\\datasets\\eval_set_multiturn.json",
+  "dataset_version": "1.3",
+  "inheritance_enabled": true,
+  "repeat": 3,
+  "turn_accuracy": {
+    "mean": 100.0,
+    "min": 100.0,
+    "max": 100.0
+  },
+  "year_binding": {
+    "mean": 100.0,
+    "min": 100.0,
+    "max": 100.0
+  },
+  "per_turn": {
+    "mt_year_carries_into_a_computed_answer#t1": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_year_carries_into_a_computed_answer#t2": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_year_carries_into_a_computed_answer#t3": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_a_stated_year_overrides_the_carry#t2": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_the_subject_changes_the_year_does_not#t1": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_the_subject_changes_the_year_does_not#t2": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_a_trend_follow_up_is_not_pinned_to_one_year#t2": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_the_metric_carries_when_the_company_changes#t1": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    },
+    "mt_the_metric_carries_when_the_company_changes#t2": {
+      "passes": 3,
+      "runs": 3,
+      "notes": []
+    }
+  },
+  "agent_model": "gpt-4o-mini",
+  "db_fingerprint": {
+    "companies": 15,
+    "named_edges": 103,
+    "financial_facts": 38966,
+    "filings": 148,
+    "max_fy_edges": 2026
+  },
+  "estimated_cost_usd": 0.0336,
+  "total_latency_s": 92.0,
+  "runs": [
+    {
+      "dataset": "data\\datasets\\eval_set_multiturn.json",
+      "dataset_version": "1.3",
+      "inheritance_enabled": true,
+      "n_conversations": 5,
+      "conversation_accuracy": 100.0,
+      "n_turns_scored": 9,
+      "turn_accuracy": 100.0,
+      "year_binding_accuracy": 100.0,
+      "n_year_checked": 8,
+      "db_fingerprint": {
+        "companies": 15,
+        "named_edges": 103,
+        "financial_facts": 38966,
+        "filings": 148,
+        "max_fy_edges": 2026
+      },
+      "agent_model": "gpt-4o-mini",
+      "cost_basis": "OpenAI list price for gpt-4o-mini",
+      "avg_latency_s": 3.35,
+      "total_latency_s": 30.1,
+      "input_tokens": 66853,
+      "output_tokens": 1511,
+      "estimated_cost_usd": 0.0109,
+      "conversations": [
+        {
+          "id": "mt_year_carries_into_a_computed_answer",
+          "correct": true,
+          "design_intent": "The reported defect, reproduced turn for turn. Turn one fixes FY2024. Turn two asks about the Apple relationship without restating the year -- CRUS -> AAPL is 87% in FY2024 and 91% in FY2026, so an unscoped lookup is visibly wrong rather than merely unlucky. Turn three multiplies the two, which is where a mismatched pair stops being a display error and becomes a wrong dollar figure with every operand traceable.",
+          "fails_means": "The fiscal year does not survive a follow-up, so every multi-turn dollar figure this system produces is built on whichever year happened to be latest. The binding check would flag it after the fact; nothing would prevent it.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Cirrus Logic's revenue in fiscal 2024?",
+              "answer": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. This figure is from the 10-K filing for the period ending March 30, 2024 (SEC 10-K filing accession 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 2.72,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t1",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 1788890000,
+                "got_raw": 1788890000.0,
+                "got_text": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. This figure is from the 10-K filing for the period ending March 30, 2024 (SEC 10-K filing accession 0000772406-24-000031).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "How dependent is it on Apple?",
+              "answer": "Cirrus Logic was highly dependent on Apple for its revenue in fiscal 2024. Apple accounted for approximately 87.0% of Cirrus Logic's total sales for that year. This figure comes from the 10-K filing for the period ending March 30, 2024 (SEC 10-K filing accession 0000772406-24-000031). \n\nFor a trend perspective, Apple represented:\n- 83.0% in fiscal 2023 (SEC 10-K filing accession 0000772406-23-000019)\n- 79.0% in fiscal 2022 (SEC 10-K filing accession 0000772406-22-000014)\n- 83.0% in fiscal 2021 (SEC 10-K filing accession 0000772406-21-000013) \n\nThis consistent pattern reflects Cirrus Logic's significant reliance on Apple as its primary customer over the years.",
+              "inherited": [
+                "fiscal_year",
+                "metric",
+                "companies"
+              ],
+              "latency_s": 3.84,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'customer': 'AAPL', 'fiscal_year': 'trend'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': 'all years', 'edge_count': 12, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 91.0, 'pct_display': '91.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2026, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-26-000018 (https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 91 percent, 89 percent and 87 percent of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 89.0, 'pct_display': '89.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2025, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-25-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 89 percent, 87 percent, and 83 percent, of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2022, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-22-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240622000014/crus-20220326.htm)', 'source_text': 'For the twelve-month periods ending March26, 2022, March27, 2021, and March28, 2020, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2021, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-21-000013 (https://www.sec.gov/Archives/edgar/data/772406/000077240621000013/crus-20210327.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent, and 78 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2020, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-20-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240620000007/crus-20200328.htm)', 'source_text': 'For the twelve-month periods ending March28, 2020, March30, 2019, and March31, 2018, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 78 percent and 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 78.0, 'pct_display': '78.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2019, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-19-000008 (https://www.sec.gov/Archives/edgar/data/772406/000077240619000008/a10-kxcrus33019.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 78 percent, 81 percent, and 79 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 81.0, 'pct_display': '81.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 66.0, 'pct_display': '66.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'For the twelve-month periods ending March 31, 2018, March 25, 2017, and March 26, 2016, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent, 79 percent and 66 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 72.0, 'pct_display': '72.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2015, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'For fiscal years 2017, 2016, and 2015, we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]', 'CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]', 'CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'CRUS->AAPL 79.0% FY2022 [0000772406-22-000014]', 'CRUS->AAPL 83.0% FY2021 [0000772406-21-000013]', 'CRUS->AAPL 79.0% FY2020 [0000772406-20-000007]', 'CRUS->AAPL 78.0% FY2019 [0000772406-19-000008]', 'CRUS->AAPL 81.0% FY2018 [0000772406-18-000007]', 'CRUS->AAPL 79.0% FY2017 [0001193125-17-181625]', 'CRUS->AAPL 66.0% FY2016 [0000772406-18-000007]', 'CRUS->AAPL 72.0% FY2015 [0001193125-17-181625]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 87.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "Cirrus Logic was highly dependent on Apple for its revenue in fiscal 2024. Apple accounted for approximately 87.0% of Cirrus Logic's total sales for that year. This figure comes from the 10-K filing for the period ending March 30, 2024 (SEC 10-K filing accession 0000772406-24-000031). \n\nFor a trend perspective, Apple represented:\n- 83.0% in fiscal 2023 (SEC 10-K filing accession 0000772406-23-000019)\n- 79.0% in fiscal 2022 (SEC 10-K filing accession 0000772406-22-000014)\n- 83.0% in fiscal 2021 (SEC 10-K filing accession 0000772406-21-000013) \n\nThis consistent pattern reflects Cirrus Logic's significant reliance on Apple as its primary customer over the years.",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [],
+                  "supersets": [
+                    "graph_query(trend)"
+                  ],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 4,
+                "citations_checked": 4,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 3,
+              "question": "If Apple cut its orders by 20%, what would that cost them?",
+              "answer": "If Apple were to cut its orders by 20%, it would cost Cirrus Logic approximately $311,266,860 in revenue. This calculation is based on Cirrus Logic's fiscal 2024 revenue of $1,788,890,000 and Apple's contribution of 87.0% to that revenue (SEC 10-K filing accession 0000772406-24-000031).",
+              "inherited": [
+                "fiscal_year",
+                "metric"
+              ],
+              "latency_s": 3.56,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 4, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}, {'supplier': 'JBL', 'customer': 'AAPL', 'revenue_pct': 11.0, 'pct_display': '11.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)', 'source_text': 'Apple, Inc. 11 % 17 % 19 %'}, {'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]', 'JBL->AAPL 11.0% FY2024 [0001628280-24-043960]', 'SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}",
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]",
+                "compute(revenue * pct / 100 * cut) \u2192 311266860.0"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t3",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 20.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "If Apple were to cut its orders by 20%, it would cost Cirrus Logic approximately $311,266,860 in revenue. This calculation is based on Cirrus Logic's fiscal 2024 revenue of $1,788,890,000 and Apple's contribution of 87.0% to that revenue (SEC 10-K filing accession 0000772406-24-000031).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 4,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_a_stated_year_overrides_the_carry",
+          "correct": true,
+          "design_intent": "The failure mode of the fix rather than of the defect. A carry that overrides what the user just said is worse than no carry, because the system then reports having assumed the year -- which reads as diligence.",
+          "fails_means": "Inheritance is pinning rather than defaulting, and every follow-up in a thread is answered for the first year mentioned in it.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Cirrus Logic's revenue in fiscal 2024?",
+              "answer": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. The period ended on March 30, 2024, as reported in the SEC 10-K filing (accession number 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 1.9,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+              ],
+              "scored": false
+            },
+            {
+              "turn": 2,
+              "question": "And in fiscal 2023?",
+              "answer": "Cirrus Logic's revenue in fiscal 2023 was $1,897,617,000. The period ended on March 25, 2023, as reported in the SEC 10-K filing (accession number 0000772406-23-000019).",
+              "inherited": [
+                "metric",
+                "companies"
+              ],
+              "latency_s": 1.81,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2023) \u2192 1897617000.0  [SEC 10-K filing accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_a_stated_year_overrides_the_carry#t2",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 1897617000,
+                "got_raw": 1897617000.0,
+                "got_text": "Cirrus Logic's revenue in fiscal 2023 was $1,897,617,000. The period ended on March 25, 2023, as reported in the SEC 10-K filing (accession number 0000772406-23-000019).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2023
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_the_subject_changes_the_year_does_not",
+          "correct": true,
+          "design_intent": "\"What about Cirrus?\" replaces who is being asked about and leaves everything else standing. The two constraints have to move independently -- a carry that merges the companies answers about both, and one that drops everything on any new company loses the year.",
+          "fails_means": "Inheritance is all-or-nothing, so the most common shape of follow-up in a real session is the one it handles worst.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "How dependent was Qorvo on Apple in fiscal 2024?",
+              "answer": "In fiscal 2024, Qorvo was dependent on Apple for 46.0% of its total revenue. This relationship is documented in Qorvo's SEC 10-K filing (accession number 0001604778-24-000036).",
+              "inherited": [],
+              "latency_s": 2.21,
+              "tool_trace": [
+                "graph_query({'supplier': 'QRVO', 'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}], 'traversal_trace': ['QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_subject_changes_the_year_does_not#t1",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 46.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal 2024, Qorvo was dependent on Apple for 46.0% of its total revenue. This relationship is documented in Qorvo's SEC 10-K filing (accession number 0001604778-24-000036).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "What about Cirrus Logic?",
+              "answer": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for approximately 87.0% of Cirrus Logic's total sales. This information is stated in their SEC 10-K filing (accession number 0000772406-24-000031).",
+              "inherited": [
+                "fiscal_year"
+              ],
+              "latency_s": 2.12,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'supplier': 'CRUS', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_subject_changes_the_year_does_not#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 87.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for approximately 87.0% of Cirrus Logic's total sales. This information is stated in their SEC 10-K filing (accession number 0000772406-24-000031).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_a_trend_follow_up_is_not_pinned_to_one_year",
+          "correct": true,
+          "design_intent": "The one turn in this set that must inherit nothing. A question about change cannot be answered inside the year the thread was talking about, and a carry with no way to decline would answer it there and call the single figure a trend. Scored on three percentages from three different years appearing at once, which a pinned answer cannot produce.",
+          "fails_means": "The carry has no off switch, and every 'how has that changed' follow-up gets a one-year answer that looks like a trend.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "How dependent was Cirrus Logic on Apple in fiscal 2024?",
+              "answer": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for approximately 87.0% of Cirrus Logic's total sales. \n\nThis information is based on the SEC 10-K filing (accession number 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 2.35,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]']}"
+              ],
+              "scored": false
+            },
+            {
+              "turn": 2,
+              "question": "How has that changed over the years?",
+              "answer": "Cirrus Logic's dependence on Apple over the years is as follows:\n\n- **FY2026**: 91.0% of total sales (SEC 10-K accession 0000772406-26-000018)\n- **FY2025**: 89.0% of total sales (SEC 10-K accession 0000772406-25-000014)\n- **FY2024**: 87.0% of total sales (SEC 10-K accession 0000772406-24-000031)\n- **FY2023**: 83.0% of total sales (SEC 10-K accession 0000772406-23-000019)\n- **FY2022**: 79.0% of total sales (SEC 10-K accession 0000772406-22-000014)\n- **FY2021**: 83.0% of total sales (SEC 10-K accession 0000772406-21-000013)\n- **FY2020**: 79.0% of total sales (SEC 10-K accession 0000772406-20-000007)\n- **FY2019**: 78.0% of total sales (SEC 10-K accession 0000772406-19-000008)\n- **FY2018**: 81.0% of total sales (SEC 10-K accession 0000772406-18-000007)\n- **FY2017**: 79.0% of total sales (SEC 10-K accession 0001193125-17-181625)\n- **FY2016**: 66.0% of total sales (SEC 10-K accession 0000772406-18-000007)\n- **FY2015**: 72.0% of total sales (SEC 10-K accession 0001193125-17-181625)\n\nOverall, Cirrus Logic's dependence on Apple has increased significantly over the years, rising from 66.0% in FY2016 to 91.0% in FY2026.",
+              "inherited": [
+                "companies"
+              ],
+              "latency_s": 5.6,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'customer': 'AAPL', 'fiscal_year': 'trend'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': 'all years', 'edge_count': 12, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 91.0, 'pct_display': '91.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2026, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-26-000018 (https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 91 percent, 89 percent and 87 percent of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 89.0, 'pct_display': '89.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2025, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-25-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 89 percent, 87 percent, and 83 percent, of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2022, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-22-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240622000014/crus-20220326.htm)', 'source_text': 'For the twelve-month periods ending March26, 2022, March27, 2021, and March28, 2020, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2021, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-21-000013 (https://www.sec.gov/Archives/edgar/data/772406/000077240621000013/crus-20210327.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent, and 78 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2020, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-20-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240620000007/crus-20200328.htm)', 'source_text': 'For the twelve-month periods ending March28, 2020, March30, 2019, and March31, 2018, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 78 percent and 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 78.0, 'pct_display': '78.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2019, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-19-000008 (https://www.sec.gov/Archives/edgar/data/772406/000077240619000008/a10-kxcrus33019.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 78 percent, 81 percent, and 79 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 81.0, 'pct_display': '81.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 66.0, 'pct_display': '66.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'For the twelve-month periods ending March 31, 2018, March 25, 2017, and March 26, 2016, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent, 79 percent and 66 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 72.0, 'pct_display': '72.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2015, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'For fiscal years 2017, 2016, and 2015, we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]', 'CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]', 'CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'CRUS->AAPL 79.0% FY2022 [0000772406-22-000014]', 'CRUS->AAPL 83.0% FY2021 [0000772406-21-000013]', 'CRUS->AAPL 79.0% FY2020 [0000772406-20-000007]', 'CRUS->AAPL 78.0% FY2019 [0000772406-19-000008]', 'CRUS->AAPL 81.0% FY2018 [0000772406-18-000007]', 'CRUS->AAPL 79.0% FY2017 [0001193125-17-181625]', 'CRUS->AAPL 66.0% FY2016 [0000772406-18-000007]', 'CRUS->AAPL 72.0% FY2015 [0001193125-17-181625]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_a_trend_follow_up_is_not_pinned_to_one_year#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 91.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "Cirrus Logic's dependence on Apple over the years is as follows:\n\n- **FY2026**: 91.0% of total sales (SEC 10-K accession 0000772406-26-000018)\n- **FY2025**: 89.0% of total sales (SEC 10-K accession 0000772406-25-000014)\n- **FY2024**: 87.0% of total sales (SEC 10-K accession 0000772406-24-000031)\n- **FY2023**: 83.0% of total sales (SEC 10-K accession 0000772406-23-000019)\n- **FY2022**: 79.0% of total sales (SEC 10-K accession 0000772406-22-000014)\n- **FY2021**: 83.0% of total sales (SEC 10-K accession 0000772406-21-000013)\n- **FY2020**: 79.0% of total sales (SEC 10-K accession 0000772406-20-000007)\n- **FY2019**: 78.0% of total sales (SEC 10-K accession 0000772406-19-000008)\n- **FY2018**: 81.0% of total sales (SEC 10-K accession 0000772406-18-000007)\n- **FY2017**: 79.0% of total sales (SEC 10-K accession 0001193125-17-181625)\n- **FY2016**: 66.0% of total sales (SEC 10-K accession 0000772406-18-000007)\n- **FY2015**: 72.0% of total sales (SEC 10-K accession 0001193125-17-181625)\n\nOverall, Cirrus Logic's dependence on Apple has increased significantly over the years, rising from 66.0% in FY2016 to 91.0% in FY2026."
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 14,
+                "citations_checked": 10,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_the_metric_carries_when_the_company_changes",
+          "correct": true,
+          "design_intent": "Two constraints inherited at once across a company switch -- \"And Corning's?\" states neither the metric nor the year. Corning's newest filing is FY2025, so a dropped year here returns a real number from the wrong period, which no check downstream can distinguish from the right one.",
+          "fails_means": "Only the year is carried, and the shortest follow-up form -- a bare possessive -- has to be expanded by the user every time.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Apple's revenue in fiscal 2024?",
+              "answer": "Apple's revenue in fiscal 2024 was $391,035,000,000 USD, for the period ending September 28, 2024 (SEC 10-K filing accession 0000320193-24-000123).",
+              "inherited": [],
+              "latency_s": 1.97,
+              "tool_trace": [
+                "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_metric_carries_when_the_company_changes#t1",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 391035000000,
+                "got_raw": 391035000000.0,
+                "got_text": "Apple's revenue in fiscal 2024 was $391,035,000,000 USD, for the period ending September 28, 2024 (SEC 10-K filing accession 0000320193-24-000123).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "And Corning's?",
+              "answer": "Corning's revenue in fiscal 2024 was $13,118,000,000 USD, for the period ending December 31, 2024 (SEC 10-K filing accession 0001628280-25-005347).",
+              "inherited": [
+                "fiscal_year",
+                "metric"
+              ],
+              "latency_s": 2.04,
+              "tool_trace": [
+                "query_financials(GLW, Revenue, FY2024) \u2192 13118000000.0  [SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_metric_carries_when_the_company_changes#t2",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 13118000000,
+                "got_raw": 13118000000.0,
+                "got_text": "Corning's revenue in fiscal 2024 was $13,118,000,000 USD, for the period ending December 31, 2024 (SEC 10-K filing accession 0001628280-25-005347).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dataset": "data\\datasets\\eval_set_multiturn.json",
+      "dataset_version": "1.3",
+      "inheritance_enabled": true,
+      "n_conversations": 5,
+      "conversation_accuracy": 100.0,
+      "n_turns_scored": 9,
+      "turn_accuracy": 100.0,
+      "year_binding_accuracy": 100.0,
+      "n_year_checked": 8,
+      "db_fingerprint": {
+        "companies": 15,
+        "named_edges": 103,
+        "financial_facts": 38966,
+        "filings": 148,
+        "max_fy_edges": 2026
+      },
+      "agent_model": "gpt-4o-mini",
+      "cost_basis": "OpenAI list price for gpt-4o-mini",
+      "avg_latency_s": 3.28,
+      "total_latency_s": 29.5,
+      "input_tokens": 70862,
+      "output_tokens": 1419,
+      "estimated_cost_usd": 0.0115,
+      "conversations": [
+        {
+          "id": "mt_year_carries_into_a_computed_answer",
+          "correct": true,
+          "design_intent": "The reported defect, reproduced turn for turn. Turn one fixes FY2024. Turn two asks about the Apple relationship without restating the year -- CRUS -> AAPL is 87% in FY2024 and 91% in FY2026, so an unscoped lookup is visibly wrong rather than merely unlucky. Turn three multiplies the two, which is where a mismatched pair stops being a display error and becomes a wrong dollar figure with every operand traceable.",
+          "fails_means": "The fiscal year does not survive a follow-up, so every multi-turn dollar figure this system produces is built on whichever year happened to be latest. The binding check would flag it after the fact; nothing would prevent it.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Cirrus Logic's revenue in fiscal 2024?",
+              "answer": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. This figure is from the 10-K filing for the period ending March 30, 2024 (SEC accession number 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 1.84,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t1",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 1788890000,
+                "got_raw": 1788890000.0,
+                "got_text": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. This figure is from the 10-K filing for the period ending March 30, 2024 (SEC accession number 0000772406-24-000031).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "How dependent is it on Apple?",
+              "answer": "In fiscal year 2024, Cirrus Logic's dependency on Apple was approximately 87% of its total net sales. This figure is detailed in their 10-K filing (SEC accession number 0000772406-24-000031). \n\nFor additional context, the dependency on Apple has been steadily increasing over the years, with 83% in FY2023 and 79% in FY2022.",
+              "inherited": [
+                "fiscal_year",
+                "metric",
+                "companies"
+              ],
+              "latency_s": 2.15,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'supplier': 'CRUS', 'fiscal_year': 'trend'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': 'all years', 'edge_count': 12, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 91.0, 'pct_display': '91.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2026, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-26-000018 (https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 91 percent, 89 percent and 87 percent of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 89.0, 'pct_display': '89.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2025, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-25-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 89 percent, 87 percent, and 83 percent, of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2022, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-22-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240622000014/crus-20220326.htm)', 'source_text': 'For the twelve-month periods ending March26, 2022, March27, 2021, and March28, 2020, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2021, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-21-000013 (https://www.sec.gov/Archives/edgar/data/772406/000077240621000013/crus-20210327.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent, and 78 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2020, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-20-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240620000007/crus-20200328.htm)', 'source_text': 'For the twelve-month periods ending March28, 2020, March30, 2019, and March31, 2018, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 78 percent and 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 78.0, 'pct_display': '78.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2019, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-19-000008 (https://www.sec.gov/Archives/edgar/data/772406/000077240619000008/a10-kxcrus33019.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 78 percent, 81 percent, and 79 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 81.0, 'pct_display': '81.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 66.0, 'pct_display': '66.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'For the twelve-month periods ending March 31, 2018, March 25, 2017, and March 26, 2016, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent, 79 percent and 66 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 72.0, 'pct_display': '72.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2015, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'For fiscal years 2017, 2016, and 2015, we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]', 'CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]', 'CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'CRUS->AAPL 79.0% FY2022 [0000772406-22-000014]', 'CRUS->AAPL 83.0% FY2021 [0000772406-21-000013]', 'CRUS->AAPL 79.0% FY2020 [0000772406-20-000007]', 'CRUS->AAPL 78.0% FY2019 [0000772406-19-000008]', 'CRUS->AAPL 81.0% FY2018 [0000772406-18-000007]', 'CRUS->AAPL 79.0% FY2017 [0001193125-17-181625]', 'CRUS->AAPL 66.0% FY2016 [0000772406-18-000007]', 'CRUS->AAPL 72.0% FY2015 [0001193125-17-181625]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 87.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal year 2024, Cirrus Logic's dependency on Apple was approximately 87% of its total net sales. This figure is detailed in their 10-K filing (SEC accession number 0000772406-24-000031). \n\nFor additional context, the dependency on Apple has been steadily increasing over the years, with 83% in FY2023 and 79% in FY2022.",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [],
+                  "supersets": [
+                    "graph_query(trend)"
+                  ],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 3,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 3,
+              "question": "If Apple cut its orders by 20%, what would that cost them?",
+              "answer": "If Apple were to cut its orders by 20%, Cirrus Logic would face a revenue loss of approximately $311,266,860. This calculation is based on Cirrus Logic's revenue of $1,788,890,000 for fiscal year 2024 and Apple accounting for 87% of those sales (SEC accession number 0000772406-24-000031).",
+              "inherited": [
+                "fiscal_year",
+                "metric"
+              ],
+              "latency_s": 5.24,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 4, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}, {'supplier': 'JBL', 'customer': 'AAPL', 'revenue_pct': 11.0, 'pct_display': '11.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)', 'source_text': 'Apple, Inc. 11 % 17 % 19 %'}, {'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]', 'JBL->AAPL 11.0% FY2024 [0001628280-24-043960]', 'SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}",
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]",
+                "query_financials(QRVO, Revenue, FY2024) \u2192 3769506000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]",
+                "query_financials(JBL, Revenue, FY2024) \u2192 28883000000.0  [SEC 10-K filing accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)]",
+                "query_financials(SWKS, Revenue, FY2024) \u2192 4178000000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]",
+                "compute(revenue * pct / 100 * cut) \u2192 311266860.0"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t3",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 20.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "If Apple were to cut its orders by 20%, Cirrus Logic would face a revenue loss of approximately $311,266,860. This calculation is based on Cirrus Logic's revenue of $1,788,890,000 for fiscal year 2024 and Apple accounting for 87% of those sales (SEC accession number 0000772406-24-000031).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 4,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_a_stated_year_overrides_the_carry",
+          "correct": true,
+          "design_intent": "The failure mode of the fix rather than of the defect. A carry that overrides what the user just said is worse than no carry, because the system then reports having assumed the year -- which reads as diligence.",
+          "fails_means": "Inheritance is pinning rather than defaulting, and every follow-up in a thread is answered for the first year mentioned in it.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Cirrus Logic's revenue in fiscal 2024?",
+              "answer": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000 USD, as reported in their 10-K filing (SEC accession number 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 2.0,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+              ],
+              "scored": false
+            },
+            {
+              "turn": 2,
+              "question": "And in fiscal 2023?",
+              "answer": "Cirrus Logic's revenue in fiscal 2023 was $1,897,617,000 USD, as reported in their 10-K filing (SEC accession number 0000772406-23-000019).",
+              "inherited": [
+                "metric",
+                "companies"
+              ],
+              "latency_s": 2.08,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2023) \u2192 1897617000.0  [SEC 10-K filing accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_a_stated_year_overrides_the_carry#t2",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 1897617000,
+                "got_raw": 1897617000.0,
+                "got_text": "Cirrus Logic's revenue in fiscal 2023 was $1,897,617,000 USD, as reported in their 10-K filing (SEC accession number 0000772406-23-000019).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2023
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_the_subject_changes_the_year_does_not",
+          "correct": true,
+          "design_intent": "\"What about Cirrus?\" replaces who is being asked about and leaves everything else standing. The two constraints have to move independently -- a carry that merges the companies answers about both, and one that drops everything on any new company loses the year.",
+          "fails_means": "Inheritance is all-or-nothing, so the most common shape of follow-up in a real session is the one it handles worst.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "How dependent was Qorvo on Apple in fiscal 2024?",
+              "answer": "In fiscal 2024, Qorvo was dependent on Apple for 46.0% of its total revenue. This information is detailed in the SEC 10-K filing (accession number 0001604778-24-000036).",
+              "inherited": [],
+              "latency_s": 1.74,
+              "tool_trace": [
+                "graph_query({'supplier': 'QRVO', 'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}], 'traversal_trace': ['QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_subject_changes_the_year_does_not#t1",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 46.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal 2024, Qorvo was dependent on Apple for 46.0% of its total revenue. This information is detailed in the SEC 10-K filing (accession number 0001604778-24-000036).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "What about Cirrus Logic?",
+              "answer": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for 87.0% of Cirrus Logic's total sales. This information is disclosed in the SEC 10-K filing (accession number 0000772406-24-000031).",
+              "inherited": [
+                "fiscal_year"
+              ],
+              "latency_s": 2.0,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'supplier': 'CRUS', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_subject_changes_the_year_does_not#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 87.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for 87.0% of Cirrus Logic's total sales. This information is disclosed in the SEC 10-K filing (accession number 0000772406-24-000031).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_a_trend_follow_up_is_not_pinned_to_one_year",
+          "correct": true,
+          "design_intent": "The one turn in this set that must inherit nothing. A question about change cannot be answered inside the year the thread was talking about, and a carry with no way to decline would answer it there and call the single figure a trend. Scored on three percentages from three different years appearing at once, which a pinned answer cannot produce.",
+          "fails_means": "The carry has no off switch, and every 'how has that changed' follow-up gets a one-year answer that looks like a trend.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "How dependent was Cirrus Logic on Apple in fiscal 2024?",
+              "answer": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for approximately 87.0% of Cirrus Logic's total sales. This information is detailed in the SEC 10-K filing under accession number 0000772406-24-000031.",
+              "inherited": [],
+              "latency_s": 2.19,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]']}"
+              ],
+              "scored": false
+            },
+            {
+              "turn": 2,
+              "question": "How has that changed over the years?",
+              "answer": "Over the years, Cirrus Logic's dependence on Apple has changed as follows:\n\n- **FY2026**: 91.0% (SEC 10-K accession 0000772406-26-000018)\n- **FY2025**: 89.0% (SEC 10-K accession 0000772406-25-000014)\n- **FY2024**: 87.0% (SEC 10-K accession 0000772406-24-000031)\n- **FY2023**: 83.0% (SEC 10-K accession 0000772406-23-000019)\n- **FY2022**: 79.0% (SEC 10-K accession 0000772406-22-000014)\n- **FY2021**: 83.0% (SEC 10-K accession 0000772406-21-000013)\n- **FY2020**: 79.0% (SEC 10-K accession 0000772406-20-000007)\n- **FY2019**: 78.0% (SEC 10-K accession 0000772406-19-000008)\n- **FY2018**: 81.0% (SEC 10-K accession 0000772406-18-000007)\n- **FY2017**: 79.0% (SEC 10-K accession 0001193125-17-181625)\n- **FY2016**: 66.0% (SEC 10-K accession 0000772406-18-000007)\n- **FY2015**: 72.0% (SEC 10-K accession 0001193125-17-181625)\n\nThis data illustrates an increasing trend in dependency on Apple from fiscal year 2015 to 2026, peaking in FY2026 at 91.0%.",
+              "inherited": [
+                "companies"
+              ],
+              "latency_s": 6.2,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'fiscal_year': 'trend', 'customer': 'AAPL'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': 'all years', 'edge_count': 12, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 91.0, 'pct_display': '91.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2026, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-26-000018 (https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 91 percent, 89 percent and 87 percent of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 89.0, 'pct_display': '89.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2025, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-25-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 89 percent, 87 percent, and 83 percent, of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2022, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-22-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240622000014/crus-20220326.htm)', 'source_text': 'For the twelve-month periods ending March26, 2022, March27, 2021, and March28, 2020, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2021, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-21-000013 (https://www.sec.gov/Archives/edgar/data/772406/000077240621000013/crus-20210327.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent, and 78 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2020, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-20-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240620000007/crus-20200328.htm)', 'source_text': 'For the twelve-month periods ending March28, 2020, March30, 2019, and March31, 2018, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 78 percent and 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 78.0, 'pct_display': '78.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2019, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-19-000008 (https://www.sec.gov/Archives/edgar/data/772406/000077240619000008/a10-kxcrus33019.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 78 percent, 81 percent, and 79 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 81.0, 'pct_display': '81.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 66.0, 'pct_display': '66.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'For the twelve-month periods ending March 31, 2018, March 25, 2017, and March 26, 2016, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent, 79 percent and 66 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 72.0, 'pct_display': '72.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2015, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'For fiscal years 2017, 2016, and 2015, we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]', 'CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]', 'CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'CRUS->AAPL 79.0% FY2022 [0000772406-22-000014]', 'CRUS->AAPL 83.0% FY2021 [0000772406-21-000013]', 'CRUS->AAPL 79.0% FY2020 [0000772406-20-000007]', 'CRUS->AAPL 78.0% FY2019 [0000772406-19-000008]', 'CRUS->AAPL 81.0% FY2018 [0000772406-18-000007]', 'CRUS->AAPL 79.0% FY2017 [0001193125-17-181625]', 'CRUS->AAPL 66.0% FY2016 [0000772406-18-000007]', 'CRUS->AAPL 72.0% FY2015 [0001193125-17-181625]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_a_trend_follow_up_is_not_pinned_to_one_year#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 91.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "Over the years, Cirrus Logic's dependence on Apple has changed as follows:\n\n- **FY2026**: 91.0% (SEC 10-K accession 0000772406-26-000018)\n- **FY2025**: 89.0% (SEC 10-K accession 0000772406-25-000014)\n- **FY2024**: 87.0% (SEC 10-K accession 0000772406-24-000031)\n- **FY2023**: 83.0% (SEC 10-K accession 0000772406-23-000019)\n- **FY2022**: 79.0% (SEC 10-K accession 0000772406-22-000014)\n- **FY2021**: 83.0% (SEC 10-K accession 0000772406-21-000013)\n- **FY2020**: 79.0% (SEC 10-K accession 0000772406-20-000007)\n- **FY2019**: 78.0% (SEC 10-K accession 0000772406-19-000008)\n- **FY2018**: 81.0% (SEC 10-K accession 0000772406-18-000007)\n- **FY2017**: 79.0% (SEC 10-K accession 0001193125-17-181625)\n- **FY2016**: 66.0% (SEC 10-K accession 0000772406-18-000007)\n- **FY2015**: 72.0% (SEC 10-K accession 0001193125-17-181625)\n\nThis data illustrates an increasing trend in dependency on Apple from fiscal year 2015 to 2026, peaking in FY2026 at 91.0%."
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 13,
+                "citations_checked": 10,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_the_metric_carries_when_the_company_changes",
+          "correct": true,
+          "design_intent": "Two constraints inherited at once across a company switch -- \"And Corning's?\" states neither the metric nor the year. Corning's newest filing is FY2025, so a dropped year here returns a real number from the wrong period, which no check downstream can distinguish from the right one.",
+          "fails_means": "Only the year is carried, and the shortest follow-up form -- a bare possessive -- has to be expanded by the user every time.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Apple's revenue in fiscal 2024?",
+              "answer": "Apple's revenue in fiscal 2024 was $391.04 billion, as reported in their 10-K filing for the period ending September 28, 2024 (SEC accession number 0000320193-24-000123).",
+              "inherited": [],
+              "latency_s": 1.93,
+              "tool_trace": [
+                "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_metric_carries_when_the_company_changes#t1",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 391035000000,
+                "got_raw": 391.04,
+                "got_text": "Apple's revenue in fiscal 2024 was $391.04 billion, as reported in their 10-K filing for the period ending September 28, 2024 (SEC accession number 0000320193-24-000123).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 0,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "And Corning's?",
+              "answer": "Corning's revenue in fiscal 2024 was $13.12 billion, as reported in their 10-K filing for the period ending December 31, 2024 (SEC accession number 0001628280-25-005347).",
+              "inherited": [
+                "fiscal_year",
+                "metric"
+              ],
+              "latency_s": 2.16,
+              "tool_trace": [
+                "query_financials(GLW, Revenue, FY2024) \u2192 13118000000.0  [SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_metric_carries_when_the_company_changes#t2",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 13118000000,
+                "got_raw": 13.12,
+                "got_text": "Corning's revenue in fiscal 2024 was $13.12 billion, as reported in their 10-K filing for the period ending December 31, 2024 (SEC accession number 0001628280-25-005347).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 0,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dataset": "data\\datasets\\eval_set_multiturn.json",
+      "dataset_version": "1.3",
+      "inheritance_enabled": true,
+      "n_conversations": 5,
+      "conversation_accuracy": 100.0,
+      "n_turns_scored": 9,
+      "turn_accuracy": 100.0,
+      "year_binding_accuracy": 100.0,
+      "n_year_checked": 8,
+      "db_fingerprint": {
+        "companies": 15,
+        "named_edges": 103,
+        "financial_facts": 38966,
+        "filings": 148,
+        "max_fy_edges": 2026
+      },
+      "agent_model": "gpt-4o-mini",
+      "cost_basis": "OpenAI list price for gpt-4o-mini",
+      "avg_latency_s": 3.6,
+      "total_latency_s": 32.4,
+      "input_tokens": 68432,
+      "output_tokens": 1627,
+      "estimated_cost_usd": 0.0112,
+      "conversations": [
+        {
+          "id": "mt_year_carries_into_a_computed_answer",
+          "correct": true,
+          "design_intent": "The reported defect, reproduced turn for turn. Turn one fixes FY2024. Turn two asks about the Apple relationship without restating the year -- CRUS -> AAPL is 87% in FY2024 and 91% in FY2026, so an unscoped lookup is visibly wrong rather than merely unlucky. Turn three multiplies the two, which is where a mismatched pair stops being a display error and becomes a wrong dollar figure with every operand traceable.",
+          "fails_means": "The fiscal year does not survive a follow-up, so every multi-turn dollar figure this system produces is built on whichever year happened to be latest. The binding check would flag it after the fact; nothing would prevent it.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Cirrus Logic's revenue in fiscal 2024?",
+              "answer": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. This figure is for the period ending March 30, 2024, and is cited from SEC 10-K filing accession number 0000772406-24-000031.",
+              "inherited": [],
+              "latency_s": 2.45,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t1",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 1788890000,
+                "got_raw": 1788890000.0,
+                "got_text": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000. This figure is for the period ending March 30, 2024, and is cited from SEC 10-K filing accession number 0000772406-24-000031.",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "How dependent is it on Apple?",
+              "answer": "In fiscal year 2024, Cirrus Logic (CRUS) was significantly dependent on Apple (AAPL), with Apple accounting for approximately 87.0% of Cirrus Logic's total net sales. This figure is sourced from their SEC 10-K filing, accession number 0000772406-24-000031.\n\nHere is a summary of the dependency over recent fiscal years:\n- FY 2024: 87.0% (citation: [0000772406-24-000031](https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm))\n- FY 2025: 89.0% (citation: [0000772406-25-000014](https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm))\n- FY 2026: 91.0% (citation: [0000772406-26-000018](https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm))\n\nThis information illustrates a consistent high level of dependency on Apple as a major customer for Cirrus Logic.",
+              "inherited": [
+                "fiscal_year",
+                "metric",
+                "companies"
+              ],
+              "latency_s": 4.15,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'customer': 'AAPL', 'fiscal_year': 'trend'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': 'all years', 'edge_count': 12, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 91.0, 'pct_display': '91.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2026, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-26-000018 (https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 91 percent, 89 percent and 87 percent of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 89.0, 'pct_display': '89.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2025, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-25-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 89 percent, 87 percent, and 83 percent, of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2022, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-22-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240622000014/crus-20220326.htm)', 'source_text': 'For the twelve-month periods ending March26, 2022, March27, 2021, and March28, 2020, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2021, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-21-000013 (https://www.sec.gov/Archives/edgar/data/772406/000077240621000013/crus-20210327.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent, and 78 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2020, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-20-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240620000007/crus-20200328.htm)', 'source_text': 'For the twelve-month periods ending March28, 2020, March30, 2019, and March31, 2018, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 78 percent and 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 78.0, 'pct_display': '78.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2019, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-19-000008 (https://www.sec.gov/Archives/edgar/data/772406/000077240619000008/a10-kxcrus33019.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 78 percent, 81 percent, and 79 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 81.0, 'pct_display': '81.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 66.0, 'pct_display': '66.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'For the twelve-month periods ending March 31, 2018, March 25, 2017, and March 26, 2016, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent, 79 percent and 66 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 72.0, 'pct_display': '72.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2015, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'For fiscal years 2017, 2016, and 2015, we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]', 'CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]', 'CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'CRUS->AAPL 79.0% FY2022 [0000772406-22-000014]', 'CRUS->AAPL 83.0% FY2021 [0000772406-21-000013]', 'CRUS->AAPL 79.0% FY2020 [0000772406-20-000007]', 'CRUS->AAPL 78.0% FY2019 [0000772406-19-000008]', 'CRUS->AAPL 81.0% FY2018 [0000772406-18-000007]', 'CRUS->AAPL 79.0% FY2017 [0001193125-17-181625]', 'CRUS->AAPL 66.0% FY2016 [0000772406-18-000007]', 'CRUS->AAPL 72.0% FY2015 [0001193125-17-181625]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 87.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal year 2024, Cirrus Logic (CRUS) was significantly dependent on Apple (AAPL), with Apple accounting for approximately 87.0% of Cirrus Logic's total net sales. This figure is sourced from their SEC 10-K filing, accession number 0000772406-24-000031.\n\nHere is a summary of the dependency over recent fiscal years:\n- FY 2024: 87.0% (citation: [0000772406-24-000031](https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm))\n- FY 2025: 89.0% (citation: [0000772406-25-000014](https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm))\n- FY 2026: 91.0% (citation: [0000772406-26-000018](https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm))\n\nThis information illustrates a consistent high level of dependency on Apple as a major customer for Cirrus Logic.",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [],
+                  "supersets": [
+                    "graph_query(trend)"
+                  ],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 4,
+                "citations_checked": 3,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 3,
+              "question": "If Apple cut its orders by 20%, what would that cost them?",
+              "answer": "If Apple were to cut its orders to Cirrus Logic by 20%, it would result in a loss of approximately $311,266,860 in revenue for Cirrus Logic in fiscal year 2024. \n\nThis calculation is based on Cirrus Logic's total revenue of $1,788,890,000 (SEC 10-K filing accession number 0000772406-24-000031) and the fact that Apple accounted for 87.0% of that revenue, leading to the following equation:\n- Loss due to cut = Total Revenue \u00d7 Revenue Percentage from Apple \u00d7 Cut\n- Loss due to cut = $1,788,890,000 \u00d7 87.0% \u00d7 20% = $311,266,860.",
+              "inherited": [
+                "fiscal_year",
+                "metric"
+              ],
+              "latency_s": 5.51,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 4, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}, {'supplier': 'JBL', 'customer': 'AAPL', 'revenue_pct': 11.0, 'pct_display': '11.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)', 'source_text': 'Apple, Inc. 11 % 17 % 19 %'}, {'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]', 'JBL->AAPL 11.0% FY2024 [0001628280-24-043960]', 'SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}",
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]",
+                "compute(revenue * pct / 100 * cut) \u2192 311266860.0"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_year_carries_into_a_computed_answer#t3",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 20.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "If Apple were to cut its orders to Cirrus Logic by 20%, it would result in a loss of approximately $311,266,860 in revenue for Cirrus Logic in fiscal year 2024. \n\nThis calculation is based on Cirrus Logic's total revenue of $1,788,890,000 (SEC 10-K filing accession number 0000772406-24-000031) and the fact that Apple accounted for 87.0% of that revenue, leading to the following equation:\n- Loss due to cut = Total Revenue \u00d7 Revenue Percentage from Apple \u00d7 Cut\n- Loss due to cut = $1,788,890,000 \u00d7 87.0% \u00d7 20% = $311,266,860.",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 8,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_a_stated_year_overrides_the_carry",
+          "correct": true,
+          "design_intent": "The failure mode of the fix rather than of the defect. A carry that overrides what the user just said is worse than no carry, because the system then reports having assumed the year -- which reads as diligence.",
+          "fails_means": "Inheritance is pinning rather than defaulting, and every follow-up in a thread is answered for the first year mentioned in it.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Cirrus Logic's revenue in fiscal 2024?",
+              "answer": "Cirrus Logic's revenue in fiscal 2024 was $1,788,890,000 (USD), for the period ending on March 30, 2024, as reported in their SEC 10-K filing (accession number 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 1.99,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+              ],
+              "scored": false
+            },
+            {
+              "turn": 2,
+              "question": "And in fiscal 2023?",
+              "answer": "Cirrus Logic's revenue in fiscal 2023 was $1,897,617,000 (USD), for the period ending on March 25, 2023, as reported in their SEC 10-K filing (accession number 0000772406-23-000019).",
+              "inherited": [
+                "metric",
+                "companies"
+              ],
+              "latency_s": 2.47,
+              "tool_trace": [
+                "query_financials(CRUS, Revenue, FY2023) \u2192 1897617000.0  [SEC 10-K filing accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_a_stated_year_overrides_the_carry#t2",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 1897617000,
+                "got_raw": 1897617000.0,
+                "got_text": "Cirrus Logic's revenue in fiscal 2023 was $1,897,617,000 (USD), for the period ending on March 25, 2023, as reported in their SEC 10-K filing (accession number 0000772406-23-000019).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2023
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_the_subject_changes_the_year_does_not",
+          "correct": true,
+          "design_intent": "\"What about Cirrus?\" replaces who is being asked about and leaves everything else standing. The two constraints have to move independently -- a carry that merges the companies answers about both, and one that drops everything on any new company loses the year.",
+          "fails_means": "Inheritance is all-or-nothing, so the most common shape of follow-up in a real session is the one it handles worst.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "How dependent was Qorvo on Apple in fiscal 2024?",
+              "answer": "In fiscal 2024, Qorvo derived 46.0% of its total revenue from Apple. This indicates a significant dependency on Apple as a customer. This information is sourced from Qorvo's 10-K filing (SEC accession number 0001604778-24-000036).",
+              "inherited": [],
+              "latency_s": 2.11,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'supplier': 'QRVO', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}], 'traversal_trace': ['QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_subject_changes_the_year_does_not#t1",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 46.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal 2024, Qorvo derived 46.0% of its total revenue from Apple. This indicates a significant dependency on Apple as a customer. This information is sourced from Qorvo's 10-K filing (SEC accession number 0001604778-24-000036).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "What about Cirrus Logic?",
+              "answer": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for 87.0% of Cirrus Logic\u2019s total revenue. This data comes from Cirrus Logic's 10-K filing (SEC accession number 0000772406-24-000031).",
+              "inherited": [
+                "fiscal_year"
+              ],
+              "latency_s": 2.08,
+              "tool_trace": [
+                "graph_query({'customer': 'AAPL', 'supplier': 'CRUS', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_subject_changes_the_year_does_not#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 87.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for 87.0% of Cirrus Logic\u2019s total revenue. This data comes from Cirrus Logic's 10-K filing (SEC accession number 0000772406-24-000031).",
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 1,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_a_trend_follow_up_is_not_pinned_to_one_year",
+          "correct": true,
+          "design_intent": "The one turn in this set that must inherit nothing. A question about change cannot be answered inside the year the thread was talking about, and a carry with no way to decline would answer it there and call the single figure a trend. Scored on three percentages from three different years appearing at once, which a pinned answer cannot produce.",
+          "fails_means": "The carry has no off switch, and every 'how has that changed' follow-up gets a one-year answer that looks like a trend.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "How dependent was Cirrus Logic on Apple in fiscal 2024?",
+              "answer": "In fiscal 2024, Cirrus Logic was highly dependent on Apple, with Apple accounting for approximately 87.0% of Cirrus Logic's total sales. This relationship is documented in Cirrus Logic's 10-K filing (SEC accession number 0000772406-24-000031).",
+              "inherited": [],
+              "latency_s": 2.34,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'CRUS', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]']}"
+              ],
+              "scored": false
+            },
+            {
+              "turn": 2,
+              "question": "How has that changed over the years?",
+              "answer": "Over the years, Cirrus Logic's dependency on Apple has shown an upward trend. Here are the percentages of total sales attributed to Apple:\n\n- **FY2026**: 91.0% (Sec 10-K accession number 0000772406-26-000018)\n- **FY2025**: 89.0% (Sec 10-K accession number 0000772406-25-000014)\n- **FY2024**: 87.0% (Sec 10-K accession number 0000772406-24-000031)\n- **FY2023**: 83.0% (Sec 10-K accession number 0000772406-23-000019)\n- **FY2022**: 79.0% (Sec 10-K accession number 0000772406-22-000014)\n- **FY2021**: 83.0% (Sec 10-K accession number 0000772406-21-000013)\n- **FY2020**: 79.0% (Sec 10-K accession number 0000772406-20-000007)\n- **FY2019**: 78.0% (Sec 10-K accession number 0000772406-19-000008)\n- **FY2018**: 81.0% (Sec 10-K accession number 0000772406-18-000007)\n- **FY2017**: 79.0% (Sec 10-K accession number 0001193125-17-181625)\n- **FY2016**: 66.0% (Sec 10-K accession number 0000772406-18-000007)\n- **FY2015**: 72.0% (Sec 10-K accession number 0001193125-17-181625)\n\nThis data indicates that Cirrus Logic's sales dependency on Apple has increased from 66.0% in FY2016 to 91.0% in FY2026.",
+              "inherited": [
+                "companies"
+              ],
+              "latency_s": 5.47,
+              "tool_trace": [
+                "graph_query({'supplier': 'CRUS', 'fiscal_year': 'trend'}) \u2192 {'found': True, 'hub': 'CRUS', 'fiscal_year': 'all years', 'edge_count': 19, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 91.0, 'pct_display': '91.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2026, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-26-000018 (https://www.sec.gov/Archives/edgar/data/772406/000077240626000018/crus-20260328.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 91 percent, 89 percent and 87 percent of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 89.0, 'pct_display': '89.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2025, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-25-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240625000014/crus-20250329.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 89 percent, 87 percent, and 83 percent, of the Companys total net sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2022, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-22-000014 (https://www.sec.gov/Archives/edgar/data/772406/000077240622000014/crus-20220326.htm)', 'source_text': 'For the twelve-month periods ending March26, 2022, March27, 2021, and March28, 2020, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2021, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-21-000013 (https://www.sec.gov/Archives/edgar/data/772406/000077240621000013/crus-20210327.htm)', 'source_text': 'we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent, and 78 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2020, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-20-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240620000007/crus-20200328.htm)', 'source_text': 'For the twelve-month periods ending March28, 2020, March30, 2019, and March31, 2018, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 78 percent and 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 78.0, 'pct_display': '78.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2019, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-19-000008 (https://www.sec.gov/Archives/edgar/data/772406/000077240619000008/a10-kxcrus33019.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 78 percent, 81 percent, and 79 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 81.0, 'pct_display': '81.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'Pegatron', 'revenue_pct': 24.0, 'pct_display': '24.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'three contract manufacturers, Pegatron, Jabil Circuits, and Hongfujin Precision who represented 24 percent, 18 percent, and 11 percent, respectively of our consolidated gross trade accounts receivable as of the end of fiscal year 2018.'}, {'supplier': 'CRUS', 'customer': 'Jabil Circuits', 'revenue_pct': 18.0, 'pct_display': '18.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'three contract manufacturers, Pegatron, Jabil Circuits, and Hongfujin Precision who represented 24 percent, 18 percent, and 11 percent, respectively of our consolidated gross trade accounts receivable as of the end of fiscal year 2018.'}, {'supplier': 'CRUS', 'customer': 'Hongfujin Precision', 'revenue_pct': 11.0, 'pct_display': '11.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2018, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'three contract manufacturers, Pegatron, Jabil Circuits, and Hongfujin Precision who represented 24 percent, 18 percent, and 11 percent, respectively of our consolidated gross trade accounts receivable as of the end of fiscal year 2018.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 79.0, 'pct_display': '79.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': 'Hongfujin Precision', 'revenue_pct': 20.0, 'pct_display': '20.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'We had three contract manufacturers, Hongfujin Precision, Protek, and Jabil Circuits who represented 20percent, 15 percent, and 13 percent, respectively of our consolidated gross trade accounts receivable as of the end of fiscal year 2017.'}, {'supplier': 'CRUS', 'customer': 'Protek', 'revenue_pct': 15.0, 'pct_display': '15.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'We had three contract manufacturers, Hongfujin Precision, Protek, and Jabil Circuits who represented 20percent, 15 percent, and 13 percent, respectively of our consolidated gross trade accounts receivable as of the end of fiscal year 2017.'}, {'supplier': 'CRUS', 'customer': 'Jabil Circuits', 'revenue_pct': 13.0, 'pct_display': '13.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2017, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'We had three contract manufacturers, Hongfujin Precision, Protek, and Jabil Circuits who represented 20percent, 15 percent, and 13 percent, respectively of our consolidated gross trade accounts receivable as of the end of fiscal year 2017.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 66.0, 'pct_display': '66.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'For the twelve-month periods ending March 31, 2018, March 25, 2017, and March 26, 2016, we had one end customer, Apple Inc., who purchased through multiple contract manufacturers and represented approximately 81 percent, 79 percent and 66 percent of the Companys total sales, respectively.'}, {'supplier': 'CRUS', 'customer': '005930.KS', 'revenue_pct': 15.0, 'pct_display': '15.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2016, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-18-000007 (https://www.sec.gov/Archives/edgar/data/772406/000077240618000007/a10-kxcrus53018.htm)', 'source_text': 'Samsung Electronics represented approximately 15 percent of the Companys total sales for fiscal year 2016.'}, {'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 72.0, 'pct_display': '72.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2015, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-17-181625 (https://www.sec.gov/Archives/edgar/data/772406/000119312517181625/d339118d10k.htm)', 'source_text': 'For fiscal years 2017, 2016, and 2015, we had one end customer, Apple, Inc., who purchased through multiple contract manufacturers and represented approximately 79 percent, 66 percent, and 72 percent, of the Companys total sales, respectively.'}], 'traversal_trace': ['CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]', 'CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]', 'CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'CRUS->AAPL 79.0% FY2022 [0000772406-22-000014]', 'CRUS->AAPL 83.0% FY2021 [0000772406-21-000013]', 'CRUS->AAPL 79.0% FY2020 [0000772406-20-000007]', 'CRUS->AAPL 78.0% FY2019 [0000772406-19-000008]', 'CRUS->AAPL 81.0% FY2018 [0000772406-18-000007]', 'CRUS->Pegatron 24.0% FY2018 [0000772406-18-000007]', 'CRUS->Jabil Circuits 18.0% FY2018 [0000772406-18-000007]', 'CRUS->Hongfujin Precision 11.0% FY2018 [0000772406-18-000007]', 'CRUS->AAPL 79.0% FY2017 [0001193125-17-181625]', 'CRUS->Hongfujin Precision 20.0% FY2017 [0001193125-17-181625]', 'CRUS->Protek 15.0% FY2017 [0001193125-17-181625]', 'CRUS->Jabil Circuits 13.0% FY2017 [0001193125-17-181625]', 'CRUS->AAPL 66.0% FY2016 [0000772406-18-000007]', 'CRUS->005930.KS 15.0% FY2016 [0000772406-18-000007]', 'CRUS->AAPL 72.0% FY2015 [0001193125-17-181625]']}"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_a_trend_follow_up_is_not_pinned_to_one_year#t2",
+                "tier": 3,
+                "type": "grounded",
+                "answerable": true,
+                "correct": true,
+                "facts_ok": true,
+                "citation_ok": true,
+                "missing_accns": [],
+                "pct_ok": true,
+                "lead_ok": true,
+                "lead_pct": 91.0,
+                "values_ok": true,
+                "missing_values": [],
+                "forbidden_seen": [],
+                "fabricated_pcts": [],
+                "got_text": "Over the years, Cirrus Logic's dependency on Apple has shown an upward trend. Here are the percentages of total sales attributed to Apple:\n\n- **FY2026**: 91.0% (Sec 10-K accession number 0000772406-26-000018)\n- **FY2025**: 89.0% (Sec 10-K accession number 0000772406-25-000014)\n- **FY2024**: 87.0% (Sec 10-K accession number 0000772406-24-000031)\n- **FY2023**: 83.0% (Sec 10-K accession number 0000772406-23-000019)\n- **FY2022**: 79.0% (Sec 10-K accession number 0000772406-22-000014)\n- **FY2021**: 83.0% (Sec 10-K accession number 0000772406-21-000013)\n- **FY2020**: 79.0% (Sec 10-K accession number 0000772406-20-000007)\n- **FY2019**: 78.0% (Sec 10-K accession number 0000772406-19-000008)\n- **FY2018**: 81.0% (Sec 10-K accession number 0000772406-18-000007)\n- **FY2017**: 79.0% (Sec 10-K accession number 0001193125-17-181625)\n- **FY2016**: 66.0% (Sec 10-K accession number 0000772406-18-000007)\n- **FY2015**: 72.0% (Sec 10-K accession number 0001193125-17-181625)\n\nThis data indicates that Cirrus Logic's sales dependency on Apple has increased from 66.0% in FY2016 to 91.0% in FY2026."
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 14,
+                "citations_checked": 10,
+                "passage_values": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "mt_the_metric_carries_when_the_company_changes",
+          "correct": true,
+          "design_intent": "Two constraints inherited at once across a company switch -- \"And Corning's?\" states neither the metric nor the year. Corning's newest filing is FY2025, so a dropped year here returns a real number from the wrong period, which no check downstream can distinguish from the right one.",
+          "fails_means": "Only the year is carried, and the shortest follow-up form -- a bare possessive -- has to be expanded by the user every time.",
+          "turns": [
+            {
+              "turn": 1,
+              "question": "What was Apple's revenue in fiscal 2024?",
+              "answer": "Apple's revenue in fiscal 2024 was $391.04 billion, as reported in the SEC 10-K filing (accession number 0000320193-24-000123).",
+              "inherited": [],
+              "latency_s": 1.95,
+              "tool_trace": [
+                "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_metric_carries_when_the_company_changes#t1",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 391035000000,
+                "got_raw": 391.04,
+                "got_text": "Apple's revenue in fiscal 2024 was $391.04 billion, as reported in the SEC 10-K filing (accession number 0000320193-24-000123).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 0,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            },
+            {
+              "turn": 2,
+              "question": "And Corning's?",
+              "answer": "Corning's revenue in fiscal 2024 was $13.12 billion, as reported in the SEC 10-K filing (accession number 0001628280-25-005347).",
+              "inherited": [
+                "fiscal_year",
+                "metric"
+              ],
+              "latency_s": 1.88,
+              "tool_trace": [
+                "query_financials(GLW, Revenue, FY2024) \u2192 13118000000.0  [SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)]"
+              ],
+              "scored": true,
+              "result": {
+                "id": "mt_the_metric_carries_when_the_company_changes#t2",
+                "tier": 1,
+                "type": "numeric",
+                "answerable": true,
+                "correct": true,
+                "expected": 13118000000,
+                "got_raw": 13.12,
+                "got_text": "Corning's revenue in fiscal 2024 was $13.12 billion, as reported in the SEC 10-K filing (accession number 0001628280-25-005347).",
+                "unit": "USD",
+                "refusal_detected": false,
+                "tool_years": {
+                  "ok": true,
+                  "years_used": [
+                    2024
+                  ],
+                  "supersets": [],
+                  "violations": []
+                }
+              },
+              "verification": {
+                "unverified_numbers": [],
+                "unsourced_inputs": [],
+                "unverified_citations": [],
+                "misbound_inputs": [],
+                "unsourced_formulas": [],
+                "verified": true,
+                "numbers_checked": 0,
+                "citations_checked": 1,
+                "passage_values": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

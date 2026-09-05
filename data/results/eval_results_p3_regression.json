@@ -1,0 +1,2697 @@
+{
+  "dataset": "data\\datasets\\eval_set.json",
+  "dataset_version": "1.3",
+  "db_fingerprint": {
+    "companies": 15,
+    "named_edges": 103,
+    "financial_facts": 38966,
+    "filings": 148,
+    "max_fy_edges": 2026
+  },
+  "n_total": 30,
+  "n_held_out_excluded": 0,
+  "n_retired_excluded": 3,
+  "agent_model": "gpt-4o-mini",
+  "cost_basis": "OpenAI list price for gpt-4o-mini",
+  "tier1_accuracy": 100.0,
+  "tier2_accuracy": 100.0,
+  "tier2_input_fetch": 100.0,
+  "retrieval_accuracy": 42.9,
+  "passage_hit_accuracy": 42.9,
+  "avg_judge_score": 2.43,
+  "refusal_accuracy": 100.0,
+  "numeric_accuracy": 100.0,
+  "grounded_accuracy": null,
+  "category_accuracy": null,
+  "overall_accuracy": 86.7,
+  "unverified_answers": 0,
+  "unsourced_formula_ids": [],
+  "unverified_ids": [],
+  "figures_checked": 30,
+  "avg_latency_s": 3.54,
+  "total_latency_s": 106.2,
+  "input_tokens": 202602,
+  "output_tokens": 4402,
+  "estimated_cost_usd": 0.033,
+  "results": [
+    {
+      "id": "t1_aapl_revenue_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 391035000000.0,
+      "got_raw": 391035000000.0,
+      "got_text": "Apple's total revenue in fiscal year 2024 was $391,035,000,000. This figure is from the 10-K filing for the period ending September 28, 2024 (SEC accession number 0000320193-24-000123).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.84,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_aapl_netincome_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 93736000000.0,
+      "got_raw": 93736000000.0,
+      "got_text": "Apple's net income for fiscal year 2024 was $93,736,000,000 (93.74 billion USD), as of September 28, 2024. This information comes from SEC 10-K filing accession number 0000320193-24-000123.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.97,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "NetIncome",
+            "value": 93736000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, NetIncome, FY2024) \u2192 93736000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_aapl_eps_diluted_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 6.08,
+      "got_raw": 6.08,
+      "got_text": "Apple's diluted EPS in fiscal year 2024 was $6.08 per share, as reported in their SEC 10-K filing (accession number 0000320193-24-000123).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.51,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "EPS_Diluted",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "EPS_Diluted",
+            "value": 6.08,
+            "unit": "USD/shares",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, EPS_Diluted, FY2024) \u2192 6.08  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_swks_revenue_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 4178000000.0,
+      "got_raw": 4178000000.0,
+      "got_text": "Skyworks Solutions' revenue in fiscal year 2024 was $4,178,000,000. The revenue period ended on September 27, 2024, as reported in their SEC 10-K filing (accession number 0000004127-24-000131).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.05,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "value": 4178000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-27",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(SWKS, Revenue, FY2024) \u2192 4178000000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_swks_netincome_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 596000000.0,
+      "got_raw": 596.0,
+      "got_text": "Skyworks Solutions' net income in fiscal year 2024 was $596 million. The period ended on September 27, 2024, as reported in the SEC 10-K filing (accession number: 0000004127-24-000131).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 1.94,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "NetIncome",
+            "value": 596000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-27",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(SWKS, NetIncome, FY2024) \u2192 596000000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_qrvo_netincome_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": -70322000.0,
+      "got_raw": -70322000.0,
+      "got_text": "Qorvo's net income in fiscal year 2024 was -$70,322,000. This figure is reported for the period ending March 30, 2024, and can be found in the SEC 10-K filing with accession number 0001604778-24-000036.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.11,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "QRVO",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "QRVO",
+            "metric": "NetIncome",
+            "value": -70322000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(QRVO, NetIncome, FY2024) \u2192 -70322000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_crus_revenue_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 1788890000.0,
+      "got_raw": 1788890000.0,
+      "got_text": "Cirrus Logic's revenue in fiscal year 2024 was $1,788,890,000. The period ended on March 30, 2024, and the SEC citation is 0000772406-24-000031.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.06,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "CRUS",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "CRUS",
+            "metric": "Revenue",
+            "value": 1788890000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_glw_revenue_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 13118000000.0,
+      "got_raw": 13118000000.0,
+      "got_text": "Corning's total revenue in fiscal year 2024 was $13,118,000,000. This is reported in the SEC 10-K filing with accession number 0001628280-25-005347.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.0,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "GLW",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "GLW",
+            "metric": "Revenue",
+            "value": 13118000000.0,
+            "unit": "USD",
+            "period_end": "2024-12-31",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(GLW, Revenue, FY2024) \u2192 13118000000.0  [SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_avgo_revenue_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 51574000000.0,
+      "got_raw": 51574000000.0,
+      "got_text": "Broadcom's total revenue in fiscal year 2024 was $51,574,000,000. This figure is from the SEC 10-K filing (accession number 0001730168-24-000139) dated November 3, 2024.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 3.0,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "value": 51574000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AVGO, Revenue, FY2024) \u2192 51574000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t1_avgo_randd_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 9310000000.0,
+      "got_raw": 9.31,
+      "got_text": "Broadcom spent $9.31 billion on R&D in fiscal year 2024. This information is cited from the SEC 10-K filing accession number 0001730168-24-000139.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.73,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "R&D",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "R&D",
+            "value": 9310000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AVGO, R&D, FY2024) \u2192 9310000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_aapl_grossprofit_pct_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 46.2063,
+      "got_raw": 46.206349815233935,
+      "got_text": "Apple's gross margin percentage in fiscal year 2024 was approximately 46.21%, based on a gross profit of $180.68 billion and revenue of $391.04 billion. The figures are cited from SEC 10-K filing accession number 0000320193-24-000123.",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "GrossProfit": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.86,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "GrossProfit",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "GrossProfit",
+            "value": 180683000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 180683000000,
+              "revenue": 391035000000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 46.206349815233935,
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 180683000000,
+              "revenue": 391035000000
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, GrossProfit, FY2024) \u2192 180683000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute(gross_profit / revenue * 100) \u2192 46.206349815233935"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_aapl_operatingincome_pct_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 31.5102,
+      "got_raw": 31.510222870075566,
+      "got_text": "Apple's operating margin percentage in fiscal year 2024 was approximately 31.51%, as calculated from an operating income of $123.22 billion and revenue of $391.04 billion (SEC 10-K filing accession 0000320193-24-000123).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "OperatingIncome": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.69,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "OperatingIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "OperatingIncome",
+            "value": 123216000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "operating_income / revenue * 100",
+            "variables": {
+              "operating_income": 123216000000.0,
+              "revenue": 391035000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 31.510222870075566,
+            "expression": "operating_income / revenue * 100",
+            "variables": {
+              "operating_income": 123216000000.0,
+              "revenue": 391035000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, OperatingIncome, FY2024) \u2192 123216000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute(operating_income / revenue * 100) \u2192 31.510222870075566"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_aapl_netincome_pct_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 23.9713,
+      "got_raw": 23.971255769943866,
+      "got_text": "Apple's net profit margin in fiscal year 2024 was approximately 23.97%. This is based on a net income of $93.736 billion and revenue of $391.035 billion. \n\n- Net Income: $93.736 billion (SEC 10-K filing accession 0000320193-24-000123)\n- Revenue: $391.035 billion (SEC 10-K filing accession 0000320193-24-000123)",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "NetIncome": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 4.04,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "NetIncome",
+            "value": 93736000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "net_income / revenue * 100",
+            "variables": {
+              "net_income": 93736000000.0,
+              "revenue": 391035000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 23.971255769943866,
+            "expression": "net_income / revenue * 100",
+            "variables": {
+              "net_income": 93736000000.0,
+              "revenue": 391035000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, NetIncome, FY2024) \u2192 93736000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute(net_income / revenue * 100) \u2192 23.971255769943866"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_avgo_grossprofit_pct_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 63.0337,
+      "got_raw": 63.03369915073487,
+      "got_text": "Broadcom's gross margin percentage in fiscal year 2024 was approximately 63.03%, based on a gross profit of $32,509,000,000 and revenue of $51,574,000,000 (SEC 10-K filing accession 0001730168-24-000139).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "GrossProfit": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.32,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "GrossProfit",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "GrossProfit",
+            "value": 32509000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "value": 51574000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 32509000000,
+              "revenue": 51574000000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 63.03369915073487,
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 32509000000,
+              "revenue": 51574000000
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AVGO, GrossProfit, FY2024) \u2192 32509000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]",
+        "query_financials(AVGO, Revenue, FY2024) \u2192 51574000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]",
+        "compute(gross_profit / revenue * 100) \u2192 63.03369915073487"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_qrvo_grossprofit_pct_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 39.4878,
+      "got_raw": 39.48780025817706,
+      "got_text": "Qorvo's gross margin percentage in fiscal year 2024 was approximately 39.49%, based on a gross profit of $1,488,495,000 and revenue of $3,769,506,000 (SEC 10-K filing accession 0001604778-24-000036).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "GrossProfit": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.67,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "QRVO",
+            "metric": "GrossProfit",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "QRVO",
+            "metric": "GrossProfit",
+            "value": 1488495000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "QRVO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "QRVO",
+            "metric": "Revenue",
+            "value": 3769506000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 1488495000.0,
+              "revenue": 3769506000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 39.48780025817706,
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 1488495000.0,
+              "revenue": 3769506000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(QRVO, GrossProfit, FY2024) \u2192 1488495000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]",
+        "query_financials(QRVO, Revenue, FY2024) \u2192 3769506000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]",
+        "compute(gross_profit / revenue * 100) \u2192 39.48780025817706"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_aapl_revenue_yoy_2023_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 2.022,
+      "got_raw": 2.021994077514121,
+      "got_text": "Apple's revenue grew by approximately 2.02% from fiscal year 2023 to 2024. The revenue for fiscal year 2024 was $391.04 billion (SEC 10-K filing accession 0000320193-24-000123), and for fiscal year 2023, it was $383.29 billion (SEC 10-K filing accession 0000320193-23-000106).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "Revenue_2024": true,
+        "Revenue_2023": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.85,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2023
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 383285000000.0,
+            "unit": "USD",
+            "period_end": "2023-09-30",
+            "fiscal_year": 2023,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-23-000106 (https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(new - old) / old * 100",
+            "variables": {
+              "new": 391035000000.0,
+              "old": 383285000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 2.021994077514121,
+            "expression": "(new - old) / old * 100",
+            "variables": {
+              "new": 391035000000.0,
+              "old": 383285000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)",
+        "SEC 10-K filing accession 0000320193-23-000106 (https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, Revenue, FY2023) \u2192 383285000000.0  [SEC 10-K filing accession 0000320193-23-000106 (https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm)]",
+        "compute((new - old) / old * 100) \u2192 2.021994077514121"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 2,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_aapl_revenue_yoy_2022_2023",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": -2.8005,
+      "got_raw": -2.8004605303199366,
+      "got_text": "Apple's revenue decreased by approximately **2.80%** from fiscal year 2022 to 2023. The revenue for fiscal year 2023 was $383.29 billion (SEC 10-K filing accession 0000320193-23-000106), while fiscal year 2022 was $394.33 billion (SEC 10-K filing accession 0000320193-22-000108).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "Revenue_2023": true,
+        "Revenue_2022": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.74,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2023
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 383285000000.0,
+            "unit": "USD",
+            "period_end": "2023-09-30",
+            "fiscal_year": 2023,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-23-000106 (https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2022
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 394328000000.0,
+            "unit": "USD",
+            "period_end": "2022-09-24",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-22-000108 (https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(new - old) / old * 100",
+            "variables": {
+              "new": 383285000000.0,
+              "old": 394328000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": -2.8004605303199366,
+            "expression": "(new - old) / old * 100",
+            "variables": {
+              "new": 383285000000.0,
+              "old": 394328000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-23-000106 (https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm)",
+        "SEC 10-K filing accession 0000320193-22-000108 (https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, Revenue, FY2023) \u2192 383285000000.0  [SEC 10-K filing accession 0000320193-23-000106 (https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm)]",
+        "query_financials(AAPL, Revenue, FY2022) \u2192 394328000000.0  [SEC 10-K filing accession 0000320193-22-000108 (https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm)]",
+        "compute((new - old) / old * 100) \u2192 -2.8004605303199366"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 2,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_swks_revenue_yoy_2023_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": -12.4549,
+      "got_raw": -12.454949291760958,
+      "got_text": "Skyworks' revenue changed by approximately -12.45% from fiscal year 2023 to 2024. The revenue for fiscal year 2024 was $4,178,000,000 (SEC 10-K filing accession 0000004127-24-000131), while the revenue for fiscal year 2023 was $4,772,400,000 (SEC 10-K filing accession 0000004127-23-000030).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "Revenue_2024": true,
+        "Revenue_2023": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.49,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "value": 4178000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-27",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "fiscal_year": 2023
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "value": 4772400000.0,
+            "unit": "USD",
+            "period_end": "2023-09-29",
+            "fiscal_year": 2023,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-23-000030 (https://www.sec.gov/Archives/edgar/data/4127/000000412723000030/swks-20230929.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(new - old) / old * 100",
+            "variables": {
+              "new": 4178000000,
+              "old": 4772400000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": -12.454949291760958,
+            "expression": "(new - old) / old * 100",
+            "variables": {
+              "new": 4178000000,
+              "old": 4772400000
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+        "SEC 10-K filing accession 0000004127-23-000030 (https://www.sec.gov/Archives/edgar/data/4127/000000412723000030/swks-20230929.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(SWKS, Revenue, FY2024) \u2192 4178000000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]",
+        "query_financials(SWKS, Revenue, FY2023) \u2192 4772400000.0  [SEC 10-K filing accession 0000004127-23-000030 (https://www.sec.gov/Archives/edgar/data/4127/000000412723000030/swks-20230929.htm)]",
+        "compute((new - old) / old * 100) \u2192 -12.454949291760958"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 2,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_avgo_revenue_yoy_2023_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 43.985,
+      "got_raw": 43.98503587481504,
+      "got_text": "Broadcom's revenue grew by approximately 43.99% from fiscal year 2023 to 2024. The revenue for 2024 was $51,574,000,000 (SEC 10-K filing accession 0001730168-24-000139), and for 2023, it was $35,819,000,000 (SEC 10-K filing accession 0001730168-23-000096).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "Revenue_2024": true,
+        "Revenue_2023": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 4.27,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "value": 51574000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "fiscal_year": 2023
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "value": 35819000000.0,
+            "unit": "USD",
+            "period_end": "2023-10-29",
+            "fiscal_year": 2023,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-23-000096 (https://www.sec.gov/Archives/edgar/data/1730168/000173016823000096/avgo-20231029.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(revenue_2024 - revenue_2023) / revenue_2023 * 100",
+            "variables": {
+              "revenue_2024": 51574000000.0,
+              "revenue_2023": 35819000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 43.98503587481504,
+            "expression": "(revenue_2024 - revenue_2023) / revenue_2023 * 100",
+            "variables": {
+              "revenue_2024": 51574000000.0,
+              "revenue_2023": 35819000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)",
+        "SEC 10-K filing accession 0001730168-23-000096 (https://www.sec.gov/Archives/edgar/data/1730168/000173016823000096/avgo-20231029.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AVGO, Revenue, FY2024) \u2192 51574000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]",
+        "query_financials(AVGO, Revenue, FY2023) \u2192 35819000000.0  [SEC 10-K filing accession 0001730168-23-000096 (https://www.sec.gov/Archives/edgar/data/1730168/000173016823000096/avgo-20231029.htm)]",
+        "compute((revenue_2024 - revenue_2023) / revenue_2023 * 100) \u2192 43.98503587481504"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 2,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "t2_glw_grossprofit_pct_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 32.5964,
+      "got_raw": 32.59643238298521,
+      "got_text": "Corning's gross margin percentage in fiscal year 2024 was approximately 32.60%, based on a gross profit of $4,276,000,000 and revenue of $13,118,000,000 (SEC 10-K filing accession number 0001628280-25-005347).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "GrossProfit": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 4.35,
+      "steps": [
+        {
+          "tool": "list_metrics",
+          "input": {
+            "ticker": "GLW"
+          },
+          "output": {
+            "found": true,
+            "ticker": "GLW",
+            "form": "10-K",
+            "metrics": [
+              {
+                "metric": "CapEx",
+                "years_available": [
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 6
+              },
+              {
+                "metric": "COGS",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "CurrentAssets",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "CurrentLiabilities",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "EPS_Basic",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "EPS_Diluted",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "GrossProfit",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "IncomeTaxExpense",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "Inventory",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "NetIncome",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "OperatingCashFlow",
+                "years_available": [
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 9
+              },
+              {
+                "metric": "OperatingIncome",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "PP&E",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "R&D",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "Revenue",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "TotalAssets",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "TotalDebt",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012
+                ],
+                "n_years": 3
+              },
+              {
+                "metric": "TotalEquity",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "TotalEquityInclNCI",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              }
+            ]
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "GLW",
+            "metric": "GrossProfit",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "GLW",
+            "metric": "GrossProfit",
+            "value": 4276000000.0,
+            "unit": "USD",
+            "period_end": "2024-12-31",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "GLW",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "GLW",
+            "metric": "Revenue",
+            "value": 13118000000.0,
+            "unit": "USD",
+            "period_end": "2024-12-31",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 4276000000.0,
+              "revenue": 13118000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 32.59643238298521,
+            "expression": "gross_profit / revenue * 100",
+            "variables": {
+              "gross_profit": 4276000000.0,
+              "revenue": 13118000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)"
+      ],
+      "tool_trace": [
+        "list_metrics(GLW) \u2192 19 metrics available",
+        "query_financials(GLW, GrossProfit, FY2024) \u2192 4276000000.0  [SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)]",
+        "query_financials(GLW, Revenue, FY2024) \u2192 13118000000.0  [SEC 10-K filing accession 0001628280-25-005347 (https://www.sec.gov/Archives/edgar/data/24741/000162828025005347/glw-20241231.htm)]",
+        "compute(gross_profit / revenue * 100) \u2192 32.59643238298521"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "unans_aapl_china_rev_2023",
+      "tier": 1,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": true,
+      "refusal_detected": true,
+      "got_text": "I cannot determine the percentage of Apple's revenue that came from China in fiscal year 2023. The data available provides insights into revenue dependence between Apple and its suppliers, but does not specifically break down Apple\u2019s revenue sources by geographic region.",
+      "latency_s": 1.98,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "customer": "AAPL",
+            "fiscal_year": "2023"
+          },
+          "output": {
+            "found": true,
+            "hub": "AAPL",
+            "fiscal_year": "2023",
+            "edge_count": 5,
+            "edges": [
+              {
+                "supplier": "CRUS",
+                "customer": "AAPL",
+                "revenue_pct": 83.0,
+                "pct_display": "83.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2023,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)",
+                "source_text": "Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively."
+              },
+              {
+                "supplier": "QRVO",
+                "customer": "AAPL",
+                "revenue_pct": 37.0,
+                "pct_display": "37.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2023,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001604778-23-000055 (https://www.sec.gov/Archives/edgar/data/1604778/000160477823000055/rfmd-20230401.htm)",
+                "source_text": "We provide products to our largest end customer, Apple Inc. (\"Apple\"), through sales to multiple contract manufacturers, which in the aggregate accounted for 37% and 33% of total revenue in fiscal years 2023 and 2022, respectively."
+              },
+              {
+                "supplier": "AVGO",
+                "customer": "AAPL",
+                "revenue_pct": 20.0,
+                "pct_display": "20.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2023,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001730168-23-000096 (https://www.sec.gov/Archives/edgar/data/1730168/000173016823000096/avgo-20231029.htm)",
+                "source_text": "We believe aggregate sales to Apple Inc., through all channels, accounted for approximately 20% of our net revenue for each of fiscal years 2023 and 2022."
+              },
+              {
+                "supplier": "JBL",
+                "customer": "AAPL",
+                "revenue_pct": 17.0,
+                "pct_display": "17.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2023,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001193125-23-259599 (https://www.sec.gov/Archives/edgar/data/898293/000119312523259599/d533726d10k.htm)",
+                "source_text": "Apple, Inc. 17 % 19 % 22 %"
+              },
+              {
+                "supplier": "SWKS",
+                "customer": "AAPL",
+                "revenue_pct": 10.0,
+                "pct_display": ">10%",
+                "pct_is_floor": true,
+                "threshold_only": true,
+                "fiscal_year": 2023,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000004127-23-000030 (https://www.sec.gov/Archives/edgar/data/4127/000000412723000030/swks-20230929.htm)",
+                "source_text": "Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue."
+              }
+            ],
+            "traversal_trace": [
+              "CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]",
+              "QRVO->AAPL 37.0% FY2023 [0001604778-23-000055]",
+              "AVGO->AAPL 20.0% FY2023 [0001730168-23-000096]",
+              "JBL->AAPL 17.0% FY2023 [0001193125-23-259599]",
+              "SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2023 [0000004127-23-000030]"
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)",
+        "SEC 10-K accession 0001604778-23-000055 (https://www.sec.gov/Archives/edgar/data/1604778/000160477823000055/rfmd-20230401.htm)",
+        "SEC 10-K accession 0001730168-23-000096 (https://www.sec.gov/Archives/edgar/data/1730168/000173016823000096/avgo-20231029.htm)",
+        "SEC 10-K accession 0001193125-23-259599 (https://www.sec.gov/Archives/edgar/data/898293/000119312523259599/d533726d10k.htm)",
+        "SEC 10-K accession 0000004127-23-000030 (https://www.sec.gov/Archives/edgar/data/4127/000000412723000030/swks-20230929.htm)"
+      ],
+      "tool_trace": [
+        "graph_query({'customer': 'AAPL', 'fiscal_year': '2023'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2023', 'edge_count': 5, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 83.0, 'pct_display': '83.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-23-000019 (https://www.sec.gov/Archives/edgar/data/772406/000077240623000019/crus-20230325.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 83 percent, 79 percent and 83 percent of the Companys total sales, respectively.'}, {'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 37.0, 'pct_display': '37.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-23-000055 (https://www.sec.gov/Archives/edgar/data/1604778/000160477823000055/rfmd-20230401.htm)', 'source_text': 'We provide products to our largest end customer, Apple Inc. (\"Apple\"), through sales to multiple contract manufacturers, which in the aggregate accounted for 37% and 33% of total revenue in fiscal years 2023 and 2022, respectively.'}, {'supplier': 'AVGO', 'customer': 'AAPL', 'revenue_pct': 20.0, 'pct_display': '20.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001730168-23-000096 (https://www.sec.gov/Archives/edgar/data/1730168/000173016823000096/avgo-20231029.htm)', 'source_text': 'We believe aggregate sales to Apple Inc., through all channels, accounted for approximately 20% of our net revenue for each of fiscal years 2023 and 2022.'}, {'supplier': 'JBL', 'customer': 'AAPL', 'revenue_pct': 17.0, 'pct_display': '17.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001193125-23-259599 (https://www.sec.gov/Archives/edgar/data/898293/000119312523259599/d533726d10k.htm)', 'source_text': 'Apple, Inc. 17 % 19 % 22 %'}, {'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2023, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-23-000030 (https://www.sec.gov/Archives/edgar/data/4127/000000412723000030/swks-20230929.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['CRUS->AAPL 83.0% FY2023 [0000772406-23-000019]', 'QRVO->AAPL 37.0% FY2023 [0001604778-23-000055]', 'AVGO->AAPL 20.0% FY2023 [0001730168-23-000096]', 'JBL->AAPL 17.0% FY2023 [0001193125-23-259599]', 'SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2023 [0000004127-23-000030]']}"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 0,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "unans_tsmc_rev_2024",
+      "tier": 1,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": true,
+      "refusal_detected": true,
+      "got_text": "I cannot find supply-chain data for TSMC in the database.",
+      "latency_s": 1.79,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "TSM",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": false,
+            "asked_for": "TSM",
+            "error": "'TSM' is not a company in this database",
+            "recoverable": true,
+            "did_you_mean": [],
+            "hint": "Use one of the known tickers. An unknown ticker is a typo, not evidence that the data is missing -- do not report it as such.",
+            "ticker": "TSM",
+            "metric": "Revenue"
+          }
+        }
+      ],
+      "citations": [],
+      "tool_trace": [
+        "query_financials(TSM, Revenue, FY2024) \u2192 NOT FOUND"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 0,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "unans_aapl_div_yield_2024",
+      "tier": 1,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": true,
+      "refusal_detected": true,
+      "got_text": "I cannot determine that value. The database does not hold information on dividend yield for Apple.",
+      "latency_s": 1.52,
+      "steps": [],
+      "citations": [],
+      "tool_trace": [],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 0,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "ret_swks_apple_concentration_2024",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": false,
+      "passage_hit": false,
+      "judge_score": 3,
+      "judge_reason": "All key facts from the reference are present, with no inaccuracies or omissions.",
+      "got_text": "According to Skyworks Solutions' fiscal year 2024 10-K, Apple constituted more than 10% of Skyworks' net revenue. The exact percentage is not disclosed, but it is stated as a lower bound of 10%. \n\n- **Dependency Level**: >10%\n- **Fiscal Year**: 2024\n- **SEC Citation**: SEC 10-K accession 0000004127-24-000131 (available [here](https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)).",
+      "latency_s": 3.23,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "supplier": "SWKS",
+            "customer": "AAPL",
+            "fiscal_year": "2024"
+          },
+          "output": {
+            "found": true,
+            "hub": "AAPL",
+            "fiscal_year": "2024",
+            "edge_count": 1,
+            "edges": [
+              {
+                "supplier": "SWKS",
+                "customer": "AAPL",
+                "revenue_pct": 10.0,
+                "pct_display": ">10%",
+                "pct_is_floor": true,
+                "threshold_only": true,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+                "source_text": "Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue."
+              }
+            ],
+            "traversal_trace": [
+              "SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]"
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+      ],
+      "tool_trace": [
+        "graph_query({'supplier': 'SWKS', 'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 1,
+        "passage_values": 0
+      }
+    },
+    {
+      "id": "ret_swks_markets_served_2024",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": true,
+      "passage_hit": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer accurately lists all key end markets and applications from the reference, along with additional context about 5G technology.",
+      "got_text": "Skyworks Solutions serves a diverse range of end markets and applications, including:\n\n- Aerospace\n- Automotive\n- Broadband\n- Cellular infrastructure\n- Connected home\n- Defense\n- Entertainment and gaming\n- Industrial\n- Medical\n- Smartphones\n- Tablets\n- Wearables\n\nAdditionally, Skyworks is engaged in developing solutions for 5G technology, which facilitates a variety of high-speed wireless applications, such as virtual reality, augmented reality, IoT, and more.\n\nFor further details, you can refer to SEC filing accession number [0000004127-25-000085](https://www.sec.gov/Archives/edgar/data/1003910/000000412725000085/000000412725000085.txt).",
+      "latency_s": 10.83,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "end markets and applications served by Skyworks Solutions",
+            "ticker": "SWKS"
+          },
+          "output": {
+            "found": true,
+            "query": "end markets and applications served by Skyworks Solutions",
+            "ticker": "SWKS",
+            "scoped_to_fiscal_year": 2025,
+            "scope_reason": "no year given; searched SWKS's most recent filing (FY2025) -- say so if the answer depends on it",
+            "results": [
+              {
+                "text": "G small cell solutions, our approach across both infrastructure and user equipment facilitates powerful, high-speed, end-to-end 5G connectivity.\nSkyworks Strategy\nMajor elements of our strategy include:\nIndustry-Leading Technology\nAs the industry migrates to more complex 5G architectures across a multitude of wireless applications, we are poised to help our customers handle growing levels of system complexity across both the transmit and receive chains. The trend towards increasing front-end and analog design challenges in smartphones and other platforms plays directly into our core strengths. Additionally, accelerating AI trends could catalyze the smartphone transformation with incremental content driving unprecedented functional and physical densities. These advancements will deliver more bandwidth, faster speeds, and enable applications like virtual reality, augmented reality, live video streaming, and seamless IoT connectivity. Crucially, they aim to bring us closer to achieving reliable low latency, ideal for massive machine communications, and introduces non-terrestrial networks that enable satellite connectivity for emergency applications. \nWe believe that we offer the broadest portfolio of radio and analog solutions from the transceiver to the antenna as well as all required manufacturing process technologies. We are also a leader in passive devices, advanced integration, including proprietary shielding and 3-D die stacking, as well as SAW, TC-SAW, and BAW filters. Our product portfolio is reinforced by a library of approximately 5,200 worldwide issued patents and other intellectual property that we own and control. Together, our industry-leading technology enables us to deliver the highest levels of product performance and integration.\nCustomer Relationships\nGiven our scale and technology leadership, we are engaged with leading original equipment manufacturers (OEMs), smartphone providers, and baseband reference design partners in the analog and mixed-signal semiconductor industry. Our customers value the scale of our global supply chain, our innovative technology, our ability to curate and deliver unique solutions, and our system engineering expertise, resulting in deep customer loyalty. We partner with our customers to support their long-term product road maps and are valued as a system solutions provider rather than just a discrete product vendor.\nDiversification\nWe are diversifying the reach of our business by expanding our addressable markets and broadening our product portfolio to serve a wider array of global customers. With the increasing adoption of 5G and the opportunity to enable more applications, we are growing our business beyond mobile devices (where we support leading top-tier manufacturers, including the leading smartphone suppliers and key baseband vendors) into additional high-performance analog markets, including",
+                "ticker": "SWKS",
+                "section": "Business",
+                "accn": "0000004127-25-000085",
+                "score": 9.172524601332281,
+                "citation": "SEC filing accession 0000004127-25-000085 \u2014 Business"
+              },
+              {
+                "text": "involved tax professionals with specialized skills and knowledge, who assisted in evaluating the Companys application of the tax laws and regulations in certain jurisdictions, including the resulting calculations, within the manually prepared income tax provision.\n/s/ \nKPMG LLP\nWe have served as the Companys auditor since 2002. \nIrvine, California\nNovember7, 2025 \n46\nTable of Contents\nSKYWORKS SOLUTIONS, INC.\nCONSOLIDATED STATEMENTS OF OPERATIONS\n(In millions, except per share amounts) \nSee accompanying Notes to Consolidated Financial Statements.\n47\nTable of Contents\nSKYWORKS SOLUTIONS, INC.\nCONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME\n(In millions) \nSee accompanying Notes to Consolidated Financial Statements.\n48\nTable of Contents\nSKYWORKS SOLUTIONS, INC.\nCONSOLIDATED BALANCE SHEETS\n(In millions, except per share amounts)\nSee accompanying Notes to Consolidated Financial Statements.\n49\nTable of Contents\nSKYWORKS SOLUTIONS, INC.\nCONSOLIDATED STATEMENTS OF CASH FLOWS\n(In millions)\nSee accompanying Notes to Consolidated Financial Statements.\n50\nTable of Contents\nSKYWORKS SOLUTIONS, INC.\nCONSOLIDATED STATEMENTS OF STOCKHOLDERS EQUITY\n \n(In millions)\nSee accompanying Notes to Consolidated Financial Statements.\n51\nTable of Contents\nNOTES TO CONSOLIDATED FINANCIAL STATEMENTS\n1. DESCRIPTION OF BUSINESS \nSkyworks Solutions, Inc., together with its consolidated subsidiaries (Skyworks or the Company), is a leading developer, manufacturer and provider of analog and mixed-signal semiconductor products and solutions for numerous applications, including aerospace, automotive, broadband, cellular infrastructure, connected home, defense, entertainment and gaming, industrial, medical, smartphone, tablet, and wearables.\n2. BASIS OF PRESENTATION AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES\nPrinciples of Consolidation\nAll Skyworks subsidiaries are included in the Companys consolidated financial statements and all intercompany balances are eliminated in consolidation.\n \nFiscal Year\nThe Companys fiscal year ends on the Friday closest to September 30. The fiscal year ended on October3, 2025 (fiscal 2025) consisted of 53 weeks. The fiscal year ended on September27, 2024 (fiscal 2024) and the fiscal year ended on September29, 2023",
+                "ticker": "SWKS",
+                "section": "Item 8",
+                "accn": "0000004127-25-000085",
+                "score": 10.050457064173674,
+                "citation": "SEC filing accession 0000004127-25-000085 \u2014 Item 8"
+              },
+              {
+                "text": "Item 1A Risk Factors and elsewhere in this Annual Report on Form 10-\nK.\nOVERVIEW\nWe, together with our consolidated subsidiaries, are a leading developer, manufacturer and provider of analog and mixed-signal semiconductor products and solutions for numerous applications, including aerospace, automotive, broadband, cellular infrastructure, connected home, defense, entertainment and gaming, industrial, medical, smartphone, tablet, and wearables. \nPending Combination With Qorvo\nOn October 27, 2025, we entered into the Merger Agreement with Qorvo, a provider of connectivity and power solutions, to combine Qorvo and Skyworks in a cash-and-stock transaction that values the combined company at approximately $\n22.0\nbillion as of the market close on October 27, 2025.\nUnder the terms of the Merger Agreement, at the effective time of the Mergers, each share of Qorvo common stock issued and outstanding immediately prior thereto (with certain exceptions set forth in the Merger Agreement) will be converted into the right to receive \n0.960\n (the Exchange Ratio) of a share of Skyworks common stock and $\n32.50\n in cash, without interest, subject to applicable withholding taxes. The Exchange Ratio is expected to result in Qorvo equityholders and Skyworks equityholders owning approximately 37% and 63%, respectively, of the combined company on a pro forma basis following the closing. The Merger Agreement also provides for Skyworks assumption of certain Qorvo equity awards, subject to certain adjustments thereto in respect of, among other things, performance-based vesting conditions. \nPursuant to the Merger Agreement, immediately following the closing, the Board of Directors will be comprised of 11 directors, consisting of (i) the Chief Executive Officer of Skyworks, who will be the Chief Executive Officer of Skyworks following the closing, (ii) seven directors designated by Skyworks and (iii) three directors designated by Qorvo who are reasonably acceptable to Skyworks, each of whom will hold office until the next annual meeting of stockholders of Skyworks. Promptly following the closing, the Board of Directors will also designate a Chairman. Robert Bruggeworth, Qorvos current President, Chief Executive Officer and director, will be one of Qorvos designees upon the closing.\nThe Mergers, which are anticipated to close early in calendar year 2027, are subject to",
+                "ticker": "SWKS",
+                "section": "Risk Factors",
+                "accn": "0000004127-25-000085",
+                "score": 6.0619707145647705,
+                "citation": "SEC filing accession 0000004127-25-000085 \u2014 Risk Factors"
+              },
+              {
+                "text": "ITEM 1. BUSINESS.\n\nSkyworks Solutions, Inc., together with its consolidated subsidiaries (Skyworks or the Company), is a leading developer, manufacturer and provider of analog and mixed-signal semiconductor products and solutions for numerous applications, including aerospace, automotive, broadband, cellular infrastructure, connected home, defense, entertainment and gaming, industrial, medical, smartphone, tablet, and wearables. \nOver the past two decades, Skyworks has made important investments to address key network technologies, from cellular to advanced Wi-Fi\n\n, enhanced GPS, and Bluetooth\n\n, among others. Capitalizing on both organic growth and strategic acquisitions, we are targeting high-growth verticals, while at the same time, seeking to diversify our revenue and customer set. \nTargeted investments in next-generation technology and solutions, technical talent, and fabrication capabilities have created the opportunity to expand into high-growth market segments, including electric and hybrid vehicles, industrial and motor control, power supply, 5G wireless infrastructure, optical data communication, data center, automotive, smart home, and several other applications.\nOur key customers include Amazon, Apple Inc. (Apple), Arcadyan, Arris, Bose, Ciena, Cisco, Ericsson, Fibocom, Garmin, Gemalto (a Thales company), General Electric, Google, Honeywell, Itron, Lenovo, LG Electronics, Microsoft, Motorola, NETGEAR, Nokia, Northrop Grumman, OPPO, Rockwell Collins, Sagemcom, Samsung, Schneider Electric, Sierra Wireless, Sonos, Sony, Technicolor, Telit, Tesla, TP-Link, VIVO, and Xiaomi. Our competitors include Analog Devices, Broadcom, Cirrus Logic, Murata Manufacturing, NXP Semiconductors, Qorvo, Qualcomm, and Texas Instruments.\nWe operate worldwide with engineering, manufacturing, sales, and service facilities throughout Asia, Europe, and North America. Our Internet address is www.skyworksinc.com. We make available free of charge on our website our Annual Report on Form 10-K, quarterly reports on Form 10-Q, current reports on Form 8-K, and amendments to those reports as soon as reasonably practicable after we electronically file such material with, or furnish it to, the SEC. The information contained on our website is not incorporated by reference in this Annual Report on Form 10-K and the inclusion of our website address in this report is an inactive textual reference only. Our SEC filings are also",
+                "ticker": "SWKS",
+                "section": "Business",
+                "accn": "0000004127-25-000085",
+                "score": 5.098052210421654,
+                "citation": "SEC filing accession 0000004127-25-000085 \u2014 Business"
+              },
+              {
+                "text": " or furnish it to, the SEC. The information contained on our website is not incorporated by reference in this Annual Report on Form 10-K and the inclusion of our website address in this report is an inactive textual reference only. Our SEC filings are also available to the public at www.sec.gov.\nIndustry Background\nWireless connectivity is expanding on a global basis. A widening range of use cases is driving the high demand for wireless data across a broad array of applications. The advancement of 5G adoption, IoT, connectivity for everyone, automotive electrification and safety, as well as augmented reality and virtual reality technology, all demand faster speeds, increased bandwidth and capacity, significantly lower latency, and more reliable and secure wireless connectivity. \nThe speed and ultra-low latency characteristics inherent in 5G technology are dramatically altering wireless connectivity, creating a market for diverse and transformative applications, and changing how individuals live, work, play, and learn. Most of the worlds largest economies have implemented commercial 5G networks, and the worlds leading smartphone manufacturers have launched multiple generations of 5G-enabled devices.\nWe expect to see a continued expansion in data consumption, dependent on seamless and reliable wireless connectivity. A few statistics illustrate this point. According to the 2025 Ericsson Mobility Report, global mobile data for 5G subscriptions are forecast to reach 6.3 billion by the end of 2030, driven by new users, innovative services, and the convergence of artificial intelligence (AI) and 5G technology, and the total number of global IoT connections is now forecast to reach approximately 43 billion by 2030, including connected cars, machines, meters, sensors, point-of-sale terminals, consumer electronics and wearables. Connected cars are forecasted by McKinsey to make up 90% of new vehicles sold globally by 2030. \nSkyworks helps facilitate these opportunities with highly customized solutions that support a broad set of wireless systems and protocols including cellular (such as 5G), Wi-Fi\n\n, GPS, Bluetooth\n\n, Accutime, HD-Radio, LoRa\n\n, Thread\n\n, Wi-Sun\n\n, and Zigbee\n\n. Additionally, Wi-Fi\n\n 8, the next generation of Wi-Fi\n\n technology, complements 5G by providing high-speed wireless connectivity in local environments. Faster data rates and improved efficiency cater to the growing number of devices reliant on wireless networks.\nWe believe AI can be a catalyst for more efficient and effective wireless communications. From",
+                "ticker": "SWKS",
+                "section": "Business",
+                "accn": "0000004127-25-000085",
+                "score": 6.550965541201337,
+                "citation": "SEC filing accession 0000004127-25-000085 \u2014 Business"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0000004127-25-000085 \u2014 Business",
+        "SEC filing accession 0000004127-25-000085 \u2014 Item 8",
+        "SEC filing accession 0000004127-25-000085 \u2014 Risk Factors"
+      ],
+      "tool_trace": [
+        "retrieve_text('end markets and applications served by Skyworks Solutions', ticker=SWKS) \u2192 5 chunks: [SWKS:Business score=9.173, SWKS:Item 8 score=10.050, SWKS:Risk Factors score=6.062, SWKS:Business score=5.098, SWKS:Business score=6.551]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 42
+      }
+    },
+    {
+      "id": "ret_avgo_vmware_acquisition",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": true,
+      "passage_hit": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer accurately captures all key facts from the reference, including Broadcom's history, the role of the VMware acquisition, and its impact on the company's offerings and strategy.",
+      "got_text": "Broadcom's history and the role of the VMware acquisition are described as follows:\n\nBroadcom has a history that spans over 60 years and originates from notable companies such as AT&T/Bell Labs, Lucent, and Hewlett-Packard. The company has evolved through several strategic acquisitions, including LSI Corporation, Broadcom Corporation, Brocade Communications Systems, CA, Inc., Symantec Enterprise Security, and notably, VMware, Inc. (VMware). This history has helped Broadcom assemble a large team of semiconductor and software design engineers, maintaining expertise in these fields across various global locations.\n\nThe acquisition of VMware has significantly contributed to Broadcom's infrastructure software solutions. VMware's products, particularly the VMware Cloud Foundation (VCF), allow Broadcom to integrate enterprise-class compute, networking, storage, and security across supported environments. The VCF product suite supports advanced workloads, including artificial intelligence and machine learning, enhancing Broadcom's offerings in software-related services. As a result, demand for VCF and related solutions has been a driving force behind revenue growth, which has seen a transition towards a subscription licensing model post-acquisition.\n\nThe integration of VMware has also enabled cost synergies, reflected in reduced expenses related to acquisition-related costs and improved gross margins for Broadcom's software segment. Broadcom's strategy continues to focus on leveraging such acquisitions to maintain technology leadership and sustain a robust business model.\n\nSources:\n- SEC filing accession 0001730168-25-000121 \u2014 Business\n- SEC filing accession 0001730168-25-000121 \u2014 Item 8",
+      "latency_s": 8.18,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "history and VMware acquisition",
+            "ticker": "AVGO"
+          },
+          "output": {
+            "found": true,
+            "query": "history and VMware acquisition",
+            "ticker": "AVGO",
+            "scoped_to_fiscal_year": 2025,
+            "scope_reason": "no year given; searched AVGO's most recent filing (FY2025) -- say so if the answer depends on it",
+            "results": [
+              {
+                "text": ", defense and aerospace, and vehicle subsystems including those used in electric vehicle powertrain, infotainment and advanced driver assistance systems.\nInfrastructure Software \nOur infrastructure software solutions help enterprises simplify their information technology (IT) environments. Many of the largest companies in the world, including most of the Fortune 500, and many government agencies rely on our infrastructure and security software solutions to modernize, optimize, and secure the most complex private cloud, hybrid cloud and edge environments. This enables scalability, agility, automation, insights, resiliency and security, making it easy for customers to run their mission-critical workloads. We also offer mission-critical FC SAN products and related software in the form of modules, switches and subsystems incorporating multiple semiconductor products. \nWe offer five major infrastructure software portfolios: Private Cloud, Mainframe Software, Cybersecurity, Enterprise Software and FC SAN Management. Below is a description of our key portfolio offerings.\nPrivate Cloud Software Portfolio.\n \nOur portfolio delivers public cloud scale and agility with private cloud security, resilience and performance, and lower total cost of ownership as compared to native public cloud, providing customers with infrastructure, application and security modernization, private AI as a service and enhanced cyber resilient data. \n\nVMware Cloud Foundation (VCF)\n:\n VCF delivers integrated, enterprise-class compute, networking, storage, management and security across any supported environment. VCF includes native Kubernetes to support both virtual machines and containerized workloads on a single platform, enables advanced AI and machine learning workloads at enterprise scale and offers integrated data services capabilities. Our solutions enhance our customers ability to continuously optimize performance and costs, protect the business from threats and enable the business to focus on outcomes instead of operations through advanced observability and insights. Our customers may select additional advanced services, such as VMware vDefend, VMware Avi Load Balancer, VMware Tanzu Platform, VMware Private AI and VMware Live Recovery, as well as business process workload automation and network observability solutions.\n\nVMware Cloud Foundation Edge\n:\n This solution is designed to deliver frictionless management of edge apps and infrastructure across many sites with limited resources. \n\nVMware vSphere Foundation\n:\n This software-defined solution provides compute, storage, networking and intelligent operations to help customers run modern applications on their existing infrastructure without added complexity.\n\nTelco Cloud Platform\n:\n \nThis solution, built on VCF, supports network operations for telecom operators and communications service providers to modernize their infrastructure and allows them to create monetizable 5",
+                "ticker": "AVGO",
+                "section": "Business",
+                "accn": "0001730168-25-000121",
+                "score": 4.576469179526819,
+                "citation": "SEC filing accession 0001730168-25-000121 \u2014 Business"
+              },
+              {
+                "text": "from our semiconductor solutions segment increased due to strong demand for our networking solutions, primarily custom AI accelerators and AI networking products. Net revenue from our infrastructure software segment increased primarily due to strong demand for our VCF product, including license revenue recognized on contracts where customers do not have the right to terminate and the transition to a subscription license model.\nGross Margin\nGross margin was $43,294 million for fiscal year 2025 compared to $32,509 million for fiscal year 2024. The increase was primarily due to higher software revenue and strong product demand for our AI-related semiconductor solutions.\nAs a percentage of net revenue, gross margin was 68% and 63% of net revenue for the fiscal years 2025 and 2024, respectively. The increase was primarily due to higher revenue impact on margin and higher infrastructure software gross margin percentage, driven by an increase in license revenue and lower infrastructure software labor costs following our integration of the VMware business.\nResearch and Development Expense\nResearch and development expense increased $1,667 million, or 18%, in fiscal year 2025, compared to the prior fiscal year. The increase was primarily due to higher stock-based compensation.\nSelling, General and Administrative Expense\nSelling, general and administrative expense decreased $748 million, or 15%, in fiscal year 2025, compared to the prior fiscal year. The decrease was primarily due to lower compensation resulting from a decrease in headcount and lower VMware acquisition-related costs, partially offset by higher stock-based compensation.\nAmortization of Acquisition-Related Intangible Assets in Operating Expenses\nAmortization of acquisition-related intangible assets recognized in operating expenses decreased $1,213 million, or 37%, in fiscal year 2025, compared to the prior fiscal year primarily due to full amortization of customer-related intangible assets from previous software acquisitions other than VMware.\nRestructuring and Other Charges\nRestructuring and other charges recognized in operating expenses decreased $942 million, or 61%, in fiscal year 2025, compared to the prior fiscal year primarily due to lower employee termination costs associated with the integration of the VMware business.\nStock-Based Compensation Expense\nDuring the fiscal quarter ended May 4, 2025, we granted two-year time- and market-based restricted stock unit awards (the Two-Year Equity Awards), in lieu of our annual employee equity awards historically granted in the second quarter of each fiscal year. Each Two-Year Equity Award vests on the same",
+                "ticker": "AVGO",
+                "section": "Item 8",
+                "accn": "0001730168-25-000121",
+                "score": 3.6549604492779375,
+                "citation": "SEC filing accession 0001730168-25-000121 \u2014 Item 8"
+              },
+              {
+                "text": "ITEM 1.\nBUSINESS\n\nOverview\nWe are a global technology leader that designs, develops and supplies a broad range of semiconductor and semiconductor-based solutions and infrastructure software solutions. Our more than 60-year history of innovation dates back to our diverse origins from AT&T/Bell Labs, Lucent and Hewlett-Packard Company, and has evolved through acquisitions, including LSI Corporation, Broadcom Corporation, Brocade Communications Systems, Inc., CA, Inc., Symantec Enterprise Security, and VMware, Inc. (VMware). Over the years, we have assembled a large team of semiconductor and software design engineers around the world. We maintain design, product and software development engineering expertise and resources at locations primarily in the U.S., Asia, and Europe. We combine global scale, engineering depth, broad product portfolio, superior execution and operational focus to deliver category-leading semiconductor and infrastructure software solutions. \nBusiness Strategy\nOur strategy is focused on sustained technology leadership and developing category-leading solutions to deliver a comprehensive suite of innovative infrastructure technology products to the worlds leading business and government customers. We seek to achieve this through extensive internal research and development, as well as strategic acquisitions of businesses and technologies, to ensure our products retain their technology market leadership. This strategy results in a robust business model designed to drive diversified and sustainable operating and financial results.\nProducts and Markets\nSemiconductor Solutions\nOur semiconductor and semiconductor-based solutions include a broad portfolio of complex digital and mixed signal devices based on silicon wafers with complementary metal oxide semiconductor (CMOS) transistors, III-V based devices, network interface cards (NICs) and other modules, switches, subsystems and, in some cases, racks. Our solutions are used in a wide array of environments, end products and applications, such as enterprise and artificial intelligence (AI) data centers, servers and networking and connectivity equipment, as well as storage systems, home connectivity devices, set-top boxes (STB), broadband access, telecommunication equipment, wireless devices and base stations, factory automation, power generation and alternative energy systems, and electronic displays. We differentiate ourselves through our high-performance design and integration capabilities, and focus on developing semiconductor products for markets that require our high quality, leading technology and integrated performance semiconductor and semiconductor-based solutions.\nOur semiconductor and semiconductor-based solutions also enable our customers to build and deploy AI data center infrastructure for their training and inference workloads and manage the movement of data across their AI network infrastructure based on open, flexible, standards-based Ethernet. In",
+                "ticker": "AVGO",
+                "section": "Business",
+                "accn": "0001730168-25-000121",
+                "score": 3.437128065122623,
+                "citation": "SEC filing accession 0001730168-25-000121 \u2014 Business"
+              },
+              {
+                "text": "Item 1A. Risk Factors of this Annual Report on Form 10-K.\n\nDistributors and original equipment manufacturers (OEMs), or their contract manufacturers, typically account for the substantial majority of our semiconductor sales. To serve customers around the world, we have strategically developed relationships with large global electronic component distributors, complemented by a number of regional distributors with customer relationships based on their respective product ranges. We have established strong relationships with leading OEM customers across multiple target markets. Our direct sales force focuses on supporting our large OEM customers and has specialized product and service knowledge that enables us to sell specific offerings at key levels throughout a customers organization. Certain customers require us to contract with them directly and with specified intermediaries, such as contract manufacturers. Many of our major customer relationships have been in place for many years and are often the result of years of collaborative product development. This has enabled us to build our extensive IP portfolio and develop critical expertise regarding our customers requirements, including substantial system-level knowledge. This collaboration has provided us with key insights into our customers' businesses and has enabled us to be more efficient and productive and to better serve our target markets and customers. We recognize revenue upon the delivery of our products to the distributors, which can cause our quarterly net revenue to fluctuate significantly. Such revenue is reduced for estimated returns and distributor allowances. \nOur software customers generally consist of large enterprises that have computing environments from multiple vendors and are highly complex. Our private cloud infrastructure suite of solutions is available directly from Broadcom, resellers and distributors, hyperscale cloud providers, value-added OEMs and VMware cloud service provider partners. VMware Cloud Foundation (VCF) provides license portability, which enables customers to purchase subscriptions of VCF software and move their VCF environments between on-premises data centers and supported cloud endpoints. We remain focused on strengthening relationships and increasing penetration within our existing core, mainframe, VMware, and Symantec endpoint \n34\nTable of Contents\ncustomers and expanding the adoption of our enterprise software offerings with these customers. We believe our enterprise-wide license model will continue to offer our customers reduced complexity, more flexibility and an easier renewal process that will help drive revenue growth.\nCosts and Expenses\nCost of products sold.\nCost of products sold consists primarily of the costs for semiconductor wafers and other materials, as well as the costs of assembling and testing those products and materials. Such costs include personnel and overhead related to our manufacturing operations, which include stock-based compensation expense, related",
+                "ticker": "AVGO",
+                "section": "Risk Factors",
+                "accn": "0001730168-25-000121",
+                "score": 3.0516605688164278,
+                "citation": "SEC filing accession 0001730168-25-000121 \u2014 Risk Factors"
+              },
+              {
+                "text": " run modern applications on their existing infrastructure without added complexity.\n\nTelco Cloud Platform\n:\n \nThis solution, built on VCF, supports network operations for telecom operators and communications service providers to modernize their infrastructure and allows them to create monetizable 5G and cloud services among others. This modernization is critical to enabling operational agility, onboarding and delivering services faster across domains while simplifying operations with automation.\n5\nTable of Contents\n\nVMware Private AI\n:\n \nThis capability, when added to VCF, enables the use of generative AI technologies while addressing data privacy and compliance needs of our customers.\n\nVMware Live Recovery\n:\n \nOur disaster and ransomware recovery advanced service helps VCF customers to combat the evolving threat landscape through solutions and technologies that enable organizational resilience through rapid recovery of applications, data and critical business services.\n\nApplication Networking and Security Portfolio\n:\n \nOur portfolio delivers zero-trust lateral security and modern load balancing solutions enabling global digital organizations to combat malware and ransomware as well as ensure resilient application delivery. These software-defined solutions provide distributed and scale-out architectures, deep application-level visibility, plug-and-play operations and self-service consumption. Customers can deploy our solutions at speed and operate them at scale across all their private cloud applications. Both VMware vDefend and VMware Avi Load Balancer solutions are available as advanced services for VCF.\n\nApplication Development and Data Services Portfolio\n:\n \nOur Tanzu solutions provide an AI application development platform with built-in best practices, configurations and optimizations that allow developers to focus on building and deploying applications. Our solutions further enable application and AI teams to gain access to low-latency, real-time data whether on-premises or in the cloud to build AI applications that drive business value. VMware Tanzu Platform is also available as an advanced service for VCF.\nMainframe Software Portfolio.\n \nOur portfolio includes AIOps & Automation, Database & Data Management, DevX & DevOps, Cybersecurity & Compliance and Foundational & Open Mainframe solutions that enable customers to innovate with their mainframe as part of their hybrid environment, and amplify the value of their mainframe investments through open tools and technologies. \n\nAIOps & Automation\n:\n \nThese solutions combine an integrated platform for unifying tools, workflows and data across diverse sources to deliver end-to-end visibility into enterprise applications, enabling enhanced issue detection and streamlined remediation. Machine learning capabilities reduce complexity and deliver meaningful and actionable insights to augment and automate day-to-day operations.\n\nDatabases",
+                "ticker": "AVGO",
+                "section": "Business",
+                "accn": "0001730168-25-000121",
+                "score": 4.183199081035995,
+                "citation": "SEC filing accession 0001730168-25-000121 \u2014 Business"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0001730168-25-000121 \u2014 Business",
+        "SEC filing accession 0001730168-25-000121 \u2014 Item 8",
+        "SEC filing accession 0001730168-25-000121 \u2014 Risk Factors"
+      ],
+      "tool_trace": [
+        "retrieve_text('history and VMware acquisition', ticker=AVGO) \u2192 5 chunks: [AVGO:Business score=4.576, AVGO:Item 8 score=3.655, AVGO:Business score=3.437, AVGO:Risk Factors score=3.052, AVGO:Business score=4.183]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 29
+      }
+    },
+    {
+      "id": "ret_aapl_product_categories",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": false,
+      "passage_hit": false,
+      "judge_score": 2,
+      "judge_reason": "The answer captures the main product and service categories but omits specific details about wearables, advertising services, and digital content offerings.",
+      "got_text": "In its 2025 Form 10-K, Apple reports revenue from several product and service categories, primarily comprising:\n\n1. **Products**:\n   - iPhone\n   - Mac\n   - iPad\n   - Other hardware that may include wearables and accessories\n\n2. **Services**:\n   - AppleCare\n   - Subscription services such as iCloud, Siri, and Maps\n   - Sales associated with the App Store, including a commission on third-party applications sold through the platform\n\nThese categories encapsulate Apple's diverse revenue streams, which are aligned with their hardware and software offerings as detailed in their filings.\n\nFor more detailed information, refer to the cited document: SEC filing accession 0000320193-25-000079 \u2014 Item 8.",
+      "latency_s": 3.4,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "product and service categories revenue",
+            "ticker": "AAPL"
+          },
+          "output": {
+            "found": true,
+            "query": "product and service categories revenue",
+            "ticker": "AAPL",
+            "scoped_to_fiscal_year": 2025,
+            "scope_reason": "no year given; searched AAPL's most recent filing (FY2025) -- say so if the answer depends on it",
+            "results": [
+              {
+                "text": "its performance obligations based on their relative SSPs. Because the Company lacks observable prices for product-related bundled services, the allocation of revenue is based on the Companys estimated SSPs. Revenue allocated to the delivered hardware and bundled software is recognized when control has transferred to the customer, which generally occurs when the product is shipped. Revenue allocated to product-related bundled services is deferred and recognized on a straight-line basis over the estimated period they are expected to be provided.\nFor certain long-term service arrangements, the Company has performance obligations for services it has not yet delivered. For these arrangements, the Company does not have a right to bill for the undelivered services. The Company has determined that any unbilled consideration relates entirely to the value of the undelivered services. Accordingly, the Company has not recognized revenue, and does not disclose amounts, related to these undelivered services.\nFor the sale of third-party products where the Company obtains control of the product before transferring it to the customer, the Company recognizes revenue based on the gross amount billed to customers. The Company considers multiple factors when determining whether it obtains control of third-party products, including evaluating if it can establish the price of the product, retains inventory risk for tangible products or has the responsibility for ensuring acceptability of the product. For third-party applications sold through the App Store, the Company does not obtain control of the product before transferring it to the customer. Therefore, the Company accounts for all third-party applicationrelated sales on a net basis by recognizing in Services net sales only the commission it retains.\nApple Inc. | 2025 Form 10-K | 35\nThe following table shows disaggregated net sales, as well as the portion of total net sales that was previously deferred, for 2025, 2024 and 2023 (in millions):\n(1)\nServices net sales include amortization of the deferred value of services bundled in the sales price of certain products.\nThe Companys proportion of net sales by disaggregated revenue source was generally consistent for each reportable segment in Note 13, Segment Information and Geographic Data for 2025, 2024 and 2023, except in Greater China, where iPhone revenue represented a moderately higher proportion of net sales.\nAs of September27, 2025 and September28, 2024, the Company had total deferred revenue of $\n13.7\n billion and $\n12.8\nbillion, respectively. As of September27, 2025, the",
+                "ticker": "AAPL",
+                "section": "Item 8",
+                "accn": "0000320193-25-000079",
+                "score": 6.692402458017975,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Item 8"
+              },
+              {
+                "text": "with the minimum tax on certain foreign earnings created by the TCJA.\nLeases\nThe Company combines and accounts for lease and nonlease components as a single lease component for leases of corporate and retail facilities.\nNote 2 \nRevenue\nThe Company recognizes revenue at the amount to which it expects to be entitled when control of products or services is transferred to its customers. Control is generally transferred when the Company has a present right to payment and title and the significant risks and rewards of ownership of products or services are transferred to its customers. For most of the Companys Products net sales, control transfers when products are shipped. For the Companys Services net sales, control transfers over time as services are delivered. Payment for Products and Services net sales is collected within a short period following transfer of control or commencement of delivery of services, as applicable.\nThe Company records reductions to Products net sales related to future product returns, price protection and other customer incentive programs based on the Companys expectations and historical experience.\nFor arrangements with multiple performance obligations, which represent promises within an arrangement that are distinct, the Company allocates revenue to all distinct performance obligations based on their relative stand-alone selling prices (SSPs). When available, the Company uses observable prices to determine SSPs. When observable prices are not available, SSPs are established that reflect the Companys best estimates of what the selling prices of the performance obligations would be if they were sold regularly on a stand-alone basis. The Companys process for estimating SSPs without observable prices considers multiple factors that may vary depending upon the unique facts and circumstances related to each performance obligation including, where applicable, prices charged by the Company for similar offerings, market trends in the pricing for similar offerings, product-specific business objectives and the estimated cost to provide the performance obligation.\nThe Company has identified the performance obligations regularly included in arrangements involving the sale of iPhone, Mac and iPad. The first material performance obligation, which represents the substantial portion of the allocated sales price, is the hardware and bundled software delivered at the time of sale. The second material performance obligation is the right to receive certain product-related bundled services, which include iCloud\n\n, Siri\n\n and Maps. The Company allocates revenue and any related discounts to all of its performance obligations based on their relative SSPs. Because the Company lacks observable prices for product-related bundled services, the allocation of revenue is based on the Companys estimated SSPs. Revenue allocated to the delivered hardware and bundled software is recognized when control",
+                "ticker": "AAPL",
+                "section": "Item 8",
+                "accn": "0000320193-25-000079",
+                "score": 4.513307138848026,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Item 8"
+              },
+              {
+                "text": " as the Companys products are introduced into specialized applications, including health. In addition, the Companys service offerings can have quality issues and from time to time experience outages, service slowdowns or errors. As a result, from time to time the Companys services have not performed as anticipated and may not meet customer expectations. The introduction of new and complex technologies, such as artificial intelligence features, can increase these and other safety risks, including exposing users to harmful, inaccurate or other negative content and experiences. The Company may not be able to detect and fix all issues and defects in the hardware, software and services it offers, which can result in widespread technical and performance issues affecting the Companys products and services. Errors, bugs and vulnerabilities can be exploited by third parties, compromising the safety and security of a users device. In addition, the Company can be exposed to product liability claims, recalls, product replacements or modifications, write-offs of inventory, property, plant and equipment or intangible assets, and significant warranty and other expenses, including litigation costs and regulatory fines. Quality problems can adversely affect the experience for users of the Companys products and services, and result in harm to the Companys reputation, loss of competitive advantage, poor market acceptance, reduced demand for products and services, delay in new product and service introductions and lost sales.\nThe Company is exposed to the risk of write-downs on the value of its inventory and other assets, in addition to purchase commitment cancellation risk.\nThe Company records a write-down for product and component inventories if cost exceeds net realizable value. The Company reviews other assets, including capital assets held at its suppliers facilities, inventory prepayments and other long-lived assets, for impairment whenever events or circumstances indicate the assets may not be recoverable. Although the Company believes its inventory, capital assets, inventory prepayments and other assets are currently recoverable, the Company may incur write-downs, impairments and other charges given the rapid and unpredictable pace of product obsolescence in the industries in which the Company competes.\nThe Company orders components for its products and builds inventory in advance of product announcements and shipments. Manufacturing purchase obligations cover the Companys forecasted component and manufacturing requirements, typically for periods up to 150 days. Because the Companys markets are volatile, competitive and subject to rapid technology and price changes, there is a risk the Company will forecast incorrectly and order or produce excess or insufficient amounts of components or products,",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "accn": "0000320193-25-000079",
+                "score": 4.378555546427146,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+              },
+              {
+                "text": "ys customers and distribution partners and the unique market dynamics of each geographic region.\nMarkets and Distribution\nThe Companys customers are primarily in the consumer, small and mid-sized business, education, enterprise and government markets. The Company sells its products and resells third-party products in most of its major markets directly to customers through its retail and online stores and its direct sales force. The Company sells its services in the same markets through its various service platforms. The Company also employs a variety of indirect distribution channels, such as third-party cellular network carriers and other resellers, for the sale of its products and certain of its services. During 2025, the Companys net sales through its direct and indirect distribution channels accounted for 40% and 60%, respectively, of total net sales.\nCompetition\nThe markets for the Companys products and services are highly competitive and are characterized by aggressive price competition, downward pressure on gross margins, continual improvement in product performance, and price sensitivity on the part of consumers and businesses. The markets in which the Company competes are further defined by frequent introduction of new products and services, short product life cycles, evolving industry standards, and rapid adoption of technological advancements by competitors. Many of the Companys competitors seek to compete primarily through aggressive pricing and very low cost structures, and by imitating the Companys products and infringing on its intellectual property.\nApple Inc. | 2025 Form 10-K | 2\nThe Companys ability to compete successfully depends heavily on ensuring the continuing and timely introduction of innovative new products, services and technologies to the marketplace. The Company designs and develops nearly the entire solution for its products, including the hardware, operating system, numerous software applications and related services. Principal competitive factors important to the Company include price, product and service features (including security features), relative price and performance, product and service quality and reliability, design and technology innovation, a strong third-party software and accessories ecosystem, marketing and distribution capability, service and support, corporate reputation, and the ability to effectively protect and enforce the Companys intellectual property rights.\nThe Company is focused on expanding its market opportunities related to smartphones, personal computers, tablets, wearables and accessories, and services. The Companys products and services face substantial competition from companies that have significant technical, marketing, distribution and other resources, as well as established hardware, software, and service offerings with large customer bases. In addition, the Company faces significant competition",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "accn": "0000320193-25-000079",
+                "score": 4.505667535849083,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+              },
+              {
+                "text": "ys products, services and operations, and may lead to operational disruptions, heightened privacy and data security risks, increased costs and potential liability and fines, all of which can have a material adverse impact on the Companys business, financial condition, results of operations and stock price.\nFinancial Risks\nThe Companys net sales and gross margins are subject to volatility and downward pressure due to a variety of factors.\nThe Companys gross margins vary significantly across its products, services, geographic segments and distribution channels and can change over time. The Companys net sales and gross margins are subject to volatility and downward pressure due to a variety of factors, including: continued industry-wide global product pricing pressures and product pricing actions that the Company may take in response to such pressures; increased competition; the Companys ability to effectively stimulate demand for certain of its products and services; compressed product life cycles; supply shortages; potential increases in the cost of components, outside manufacturing services, and developing, acquiring and delivering content for the Companys services; the Companys ability to manage product quality and warranty costs effectively; shifts in the mix of products and services, or in the geographic, currency or channel mix, including to the extent that regulatory changes require the Company to modify its product and service offerings; fluctuations in foreign exchange rates; inflation and other macroeconomic pressures; the imposition of new or increased tariffs and other trade restrictions, their overall magnitude and duration, and retaliatory actions in response; and the introduction of new products or services, including new products or services with lower profit margins. These and other factors could have a materially adverse impact on the Companys results of operations, financial condition and stock price. Further, the Company generates a significant portion of its net sales from a single product category and a decline in demand for that product could significantly impact net sales and gross margins.\nThe Companys financial performance is subject to risks associated with changes in the value of the U.S. dollar relative to local currencies.\nThe Companys primary exposure to movements in foreign exchange rates relates to nonU.S. dollardenominated sales, cost of sales and operating expenses worldwide. Gross margins on the Companys products in foreign countries and on products that include components obtained from foreign suppliers have in the past been adversely affected and could in the future be materially adversely affected by foreign exchange rate fluctuations.\nThe weakening of foreign currencies relative to the U.S. dollar adversely affects the U.S. dollar value of the Compan",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "accn": "0000320193-25-000079",
+                "score": 3.5911609621688285,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0000320193-25-000079 \u2014 Item 8",
+        "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+      ],
+      "tool_trace": [
+        "retrieve_text('product and service categories revenue', ticker=AAPL) \u2192 5 chunks: [AAPL:Item 8 score=6.692, AAPL:Item 8 score=4.513, AAPL:Risk Factors score=4.379, AAPL:Risk Factors score=4.506, AAPL:Risk Factors score=3.591]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 19
+      }
+    },
+    {
+      "id": "ret_aapl_applecare_description",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": true,
+      "passage_hit": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer accurately captures all the key facts from the reference answer with no fabrications.",
+      "got_text": "In its 2025 Form 10-K, Apple describes its AppleCare service offerings as a portfolio of fee-based service and support products. These offerings provide priority access to Apple technical support, access to the global Apple authorized service network for repair and replacement services, and in many instances, additional coverage for accidental damage, theft, or loss, depending on the country and type of product.\n\nThe information can be found in the company's 2025 filing under the section discussing its services (SEC filing accession 0000320193-25-000079).",
+      "latency_s": 4.46,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "AppleCare service offerings",
+            "ticker": "AAPL"
+          },
+          "output": {
+            "found": true,
+            "query": "AppleCare service offerings",
+            "ticker": "AAPL",
+            "scoped_to_fiscal_year": 2025,
+            "scope_reason": "no year given; searched AAPL's most recent filing (FY2025) -- say so if the answer depends on it",
+            "results": [
+              {
+                "text": "panys media streaming and gaming device based on its tvOS\n\n operating system, and HomePod\n\n and HomePod mini\n\n, high-fidelity wireless smart speakers.\nAccessories includes Apple-branded and third-party accessories.\nApple Inc. | 2025 Form 10-K | 1\nServices\nAdvertising\nThe Companys advertising services include third-party licensing arrangements and the Companys own advertising platforms.\nAppleCare\nThe Company offers a portfolio of fee-based service and support products under the AppleCare\n\n brand. The offerings provide priority access to Apple technical support, access to the global Apple authorized service network for repair and replacement services, and in many cases additional coverage for instances of accidental damage or theft and loss, depending on the country and type of product.\nCloud Services\nThe Companys cloud services store and keep customers content up-to-date and available across multiple Apple devices and Windows personal computers.\nDigital Content\nThe Company operates various platforms, including the App Store\n\n,\n that allow customers to discover and download applications and digital content, such as books, music, video, games and podcasts.\nThe Company also offers digital content through subscription-based services, including Apple Arcade\n\n, a game service; Apple Fitness+\n\n, a personalized fitness service; Apple Music\n\n, which offers users a curated listening experience with on-demand radio stations; Apple News+\n\n, a news and magazine service; and Apple TV\n\n, which offers exclusive original content and live sports.\nPayment Services\nThe Company offers payment services, including Apple Card\n\n, a co-branded credit card, and Apple Pay\n\n, a cashless payment service.\nSegments\nThe Company manages its business primarily on a geographic basis. The Companys reportable segments consist of the Americas, Europe, Greater China, Japan and Rest of Asia Pacific. Americas includes both North and South America. Europe includes European countries, as well as India, the Middle East and Africa. Greater China includes China mainland, Hong Kong and Taiwan. Rest of Asia Pacific includes Australia, New Zealand and those Asian countries not included in the Companys other reportable segments. Although the reportable segments provide similar hardware and software products and similar services, each one is managed separately to better align with the location of the Companys customers and distribution partners and the unique market dynamics of each geographic region.\nMarkets and Distribution\nThe Companys customers are primarily in the consumer, small and mid-sized business, education, enterprise and government markets. The Company sells its products and",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "accn": "0000320193-25-000079",
+                "score": 8.854945320677661,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+              },
+              {
+                "text": "ys customers and distribution partners and the unique market dynamics of each geographic region.\nMarkets and Distribution\nThe Companys customers are primarily in the consumer, small and mid-sized business, education, enterprise and government markets. The Company sells its products and resells third-party products in most of its major markets directly to customers through its retail and online stores and its direct sales force. The Company sells its services in the same markets through its various service platforms. The Company also employs a variety of indirect distribution channels, such as third-party cellular network carriers and other resellers, for the sale of its products and certain of its services. During 2025, the Companys net sales through its direct and indirect distribution channels accounted for 40% and 60%, respectively, of total net sales.\nCompetition\nThe markets for the Companys products and services are highly competitive and are characterized by aggressive price competition, downward pressure on gross margins, continual improvement in product performance, and price sensitivity on the part of consumers and businesses. The markets in which the Company competes are further defined by frequent introduction of new products and services, short product life cycles, evolving industry standards, and rapid adoption of technological advancements by competitors. Many of the Companys competitors seek to compete primarily through aggressive pricing and very low cost structures, and by imitating the Companys products and infringing on its intellectual property.\nApple Inc. | 2025 Form 10-K | 2\nThe Companys ability to compete successfully depends heavily on ensuring the continuing and timely introduction of innovative new products, services and technologies to the marketplace. The Company designs and develops nearly the entire solution for its products, including the hardware, operating system, numerous software applications and related services. Principal competitive factors important to the Company include price, product and service features (including security features), relative price and performance, product and service quality and reliability, design and technology innovation, a strong third-party software and accessories ecosystem, marketing and distribution capability, service and support, corporate reputation, and the ability to effectively protect and enforce the Companys intellectual property rights.\nThe Company is focused on expanding its market opportunities related to smartphones, personal computers, tablets, wearables and accessories, and services. The Companys products and services face substantial competition from companies that have significant technical, marketing, distribution and other resources, as well as established hardware, software, and service offerings with large customer bases. In addition, the Company faces significant competition",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "accn": "0000320193-25-000079",
+                "score": 4.186479953484676,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+              },
+              {
+                "text": " to providing components seamlessly within their offerings or work collaboratively to offer integrated solutions. Some of the Companys competitors have broad product lines, low-priced products, large installed bases of active devices, and large customer bases. Competition has been particularly intense as competitors have aggressively cut prices and lowered product margins. Certain competitors have the resources, experience or cost structures to provide products and services at little or no profit or even at a loss. The Company has a minority market share in the global smartphone, personal computer, tablet and wearables markets, and some of the markets in which the Company competes have from time to time experienced little to no growth or contracted overall.\nIf the Company is unable to compete successfully, its business, reputation, results of operations, financial condition and stock price can be materially adversely affected.\nApple Inc. | 2025 Form 10-K | 7\nBusiness Risks\nTo remain competitive and stimulate customer demand, the Company must successfully manage frequent introductions and transitions of products and services.\nDue to the highly volatile and competitive nature of the markets and industries in which the Company competes, the Company must continually introduce new products, services and technologies, enhance existing products and services, effectively stimulate customer demand for new and upgraded products and services, navigate global regulatory requirements and barriers to market access, and successfully manage the transition to these new and upgraded products and services. The success of new product and service introductions depends on a number of factors, including the Companys ability to recruit and retain highly skilled personnel to execute on its strategic initiatives, and the timely and successful development and market acceptance of new products, services and technologies. Success also relies on the Companys ability to manage the risks associated with new technologies and production ramp-up issues, the effective integration of third-party services and technologies into the Companys products and services, the availability, delivery and performance of application software or other third-party support for the Companys products and services, the effective management of manufacturing and other purchase commitments and the management of inventory levels in line with anticipated product demand, and the availability of products in appropriate quantities and at expected costs to meet anticipated demand. Additionally, quality issues or other defects or deficiencies can adversely affect the success of new product and service introductions and market acceptance. New products, services and technologies may replace or supersede existing offerings and may produce lower revenues and lower profit margins. The Company may not be able to successfully manage future introductions and transitions of products and services,",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "accn": "0000320193-25-000079",
+                "score": 4.286516545342247,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors"
+              },
+              {
+                "text": "its performance obligations based on their relative SSPs. Because the Company lacks observable prices for product-related bundled services, the allocation of revenue is based on the Companys estimated SSPs. Revenue allocated to the delivered hardware and bundled software is recognized when control has transferred to the customer, which generally occurs when the product is shipped. Revenue allocated to product-related bundled services is deferred and recognized on a straight-line basis over the estimated period they are expected to be provided.\nFor certain long-term service arrangements, the Company has performance obligations for services it has not yet delivered. For these arrangements, the Company does not have a right to bill for the undelivered services. The Company has determined that any unbilled consideration relates entirely to the value of the undelivered services. Accordingly, the Company has not recognized revenue, and does not disclose amounts, related to these undelivered services.\nFor the sale of third-party products where the Company obtains control of the product before transferring it to the customer, the Company recognizes revenue based on the gross amount billed to customers. The Company considers multiple factors when determining whether it obtains control of third-party products, including evaluating if it can establish the price of the product, retains inventory risk for tangible products or has the responsibility for ensuring acceptability of the product. For third-party applications sold through the App Store, the Company does not obtain control of the product before transferring it to the customer. Therefore, the Company accounts for all third-party applicationrelated sales on a net basis by recognizing in Services net sales only the commission it retains.\nApple Inc. | 2025 Form 10-K | 35\nThe following table shows disaggregated net sales, as well as the portion of total net sales that was previously deferred, for 2025, 2024 and 2023 (in millions):\n(1)\nServices net sales include amortization of the deferred value of services bundled in the sales price of certain products.\nThe Companys proportion of net sales by disaggregated revenue source was generally consistent for each reportable segment in Note 13, Segment Information and Geographic Data for 2025, 2024 and 2023, except in Greater China, where iPhone revenue represented a moderately higher proportion of net sales.\nAs of September27, 2025 and September28, 2024, the Company had total deferred revenue of $\n13.7\n billion and $\n12.8\nbillion, respectively. As of September27, 2025, the",
+                "ticker": "AAPL",
+                "section": "Item 8",
+                "score": 0.6947485208511353,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Item 8",
+                "accn": "0000320193-25-000079"
+              },
+              {
+                "text": " of the Companys products, processes and services. While the Company has generally been able to obtain such licenses on commercially reasonable terms in the past, there is no guarantee that such licenses could be obtained in the future on reasonable terms or at all.\nBusiness Seasonality and Product Introductions\nThe Company has historically experienced higher net sales in its first quarter compared to other quarters in its fiscal year due in part to seasonal holiday demand. Additionally, new product and service introductions can significantly impact net sales, cost of sales and operating expenses. The timing of product introductions can also impact the Companys net sales to its indirect distribution channels as these channels are filled with new inventory following a product launch, and channel inventory of an older product often declines as the launch of a newer product approaches. Net sales can also be affected when consumers and distributors anticipate a product introduction.\nHuman Capital\nThe Company believes that its people play an important role in its success, and strives to attract, develop and retain the best talent. The Company works to create a culture of collaboration, one where people with a broad range of backgrounds and perspectives can come together to innovate and do the best work of their lives. The Company is an equal opportunity employer committed to inclusion and to providing a workplace free of harassment or discrimination. As of September27, 2025, the Company had approximately 166,000 full-time equivalent employees.\nThe Company believes that compensation should be competitive and equitable, and offers discretionary cash and equity awards to enable employees to share in the Companys success. The Company recognizes its people are most likely to thrive when they have the resources to meet their needs and the time and support to succeed in their professional and personal lives. In support of this, the Company offers a wide variety of benefits for employees around the world, including health, wellness and time away.\nThe Company invests in resources to help its people develop and achieve their career goals. The Company offers programs through Apple University on leadership, management and influence, as well as Apple culture and values. Team members can also take advantage of online classes for business, technical and personal development.\nThe Company believes that open and honest communication among team members, managers and leaders helps create an open, collaborative work environment where everyone can contribute, grow and succeed. Team members are encouraged to come to their managers with questions, feedback or concerns, and the Company conducts surveys that gauge employee sentiment in areas like career development, manager performance and inclusion.\nThe Company is committed to",
+                "ticker": "AAPL",
+                "section": "Risk Factors",
+                "score": 0.669336199760437,
+                "citation": "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors",
+                "accn": "0000320193-25-000079"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0000320193-25-000079 \u2014 Risk Factors",
+        "SEC filing accession 0000320193-25-000079 \u2014 Item 8"
+      ],
+      "tool_trace": [
+        "retrieve_text('AppleCare service offerings', ticker=AAPL) \u2192 5 chunks: [AAPL:Risk Factors score=8.855, AAPL:Risk Factors score=4.186, AAPL:Risk Factors score=4.287, AAPL:Item 8 score=0.695, AAPL:Risk Factors score=0.669]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 21
+      }
+    },
+    {
+      "id": "ret_qrvo_customer_risk",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": false,
+      "passage_hit": false,
+      "judge_score": 2,
+      "judge_reason": "The generated answer captures the main points regarding customer concentration risk but includes inaccurate fiscal year references and lacks specific revenue figures related to Apple and Samsung as mentioned in the 10-K.",
+      "got_text": "Qorvo's 10-K filing for FY2026 highlights the following points regarding customer concentration risk:\n\n1. **Dependence on Large Customers**: Qorvo relies significantly on several large customers, and the loss of a major customer, or a reduction in business from these customers, could materially affect its financial health. This dependence poses a risk because rapid changes in customer requirements can lead to fluctuations in the company's operating results. (SEC filing accession 0001628280-26-032873)\n\n2. **Sales through Distributors**: A significant portion of Qorvo's products is sold through third-party distributors. Changes in relationships with these distributors, or their inability to perform as expected, could adversely impact Qorvo's revenue. The company faces risks associated with competitive pressures and credit risks related to these distributors. (SEC filing accession 0001628280-26-032873)\n\n3. **Credit Risk in Accounts Receivable**: The company recognizes potential concentration of credit risk in accounts receivable, which is unsecured. To mitigate this risk, Qorvo has established credit policies and standards aimed at ensuring the financial stability of its major customers, thus moderating risks through conservative payment terms. (SEC filing accession 0001628280-26-032873)\n\nThese factors illustrate the significant risk Qorvo faces due to its reliance on a limited number of key customers and the potential impacts on its operations and financial results if there are disruptions in these relationships.",
+      "latency_s": 4.68,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "customer concentration risk",
+            "ticker": "QRVO"
+          },
+          "output": {
+            "found": true,
+            "query": "customer concentration risk",
+            "ticker": "QRVO",
+            "scoped_to_fiscal_year": 2026,
+            "scope_reason": "no year given; searched QRVO's most recent filing (FY2026) -- say so if the answer depends on it",
+            "results": [
+              {
+                "text": "ITEM 1A. RISK FACTORS.\n\nYou should carefully consider the risks described below in addition to the other information contained in this report before making an investment decision with respect to any of our securities. Our business, financial condition or results of operations could be materially and adversely impacted by any of these risks. The risks and uncertainties described below are not the only ones we face. Additional risks not currently known to us, or other factors not perceived by us to present material risks to our business at this time, may impair our business operations, financial condition, or results of operations.\nRisk Factors Summary \nThe following is a summary of the principal risks that could adversely affect our business, financial condition or results of operations.\n\nThe consummation of the Mergers is contingent upon the satisfaction of a number of conditions that may be outside of our or Skyworks control and that we and Skyworks may be unable to satisfy, or which may delay the consummation of the Mergers or result in the imposition of conditions that could reduce the anticipated benefits from the Mergers or cause the parties to abandon the Mergers.\n\nEfforts to complete the Mergers could disrupt our relationships with third parties and employees, divert managements attention, interrupt new product introductions, or result in negative publicity or legal proceedings, any of which could negatively impact our operating results and ongoing business.\n13\nTable of Contents\n\nFailure to realize the anticipated benefits of the Mergers, delay in realizing those benefits, or significant challenges in integrating the Company with Skyworks could have an adverse effect on the price of Skyworks common stock that Company stockholders will own following the completion of the Mergers.\n\nBecause our stockholders have adopted the Merger Agreement, the Merger Agreement will not permit us to pursue alternative transactions to the Mergers.\n\nOur operating results fluctuate and are substantially dependent on developing new products and achieving design wins as our customers' requirements can change rapidly and product life cycles can be short.\n\nWe depend on several large customers for a substantial portion of our revenue and the loss of a large customer or loss of share at one or more of these customers could have a material adverse effect on our business, financial condition and results of operations.\n\nWe face risks of a loss of revenue if contracts with the U.S. government or defense and aerospace contractors are canceled or delayed or if defense spending is reduced.\n\nWe depend heavily on third parties.\n\nWe face risks related to sales through distributors.\n\nWe face risks",
+                "ticker": "QRVO",
+                "section": "Risk Factors",
+                "accn": "0001628280-26-032873",
+                "score": 3.8282156139813575,
+                "citation": "SEC filing accession 0001628280-26-032873 \u2014 Risk Factors"
+              },
+              {
+                "text": " tape and reel. Our recent efforts to consolidate our manufacturing footprint, including the divestitures of assembly and test operations in both China and Costa Rica, as well as the sale of our North Carolina fabrication facility, have increased our reliance on third parties.\nThe use of external suppliers involves a number of risks, including the possibility of material disruptions in the supply of key components and the lack of control over delivery schedules, capacity constraints, manufacturing yields, product quality and cost increases. Furthermore, supply chain disruptions and labor market constraints have created heightened risk that external suppliers may be unable to meet their obligations to us. If we experience any significant difficulty in obtaining the materials or services used in the conduct of our business, these supply challenges may result in loss of share at our customers or limit our ability to fully satisfy customer demand.\nAs the semiconductor industry may experience supply constraints for certain items, from time to time, we enter into certain supply agreements to address short-term and long-term supply requirements. However, we may not be able to secure supply agreements to support customer demand. If we are unable to secure supply agreements or even with supply agreements, we are still subject to risks that a supplier will prioritize other customers' capacity demands or be unable to meet its supply commitments, achieve anticipated manufacturing yields, produce wafers or other components on a timely basis, or provide additional capacity beyond its commitments sufficient to meet our supply needs. If so, we may experience delays in product launches or supply shortages for certain products, which could cause an unanticipated decline in our sales and damage our existing customer relationships and our ability to establish new customer relationships. In addition, if a supplier experiences financial difficulties or goes into \n20\nTable of Contents\nbankruptcy, it could be difficult or impossible, or may require substantial time and expense, for us to recover any or all of our fees and deposits made as part of any supply agreement.\nAlthough our key suppliers commit to us to be compliant with applicable ISO 9001 and/or IATF 16949 quality standards, we have experienced quality and reliability issues with suppliers in the past. Quality or reliability issues in our supply chain could negatively affect our products, our reputation and our results of operations.\nWe face risks related to sales through distributors.\n \nWe sell a significant portion of our products through third-party distributors. We depend on these distributors to help us create end customer demand, provide technical support and other value-added services to customers, fill customer orders and stock our products. We may rely",
+                "ticker": "QRVO",
+                "section": "Risk Factors",
+                "accn": "0001628280-26-032873",
+                "score": 4.663621333880626,
+                "citation": "SEC filing accession 0001628280-26-032873 \u2014 Risk Factors"
+              },
+              {
+                "text": ".\n \nWe sell a significant portion of our products through third-party distributors. We depend on these distributors to help us create end customer demand, provide technical support and other value-added services to customers, fill customer orders and stock our products. We may rely on one or more key distributors for a product, and a material change in our relationship with one or more of these distributors or their failure to perform as expected could reduce our revenue. Our ability to add or replace distributors for some of our products may be limited because our end customers may be hesitant to accept the addition or replacement of a distributor due to advantages in the incumbent distributors technical support and favorable business terms related to payments, discounts and stocking of acceptable inventory levels. Using third parties for distribution exposes us to many risks, including competitive pressure, concentration, credit risk and compliance risks. Other third parties may use one of our distributors to sell products that compete with our products, and we may need to incentivize the distributors to focus on the sale of our products. Our distributors may face financial difficulties, including bankruptcy, which could harm our collection of accounts receivable and financial results. Violations of the Foreign Corrupt Practices Act or similar laws by our distributors or other third-party intermediaries could have a material impact on our business. Failure to manage risks related to our use of distributors may reduce sales, increase expenses and weaken our competitive position.\nWe face risks associated with the operation of our manufacturing facilities.\nWe operate wafer fabrication facilities in Oregon and Texas. We use several international and domestic assembly suppliers, as well as internal assembly facilities in Germany and the U.S., to assemble and test our products. We currently have our own test and tape and reel facilities located in the U.S., and we also utilize contract suppliers and partners in Asia. During fiscal 2026, we completed the sale of our North Carolina fabrication facility and are operating under a short-term supply agreement with the buyer until we complete the transfer of SAW filter production to our Texas facility.\nA number of factors related to our facilities will affect our business and financial results, including the following:\n\nour ability to adjust production capacity in a timely fashion, including the migration of production amongst our various factories, in response to changes in demand for our products;\n\nthe significant fixed costs of operating the facilities;\n\nfactory utilization rates;\n\nour ability to qualify our facilities for new products and new technologies in a timely manner;\n\nthe availability of raw materials, the impact of the volatility of commodity pricing and tariffs imposed on raw materials",
+                "ticker": "QRVO",
+                "section": "Risk Factors",
+                "accn": "0001628280-26-032873",
+                "score": 3.7004694673135194,
+                "citation": "SEC filing accession 0001628280-26-032873 \u2014 Risk Factors"
+              },
+              {
+                "text": "the Merger Agreement. \nOn February 5, 2026, Qorvo and Skyworks each received a Request for Additional Information and Documentary Material (the Second Request) from the U.S. Federal Trade Commission (FTC) in connection with the transaction. The Second Request was issued under notification requirements of the HSR Act. The effect of the Second Request is to extend the waiting period imposed by the HSR Act until 30 days after Qorvo and Skyworks have each substantially complied with the Second Request it received, unless the waiting period is voluntarily extended by the parties or terminated sooner by the FTC. \n67\nTable of Contents\nQorvo, Inc. and Subsidiaries \nNotes to Consolidated Financial Statements (continued)\nThe stockholders of both Qorvo and Skyworks approved the Merger Agreement at each company's special meeting of stockholders on February 11, 2026. Consummation of the Mergers is subject to required regulatory approvals, including certain antitrust and foreign investment approvals, and the satisfaction of other customary closing conditions. The Company currently anticipates the transaction will be completed early in calendar year 2027.\nThe foregoing\n summary of the Merger Agreement and the transactions contemplated thereby does not purport to be complete and is subject to, and qualified in its entirety by, the Merger Agreement, which was filed as Exhibit 2.1 to the Company's Current Report on Form 8-K filed on October 28, 2025.\nMerger-related costs for fiscal \n2026\n were approximately $\n23.5\n million, primarily related to legal and professional fees.\n \n3. CONCENTRATIONS OF CREDIT RISK \nThe Companys principal financial instrument subject to potential concentration of credit risk is accounts receivable, which is unsecured. The Company provides an allowance for doubtful accounts equal to estimated losses expected to be incurred in the collection of accounts receivable. The Company's trade receivables are evaluated on a collective (pool) basis and aggregated on the basis of similar risk characteristics, adjusting for broad-based economic indicators as well as customer-specific factors. The Company has adopted credit policies and standards intended to accommodate industry growth and inherent risk and believes that credit risks are moderated by the financial stability of its major customers, conservative payment terms and the Companys strict credit policies.\nThe Company provides products to its largest end customer, Apple Inc., through sales to multiple contract manufacturers, which in the",
+                "ticker": "QRVO",
+                "section": "Item 8",
+                "accn": "0001628280-26-032873",
+                "score": 7.413690076151271,
+                "citation": "SEC filing accession 0001628280-26-032873 \u2014 Item 8"
+              },
+              {
+                "text": " no charge;\n\nreimbursement of direct and indirect costs incurred by our customers in recalling or reworking their products due to defects in our products;\n\ntravel and personnel costs to investigate potential product quality issues and to identify or confirm the failure mechanism or root cause of product defects; and\n\ndefending against litigation.\nThese costs could be significant and could impact our results of operations. Our reputation with customers also could be damaged as a result of product defects and quality issues, and product demand could be reduced, which could harm our business and financial results.\nWe are subject to inventory risks and costs because we purchase materials and build our products based on forecasts provided by customers before receiving purchase orders for the products.\nIn order to ensure availability of our products for some of our largest end customers, we purchase materials and start manufacturing certain products in advance of receiving purchase orders based on forecasts provided by these customers. These forecasts, however, do not represent binding purchase commitments and we do not recognize sales for these products until they are shipped to, or consumed by, the customer. As a result, we incur significant inventory and manufacturing costs in advance of anticipated sales. In addition, a divestment of individual manufacturing locations or the transfer of a production line from one internal facility to another internal or third-party facility may lead to supply chain disruptions while qualifying a new manufacturing site. In anticipation of such disruptions, we may establish buffer inventory to accommodate our customers anticipated demand, which may not materialize. Because demand for our products may not materialize, or may be lower than expected, purchasing materials and manufacturing based on forecasts subjects us to heightened risks of higher inventory carrying costs, increased obsolescence, and higher operating costs. These inventory risks are exacerbated when our customers purchase indirectly through contract manufacturers or hold component inventory levels greater than their consumption rate because this reduces our visibility regarding the customers accumulated levels of inventory. \nFrom time to time, we enter into capacity reservation agreements with certain suppliers which require minimum purchase commitments. If the purchase commitments exceed our forecasted demand, we may incur charges based on actual or estimated purchase shortfalls. Future circumstances may warrant us to enter into similar agreements, and to the extent management's estimates of anticipated future demand are incorrect, we may incur charges which would have a negative impact on our gross margin and other operating results.\nWe sell certain of our products based on reference designs of chipset suppliers, and our inability to effectively manage or maintain our relationships with these companies may have an adverse effect on our business.\nChipset suppliers",
+                "ticker": "QRVO",
+                "section": "Risk Factors",
+                "score": 0.7045670957734318,
+                "citation": "SEC filing accession 0001628280-26-032873 \u2014 Risk Factors",
+                "accn": "0001628280-26-032873"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0001628280-26-032873 \u2014 Risk Factors",
+        "SEC filing accession 0001628280-26-032873 \u2014 Item 8"
+      ],
+      "tool_trace": [
+        "retrieve_text('customer concentration risk', ticker=QRVO) \u2192 5 chunks: [QRVO:Risk Factors score=3.828, QRVO:Risk Factors score=4.664, QRVO:Risk Factors score=3.700, QRVO:Item 8 score=7.414, QRVO:Risk Factors score=0.705]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 22
+      }
+    },
+    {
+      "id": "ret_glw_business_segments",
+      "tier": 1,
+      "type": "retrieval",
+      "answerable": true,
+      "correct": false,
+      "passage_hit": false,
+      "judge_score": 1,
+      "judge_reason": "The answer correctly identifies several segments but inaccurately includes 'Automotive' and 'Hemlock and Emerging Growth Businesses,' which are not part of Corning's reported segments in the 10-K.",
+      "got_text": "Corning's main business segments, as described in its 10-K filing for fiscal year 2025, are:\n\n1. **Optical Communications** - This segment generates products for both enterprise and carrier applications, benefiting from strong demand due to advancements in generative AI and data center interconnections.\n\n2. **Display** - Focuses on display glass products, which faced challenges due to currency fluctuations but adapted through pricing strategies.\n\n3. **Specialty Materials** - Primarily involves the production of premium glass for mobile devices and solutions such as Gorilla Glass.\n\n4. **Automotive** - Produces automotive products, which include interior and exterior glass components. This segment saw a decline due to market softness.\n\n5. **Life Sciences** - Supplies laboratory products for research and drug manufacturing, maintaining steady sales figures.\n\n6. **Hemlock and Emerging Growth Businesses** - This segment saw growth driven by polysilicon and solar module sales for the solar energy sector.\n\nThese details were extracted from the 10-K filing, accession number 0000024741-26-000124.",
+      "latency_s": 3.63,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "business segments",
+            "ticker": "GLW"
+          },
+          "output": {
+            "found": true,
+            "query": "business segments",
+            "ticker": "GLW",
+            "scoped_to_fiscal_year": 2025,
+            "scope_reason": "no year given; searched GLW's most recent filing (FY2025) -- say so if the answer depends on it",
+            "results": [
+              {
+                "text": " statements for the reconciliation to consolidated net sales.\nOptical Communications\nThe increase in segment net sales was primarily due to continued growth in our Enterprise business driven by strong demand for our Generative AI products, and in our Carrier business, driven by demand for datacenter interconnect products and fiber-to-the-home products. \nDisplay \nThe decrease in segment net sales was primarily due to the impact from resetting our core rate from 107 to 120 Japanese yen to USD as the comparative period results were not recast and are presented at the 107 Japanese yen to USD core rate.To offset the change in core rate and the weaker Japanese yen environment, we implemented pricing actions in the second half of 2024. The effects of the price increases on slightly higher volumes in 2025, compared to the prior period, substantially offset the impact of resetting the core rate.\nSpecialty Materials\nThe increase in segment net sales was primarily due to continued strong demand for premium glass for mobile devices and growth in our Gorilla Glass solutions business.\nAutomotive\nThe decrease in segment net sales was primarily due to softness in heavy-duty diesel market and unfavorable impacts of foreign exchange movements.\nLife Sciences\nSegment net sales remained consistent with the comparative period.\nHemlock and Emerging Growth Businesses\nThe increase was primarily driven by growth in polysilicon and solar module sales for the solar industry.\n27\nTable of \nContents\nThe following table presents segment net income by reportable segment and Hemlock and Emerging Growth Businesses (in millions):\n\nYear ended December 31,\n$ change \n% change\n\n2025\n2024\n25 vs. 24\n25 vs. 24\nOptical Communications\n$\n1,048\n\n$\n612\n$\n436\n71\n%\nDisplay \n993\n\n1,006\n(13)\n(1\n%)\nSpecialty Materials\n367\n\n260\n107\n41\n%\nAutomotive\n278\n\n261\n17\n7\n%\nLife Sciences\n61\n\n63\n(2)\n(3\n%)\nNet income of reportable segments\n2,747\n\n2,202\n545\n25\n%\nHemlock and Emerging Growth Businesses\n(26)\n42\n(68)\n*\nNet income of reportable segments and Hemlock and Emerging\nGrowth Businesses \n(1)\n$\n2,721\n\n$\n2,244\n$\n477\n21\n%\n*\n Not meaningful\n(1)\nRefer to Note 18 (Reportable Segments) in the accompanying",
+                "ticker": "GLW",
+                "section": "MD&A",
+                "accn": "0000024741-26-000124",
+                "score": 2.596387353011278,
+                "citation": "SEC filing accession 0000024741-26-000124 \u2014 MD&A"
+              },
+              {
+                "text": "D ColdForm Technology and Fusion5 Glass enable more reliable, higher quality, lighter weight and more economical auto interior cover glass parts and exterior windows. This glass business leverages our 100+ year Automotive OEM market access, longstanding Display panel maker relationships and ecosystem from our Specialty Materials segment to help drive automotive business growth. \nWe manufacture our automotive products in New York, Virginia, China, South Korea, Taiwan, and Germany.\nPatent protection is important to the segments operations. The segment has an extensive portfolio of patents relating to its products, technologies and manufacturing processes. We are licensed to use certain patents owned by others, which are also considered important to the segments operations. Refer to the material under the heading Patents and Trademarks for more information.\nThe Automotive segment represented 11% of Cornings total segment net sales in 2025.\nLife Sciences Segment\nAs a leading developer, manufacturer and global supplier of laboratory products for over 110 years, the Life Sciences segment works with researchers and drug manufacturers seeking to drive innovation, increase efficiencies, reduce costs and compress timelines. Using unique expertise in the fields of materials science, polymer surface science, cell culture and cell biology, the segment provides innovative solutions that improve productivity and enable breakthrough research for traditional small molecule, or chemical, drugs, biologics, vaccines and emerging cell and gene therapies.\nLife Sciences products include consumables, such as plastic vessels, liquid handling plastics, specialty surfaces, cell culture media and serum, as well as general labware, glassware and equipment. These products are used for drug discovery research and development, compound screening, diagnostics, advanced cell culture research, genomics applications and mass production of cells for clinical trials and bioproduction. \nWe sell life sciences products under the Corning, Falcon, PYREX and Axygen brands. The products are marketed globally, primarily through distributors, to pharmaceutical and biotechnology companies, contract manufacturing organizations, central testing labs, academic institutions, hospitals, government entities and other facilities. We manufacture these products in California, Illinois, Maine, Massachusetts, New York, North Carolina, Utah, Virginia, China, France, Mexico, Brazil and Poland.\nPatent protection is important to the segments operations. The segment has a growing portfolio of patents relating to its products, technologies and manufacturing processes. Brand recognition and loyalty, through well-known trademarks, are important to the segment. Refer to the material under the heading Patents and Trademarks for more information.\nThe Life Sciences segment represented 6",
+                "ticker": "GLW",
+                "section": "Business",
+                "accn": "0000024741-26-000124",
+                "score": 3.112580826050086,
+                "citation": "SEC filing accession 0000024741-26-000124 \u2014 Business"
+              },
+              {
+                "text": " not to sustain its position relating to these matters. However, if the Company is ultimately unsuccessful in defending its position, the impact could be material to its consolidated financial statements.\n26\nTable of \nContents\nSEGMENT ANALYSIS\nFinancial results for the reportable segments and Hemlock and Emerging Growth Businesses are prepared on a basis consistent with the internal disaggregation of financial information to assist the chief operating decision maker in making internal operating decisions, which is more fully discussed within Note 18 (Reportable Segments) in the accompanying notes to the consolidated financial statements and includes a reconciliation of our segment information to the corresponding amounts in our consolidated statements of income.\nAs of January 1, 2025, the Company began managing its Automotive Glass Solutions business together with its Environmental Technologies business, forming its Automotive segment, and its Display Technologies segment was renamed to Display.\nThe comparative period segment information presented below has been recast to reflect the above changes in segment reporting.\nSegment net income may not be consistent with measures used by other companies.\nThe following table presents segment net sales by reportable segment and Hemlock and Emerging Growth Businesses (in millions):\nYear ended December 31,\n$ change\n% change\n2025\n2024\n25 vs. 24\n25 vs. 24\nOptical Communications\n$\n6,274\n\n$\n4,657\n$\n1,617\n35\n%\nDisplay \n3,697\n\n3,872\n(175)\n(5\n%)\nSpecialty Materials\n2,211\n\n2,018\n193\n10\n%\nAutomotive\n1,794\n\n1,846\n(52)\n(3\n%)\nLife Sciences\n972\n\n979\n(7)\n(1\n%)\nNet sales of reportable segments\n14,948\n\n13,372\n1,576\n12\n%\nHemlock and Emerging Growth Businesses\n1,460\n\n1,097\n363\n33\n%\nNet sales of reportable segments and Hemlock and Emerging \nGrowth Businesses\n(1)\n$\n16,408\n\n$\n14,469\n$\n1,939\n13\n%\n(1)\nRefer to Note 18 (Reportable Segments) in the accompanying notes to the consolidated financial statements for the reconciliation to consolidated net sales.\nOptical Communications\nThe increase in segment net sales was primarily due to continued growth in our Enterprise business driven by strong demand for our Generative AI products, and in our Carrier business, driven by demand for",
+                "ticker": "GLW",
+                "section": "MD&A",
+                "accn": "0000024741-26-000124",
+                "score": 3.2271026563103935,
+                "citation": "SEC filing accession 0000024741-26-000124 \u2014 MD&A"
+              },
+              {
+                "text": " to fluctuations in telecommunication and hyperscale data center capital spending, which may negatively affect the demand for our products and have a material adverse impact on our financial results. Additionally, the display glass business is exposed to exchange rate movements. If we are not able to achieve proportionate reductions in costs and/or increases in volume or price to offset the aforementioned factors, it could have a material adverse impact on our financial results. \nRisks associated with the launch of a new business\nLaunching new businesses involves inherent risks, including execution challenges, regulatory compliance, supply chain complexity, and uncertainty in market demand and competitive conditions. These factors may affect our ability to achieve anticipated returns and strategic objectives. In connection with our recent entry into the solar industry, we face risks specific to this sector, such as dependence on government manufacturing tax incentives, exposure to policy and regulatory changes, and complexities in sourcing specialized components. These factors, along with market volatility and evolving industry standards, could further impact the profitability of this business.\nBecause we have a concentrated customer base, future sales and cash flows could be negatively impacted by the actions or loss of one or more key customers\nA relatively small number of end customers account for a high percentage of our net sales in each of our business segments. This concentration subjects us to a variety of risks including:\n\nThe loss or insolvency of one or more of our key customers, could result in a substantial loss of sales and reduction in anticipated cash flows;\n\nCustomers may possess substantial leverage in negotiating contractual obligations, including liability provisions; and \n\nMergers and consolidations between customers could result in further concentration of the customer base.\nThe following table details the number of combined customers of our reportable segments that accounted for a large percentage of segment net sales, not adjusted for constant-currency:\nNumber of combined end customers\n% of total segment net sales in 2025\nOptical Communications\n2\n28\n%\nDisplay \n3\n59\n%\nSpecialty Materials\n2\n43\n%\nAutomotive\n3\n61\n%\nLife Sciences\n2\n45\n%\n13\nTable of \nContents\nEvents outside of Cornings control, or those of our contract manufacturers, could cause a disruption to our manufacturing operations and our ability to serve our customers, resulting in a negative impact to Cornings net sales, net income, asset values and liquidity\nDisruption to our manufacturing operations, or those of our contract manufacturers, could significantly impact Cornings ability to supply its customers and could produce a near",
+                "ticker": "GLW",
+                "section": "Risk Factors",
+                "accn": "0000024741-26-000124",
+                "score": 2.3380664589268925,
+                "citation": "SEC filing accession 0000024741-26-000124 \u2014 Risk Factors"
+              },
+              {
+                "text": ", optical components and couplers, closures, network interface devices and other accessories. These products may be sold as individual components or as part of integrated optical connectivity solutions designed for various carrier network applications. Examples of these solutions include our Evolv platform, which provides pre-connectorized solutions for cost-effectively deploying fiber-to-the-home and 5G networks; and the Centrix platform, which provides a fiber management system with industry-leading density and innovative jumper routing that can be deployed in a wide variety of carrier switching centers.\nOur enterprise network portfolio leverages optical fiber products, including ClearCurve ultra-bendable multimode fiber for private and hyperscale data centers and other enterprise network applications. \nOur hardware and equipment for enterprise network applications include cable assemblies, fiber-optic hardware, fiber-optic connectors, optical components and couplers, closures and other accessories. These products may be sold as individual components or as part of integrated optical connectivity solutions designed for various network applications, including hyperscale data centers. Examples of enterprise network solutions include the Edge8 platform, which provides high-density pre-connectorized cabling solutions for data center applications, supporting a path to speeds of 400G and beyond. \nWe invented new fibers, cables and connectors to capture the generative AI enterprise demand. This includes our SMF-28e Contour fiber, a 40% smaller fiber delivering improved bend resistance in high-density environments. This fiber forms the basis of our Contour Flow Cable, which can fit double the fiber into the same cable diameter. These components are being adopted by hyperscale data centers as well as the carriers building data center interconnect networks, and others focusing on key technology vectors such as density, latency and sustainability. \nOur optical fiber manufacturing facilities are in North Carolina, China, India and Poland. Cabling operations are in North Carolina, Poland and smaller regional locations. Our manufacturing operations for hardware and equipment products are in Texas, Mexico, Germany, Poland and China. \nPatent protection is important to the segments operations. The segment has an extensive portfolio of patents relating to its products, technologies and manufacturing processes. The segment licenses certain of its patents to third parties and generates revenue from these licenses, although the royalty income is not currently material to this segments operating results. We are licensed to use certain patents owned by others, which are considered important to the segments operations. Refer to the material under the heading Patents and Trademarks for more information. \nThe Optical Communications segment represented 38%",
+                "ticker": "GLW",
+                "section": "Business",
+                "accn": "0000024741-26-000124",
+                "score": 2.159937446132883,
+                "citation": "SEC filing accession 0000024741-26-000124 \u2014 Business"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0000024741-26-000124 \u2014 MD&A",
+        "SEC filing accession 0000024741-26-000124 \u2014 Business",
+        "SEC filing accession 0000024741-26-000124 \u2014 Risk Factors"
+      ],
+      "tool_trace": [
+        "retrieve_text('business segments', ticker=GLW) \u2192 5 chunks: [GLW:MD&A score=2.596, GLW:Business score=3.113, GLW:MD&A score=3.227, GLW:Risk Factors score=2.338, GLW:Business score=2.160]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 83
+      }
+    }
+  ]
+}

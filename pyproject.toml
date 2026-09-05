@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "financial-report-copilot"
+version = "0.2.0"
+description = "Financial Report Copilot v2 — LangGraph re-implementation of the agent orchestration"
+requires-python = ">=3.11"
+dependencies = [
+    # ── carried over from v1 (renxiang-ch/Financial-Report-Research-Copilot) ──
+    "httpx>=0.27",
+    "psycopg2-binary>=2.9",
+    "pgvector>=0.3",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "python-dotenv>=1.0",
+    "openai>=1.40",
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "rank-bm25>=0.2",
+    "tiktoken>=0.7",
+    "beautifulsoup4>=4.12",
+    "sentence-transformers>=3.0",
+    "langfuse>=2.0",
+    "streamlit>=1.35",
+    "altair>=5.0",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    # ── v2: LangGraph / LangChain orchestration stack (pinned exact) ──
+    "langgraph==1.2.11",
+    "langchain-core==1.6.1",
+    "langchain-openai==1.6.0",
+    "langgraph-checkpoint-postgres==3.1.2",
+    "langsmith==0.12.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+    "pytest-httpx>=0.30",
+    "ruff>=0.5",
+    "mypy>=1.10",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "db: test needs a live PostgreSQL + pgvector (DATABASE_URL)",
+    "llm: test needs OPENAI_API_KEY and makes a real model call",
+]

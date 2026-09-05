@@ -1,0 +1,186 @@
+{
+  "run_at": "2026-08-24T20:51:34+00:00",
+  "n": 7,
+  "arms": {
+    "none": {
+      "hits": {
+        "hit@1": 1,
+        "hit@3": 2,
+        "hit@5": 2
+      },
+      "mrr": 0.2143,
+      "results": [
+        {
+          "id": "ret_swks_apple_concentration_2024",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_swks_markets_served_2024",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_avgo_vmware_acquisition",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_aapl_product_categories",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_aapl_applecare_description",
+          "scoped_to": null,
+          "rank": 1
+        },
+        {
+          "id": "ret_qrvo_customer_risk",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_glw_business_segments",
+          "scoped_to": null,
+          "rank": 2
+        }
+      ]
+    },
+    "asked": {
+      "hits": {
+        "hit@1": 1,
+        "hit@3": 2,
+        "hit@5": 2
+      },
+      "mrr": 0.2143,
+      "results": [
+        {
+          "id": "ret_swks_apple_concentration_2024",
+          "scoped_to": 2024,
+          "rank": null
+        },
+        {
+          "id": "ret_swks_markets_served_2024",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_avgo_vmware_acquisition",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_aapl_product_categories",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_aapl_applecare_description",
+          "scoped_to": null,
+          "rank": 1
+        },
+        {
+          "id": "ret_qrvo_customer_risk",
+          "scoped_to": null,
+          "rank": null
+        },
+        {
+          "id": "ret_glw_business_segments",
+          "scoped_to": null,
+          "rank": 2
+        }
+      ]
+    },
+    "latest": {
+      "hits": {
+        "hit@1": 2,
+        "hit@3": 3,
+        "hit@5": 3
+      },
+      "mrr": 0.381,
+      "results": [
+        {
+          "id": "ret_swks_apple_concentration_2024",
+          "scoped_to": 2024,
+          "rank": null
+        },
+        {
+          "id": "ret_swks_markets_served_2024",
+          "scoped_to": 2025,
+          "rank": 2
+        },
+        {
+          "id": "ret_avgo_vmware_acquisition",
+          "scoped_to": 2025,
+          "rank": 1
+        },
+        {
+          "id": "ret_aapl_product_categories",
+          "scoped_to": 2025,
+          "rank": 6
+        },
+        {
+          "id": "ret_aapl_applecare_description",
+          "scoped_to": 2025,
+          "rank": 1
+        },
+        {
+          "id": "ret_qrvo_customer_risk",
+          "scoped_to": 2026,
+          "rank": null
+        },
+        {
+          "id": "ret_glw_business_segments",
+          "scoped_to": 2025,
+          "rank": null
+        }
+      ]
+    },
+    "trend": {
+      "hits": {
+        "hit@1": 2,
+        "hit@3": 3,
+        "hit@5": 3
+      },
+      "mrr": 0.381,
+      "results": [
+        {
+          "id": "ret_swks_apple_concentration_2024",
+          "scoped_to": 2024,
+          "rank": null
+        },
+        {
+          "id": "ret_swks_markets_served_2024",
+          "scoped_to": 2025,
+          "rank": 2
+        },
+        {
+          "id": "ret_avgo_vmware_acquisition",
+          "scoped_to": 2025,
+          "rank": 1
+        },
+        {
+          "id": "ret_aapl_product_categories",
+          "scoped_to": 2025,
+          "rank": 6
+        },
+        {
+          "id": "ret_aapl_applecare_description",
+          "scoped_to": 2025,
+          "rank": 1
+        },
+        {
+          "id": "ret_qrvo_customer_risk",
+          "scoped_to": 2026,
+          "rank": null
+        },
+        {
+          "id": "ret_glw_business_segments",
+          "scoped_to": 2025,
+          "rank": null
+        }
+      ]
+    }
+  }
+}

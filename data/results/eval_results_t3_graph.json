@@ -1,0 +1,170 @@
+{
+  "dataset": "data\\eval_set_tier3.json",
+  "dataset_version": "1.0",
+  "mode": "graph-augmented",
+  "n_total": 8,
+  "graph_lookup_accuracy": 100.0,
+  "graph_fact_accuracy": 100.0,
+  "graph_trend_accuracy": 100.0,
+  "graph_comparison_accuracy": 100.0,
+  "graph_compute_accuracy": 100.0,
+  "refusal_accuracy": 100.0,
+  "overall_accuracy": 100.0,
+  "avg_latency_s": 5.45,
+  "total_latency_s": 43.6,
+  "input_tokens": 45502,
+  "output_tokens": 1732,
+  "estimated_cost_usd": 0.0079,
+  "results": [
+    {
+      "id": "t3_aapl_suppliers_2024",
+      "tier": 3,
+      "type": "graph_lookup",
+      "answerable": true,
+      "correct": true,
+      "graph_called": true,
+      "edges_found": true,
+      "missing_edges": [],
+      "got_text": "In fiscal year 2024, the companies that directly supply Apple, based on 10-K customer concentration disclosures, are:\n\n1. **CRUS**: Accounted for approximately **87%** of total sales to Apple. \n   - SEC citation: [0000772406-24-000031](https://www.sec.gov/Archives/edgar/data/772406/00007724062400003",
+      "latency_s": 6.08,
+      "tool_trace": [
+        "graph_query(customer=AAPL, fiscal_year=2024) \u2192 3 edges",
+        "  edge: CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+        "  edge: QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+        "  edge: SWKS->AAPL >10% (threshold \u2014 exact % not disclosed in 10-K text) FY2024 [0000004127-24-000131]"
+      ]
+    },
+    {
+      "id": "t3_qrvo_apple_pct_2024",
+      "tier": 3,
+      "type": "graph_fact",
+      "answerable": true,
+      "correct": true,
+      "edges_found": true,
+      "expected": 46.0,
+      "got_raw": 46.0,
+      "got_text": "In fiscal year 2024, 46% of Qorvo's revenue came from Apple. This information is sourced from Qorvo's 10-K filing (SEC accession number 0001604778-24-000036).",
+      "latency_s": 1.96,
+      "tool_trace": [
+        "graph_query(customer=AAPL, supplier=QRVO, fiscal_year=2024) \u2192 1 edges",
+        "  edge: QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]"
+      ]
+    },
+    {
+      "id": "t3_crus_apple_trend",
+      "tier": 3,
+      "type": "graph_trend",
+      "answerable": true,
+      "correct": true,
+      "graph_called": true,
+      "edges_found": true,
+      "missing_edges": [],
+      "got_text": "Cirrus Logic's revenue dependency on Apple has changed over the fiscal years as follows:\n\n- **FY2026**: Approximately **91%** of total net sales (SEC 10-K accession 0000772406-26-000018)\n- **FY2025**: Approximately **89%** of total net sales (SEC 10-K accession 0000772406-25-000014)\n- **FY2024**: Ap",
+      "latency_s": 5.41,
+      "tool_trace": [
+        "graph_query(supplier=CRUS, fiscal_year=trend) \u2192 5 edges",
+        "  edge: CRUS->AAPL 91.0% FY2026 [0000772406-26-000018]",
+        "  edge: CRUS->AAPL 89.0% FY2025 [0000772406-25-000014]",
+        "  edge: CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+        "  edge: CRUS->AAPL 83.0% FY2023 [0000772406-24-000031]",
+        "  edge: CRUS->AAPL 79.0% FY2022 [0000772406-24-000031]"
+      ]
+    },
+    {
+      "id": "t3_most_exposed_supplier_2024",
+      "tier": 3,
+      "type": "graph_comparison",
+      "answerable": true,
+      "correct": true,
+      "graph_called": true,
+      "judge_score": 3,
+      "judge_reason": "The answer correctly identifies CRUS as the company with the highest Apple revenue concentration, cites the correct percentage, and provides a valid source.",
+      "got_text": "The supplier with the highest Apple revenue concentration in fiscal year 2024 is CRUS, which disclosed that Apple represented approximately 87% of their total sales. This information is cited in SEC 10-K accession number 0000772406-24-000031.",
+      "latency_s": 4.18,
+      "tool_trace": [
+        "graph_query(customer=AAPL, fiscal_year=2024) \u2192 3 edges",
+        "  edge: CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+        "  edge: QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+        "  edge: SWKS->AAPL >10% (threshold \u2014 exact % not disclosed in 10-K text) FY2024 [0000004127-24-000131]"
+      ]
+    },
+    {
+      "id": "t3_qrvo_dollar_impact_2024",
+      "tier": 3,
+      "type": "graph_compute",
+      "answerable": true,
+      "correct": true,
+      "graph_called": true,
+      "financials_called": true,
+      "expected": 346994552.0,
+      "got_raw": 346794552.0,
+      "got_text": "If Apple reduced orders by 20% in fiscal year 2024, the estimated dollar revenue impact on Qorvo would be approximately **$346,794,552**, based on Qorvo's FY2024 revenue and its disclosed concentratio",
+      "latency_s": 5.14,
+      "tool_trace": [
+        "graph_query(customer=AAPL, fiscal_year=2024) \u2192 3 edges",
+        "  edge: CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+        "  edge: QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+        "  edge: SWKS->AAPL >10% (threshold \u2014 exact % not disclosed in 10-K text) FY2024 [0000004127-24-000131]",
+        "query_financials(QRVO, Revenue, FY2024) \u2192 3769506000.0",
+        "compute(revenue * pct / 100 * cut) \u2192 346794552.0"
+      ]
+    },
+    {
+      "id": "t3_crus_dollar_impact_2024",
+      "tier": 3,
+      "type": "graph_compute",
+      "answerable": true,
+      "correct": true,
+      "graph_called": true,
+      "financials_called": true,
+      "expected": 311266860.0,
+      "got_raw": 311266860.0,
+      "got_text": "If Apple reduced orders by 20% in fiscal year 2024, the estimated dollar revenue impact on Cirrus Logic would be approximately $311,266,860. This is based on Cirrus Logic's revenue of $1,788,890,000 a",
+      "latency_s": 5.59,
+      "tool_trace": [
+        "graph_query(customer=AAPL, fiscal_year=2024) \u2192 3 edges",
+        "  edge: CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+        "  edge: QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+        "  edge: SWKS->AAPL >10% (threshold \u2014 exact % not disclosed in 10-K text) FY2024 [0000004127-24-000131]",
+        "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0",
+        "compute(revenue * pct * cut) \u2192 311266860.0"
+      ]
+    },
+    {
+      "id": "t3_rank_apple_exposure_2024",
+      "tier": 3,
+      "type": "graph_compute",
+      "answerable": true,
+      "correct": true,
+      "graph_called": true,
+      "financials_called": true,
+      "judge_score": 3,
+      "judge_reason": "The agent correctly ranks the companies by estimated revenue impact, includes accurate calculations, and specifies that the Skyworks figure is a floor.",
+      "got_text": "Based on a hypothetical 20% order cut by Apple in fiscal year 2024, here are the estimated dollar revenue impacts for Qorvo, Cirrus Logic, and Skyworks, ranked from largest to smallest:\n\n1. **Qorvo (QRVO)**: \n   - Estimated Revenue Impact: $346,794,552\n   - Calculation: \\( 3,769,506,000 \\times 0.46 ",
+      "latency_s": 14.51,
+      "tool_trace": [
+        "graph_query(customer=AAPL, fiscal_year=2024) \u2192 3 edges",
+        "  edge: CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+        "  edge: QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+        "  edge: SWKS->AAPL >10% (threshold \u2014 exact % not disclosed in 10-K text) FY2024 [0000004127-24-000131]",
+        "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0",
+        "query_financials(QRVO, Revenue, FY2024) \u2192 3769506000.0",
+        "query_financials(SWKS, Revenue, FY2024) \u2192 4178000000.0",
+        "compute(3769506000 * 0.46 * 0.20) \u2192 346794552.0",
+        "compute(1788890000 * 0.87 * 0.20) \u2192 311266860.0",
+        "compute(4178000000 * 0.10 * 0.20) \u2192 83560000.0"
+      ]
+    },
+    {
+      "id": "t3_unans_apple_supplier_share",
+      "tier": 3,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": true,
+      "refusal_detected": true,
+      "got_text": "I cannot determine what percentage of Apple's total procurement budget comes from Qorvo.",
+      "latency_s": 0.78,
+      "tool_trace": []
+    }
+  ]
+}

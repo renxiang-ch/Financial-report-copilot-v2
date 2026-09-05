@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "description": "Purpose-built mini-benchmark isolating tool-selection behavior (not answer correctness). Each item labels the tool the agent SHOULD reach for, given the question's phrasing — independent of eval_set.json / eval_set_tier3.json, which are frozen. Three categories, 4 questions each: (1) dependency — a specific supplier-on-customer revenue concentration, structured data lives in supply_edges, graph_query is correct; retrieve_text would only surface unstructured prose that may or may not state the number. (2) qualitative — asks what the 10-K SAYS about risk factors/business description, no single number requested; retrieve_text is correct — negative control to confirm the router does not over-fire on customer-concentration-adjacent phrasing that isn't actually asking for the graph relationship. (3) procurement_share — asks for the CUSTOMER's share of spend with a supplier, which 10-K customer-concentration disclosures cannot answer (supplier-reported, not customer-reported) — structurally unanswerable, correct behavior is zero tool calls and an immediate refusal.",
+  "items": [
+    {
+      "id": "rt_dep_qrvo_apple",
+      "category": "dependency",
+      "question": "How dependent is Qorvo on Apple as a customer?",
+      "expected_tool_category": "graph_query",
+      "answerable": true,
+      "notes": "supply_edges has QRVO→AAPL edges with exact revenue_pct across years."
+    },
+    {
+      "id": "rt_dep_crus_apple_pct",
+      "category": "dependency",
+      "question": "What percentage of Cirrus Logic's revenue comes from Apple?",
+      "expected_tool_category": "graph_query",
+      "answerable": true,
+      "notes": "supply_edges has CRUS→AAPL edges with exact revenue_pct."
+    },
+    {
+      "id": "rt_dep_swks_reliance",
+      "category": "dependency",
+      "question": "How reliant is Skyworks Solutions on Apple, based on its 10-K disclosures?",
+      "expected_tool_category": "graph_query",
+      "answerable": true,
+      "notes": "supply_edges has SWKS→AAPL edges (threshold_only=true, but the graph is still the authoritative source, not free-text retrieval)."
+    },
+    {
+      "id": "rt_dep_avgo_concentration",
+      "category": "dependency",
+      "question": "What is Broadcom's revenue concentration with Apple?",
+      "expected_tool_category": "graph_query",
+      "answerable": true,
+      "notes": "supply_edges has AVGO→AAPL edges with exact revenue_pct."
+    },
+    {
+      "id": "rt_qual_crus_risk",
+      "category": "qualitative",
+      "question": "What risk factors does Cirrus Logic identify related to customer concentration?",
+      "expected_tool_category": "retrieve_text",
+      "answerable": true,
+      "notes": "Negative control: mentions 'customer concentration' but asks for narrative risk-factor text, not a number — the dependency regex must not fire here."
+    },
+    {
+      "id": "rt_qual_avgo_competitive",
+      "category": "qualitative",
+      "question": "What does Broadcom's 10-K say about competitive risks in its semiconductor business?",
+      "expected_tool_category": "retrieve_text",
+      "answerable": true,
+      "notes": "Negative control: pure qualitative retrieval question, no concentration language at all."
+    },
+    {
+      "id": "rt_qual_qrvo_risk",
+      "category": "qualitative",
+      "question": "How does Qorvo describe the risks of relying on a small number of customers?",
+      "expected_tool_category": "retrieve_text",
+      "answerable": true,
+      "notes": "Negative control: 'relying on customers' is adjacent phrasing to 'dependent on' — tests regex specificity."
+    },
+    {
+      "id": "rt_qual_swks_supply_chain",
+      "category": "qualitative",
+      "question": "What business risks does Skyworks disclose related to supply chain disruptions?",
+      "expected_tool_category": "retrieve_text",
+      "answerable": true,
+      "notes": "Negative control: supply-chain phrasing but not a customer-concentration question."
+    },
+    {
+      "id": "rt_ref_apple_qrvo_procurement",
+      "category": "procurement_share",
+      "question": "What percentage of Apple's total procurement budget comes from Qorvo?",
+      "expected_tool_category": "refuse_no_tool",
+      "answerable": false,
+      "notes": "Customer-side procurement share — not disclosed anywhere (supplier-reported concentration ≠ customer-reported spend share)."
+    },
+    {
+      "id": "rt_ref_apple_crus_sourcing",
+      "category": "procurement_share",
+      "question": "How much of Apple's component sourcing comes from Cirrus Logic?",
+      "expected_tool_category": "refuse_no_tool",
+      "answerable": false,
+      "notes": "Same pattern, different phrasing ('sourcing' instead of 'procurement')."
+    },
+    {
+      "id": "rt_ref_apple_swks_spend",
+      "category": "procurement_share",
+      "question": "What share of Apple's supply chain spending goes to Skyworks?",
+      "expected_tool_category": "refuse_no_tool",
+      "answerable": false,
+      "notes": "Same pattern, different phrasing ('spending goes to')."
+    },
+    {
+      "id": "rt_ref_apple_avgo_purchasing",
+      "category": "procurement_share",
+      "question": "What fraction of Apple's purchasing is with Broadcom?",
+      "expected_tool_category": "refuse_no_tool",
+      "answerable": false,
+      "notes": "Same pattern, different phrasing ('fraction ... purchasing is with')."
+    }
+  ]
+}

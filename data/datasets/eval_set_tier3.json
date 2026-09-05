@@ -1,0 +1,152 @@
+{
+  "version": "1.0",
+  "description": "Tier-3 supply-chain graph reasoning eval set. Tests graph_query tool + cross-company reasoning. Used to measure baseline-RAG vs graph-augmented delta.",
+  "items": [
+    {
+      "id": "t3_aapl_suppliers_2024",
+      "tier": 3,
+      "type": "graph_lookup",
+      "question": "Which companies in the database directly supply Apple, based on 10-K customer concentration disclosures? Use fiscal year 2024 data.",
+      "answerable": true,
+      "fiscal_year": 2024,
+      "expected_suppliers": ["QRVO", "CRUS", "SWKS"],
+      "expected_edges": [
+        {"supplier": "QRVO", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 46.0},
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 87.0},
+        {"supplier": "SWKS", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 10.0, "threshold_only": true}
+      ],
+      "graph_call": {"customer": "AAPL", "fiscal_year": 2024},
+      "scoring": "traversal_trace",
+      "scoring_notes": "Agent must call graph_query(customer=AAPL, fiscal_year=2024). traversal_trace must contain QRVO, CRUS, SWKS edges."
+    },
+    {
+      "id": "t3_qrvo_apple_pct_2024",
+      "tier": 3,
+      "type": "graph_fact",
+      "question": "What percentage of Qorvo's revenue came from Apple in fiscal year 2024, according to Qorvo's 10-K?",
+      "answerable": true,
+      "ticker": "QRVO",
+      "fiscal_year": 2024,
+      "expected_value": 46.0,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "expected_edges": [
+        {"supplier": "QRVO", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 46.0}
+      ],
+      "graph_call": {"supplier": "QRVO", "customer": "AAPL", "fiscal_year": 2024},
+      "scoring": "numeric"
+    },
+    {
+      "id": "t3_crus_apple_trend",
+      "tier": 3,
+      "type": "graph_trend",
+      "question": "How has Cirrus Logic's revenue dependency on Apple changed over all available fiscal years? Show the trend.",
+      "answerable": true,
+      "ticker": "CRUS",
+      "expected_edges": [
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2022, "revenue_pct": 79.0},
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2023, "revenue_pct": 83.0},
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 87.0},
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2025, "revenue_pct": 89.0},
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2026, "revenue_pct": 91.0}
+      ],
+      "graph_call": {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": "trend"},
+      "scoring": "traversal_trace",
+      "scoring_notes": "Agent must call graph_query with fiscal_year='trend'. traversal_trace must contain all 5 edges FY2022-2026. Answer should characterize direction (increasing)."
+    },
+    {
+      "id": "t3_most_exposed_supplier_2024",
+      "tier": 3,
+      "type": "graph_comparison",
+      "question": "Among Apple's suppliers in the database, which one disclosed the highest Apple revenue concentration in fiscal year 2024?",
+      "answerable": true,
+      "fiscal_year": 2024,
+      "expected_answer_ticker": "CRUS",
+      "expected_value": 87.0,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "expected_edges": [
+        {"supplier": "QRVO", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 46.0},
+        {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 87.0},
+        {"supplier": "SWKS", "customer": "AAPL", "fiscal_year": 2024, "revenue_pct": 10.0, "threshold_only": true}
+      ],
+      "graph_call": {"customer": "AAPL", "fiscal_year": 2024},
+      "scoring": "llm_judge",
+      "scoring_notes": "Correct answer: CRUS at 87%. Agent must retrieve all three suppliers and compare. Judge checks CRUS is named as highest."
+    },
+    {
+      "id": "t3_qrvo_dollar_impact_2024",
+      "tier": 3,
+      "type": "graph_compute",
+      "question": "If Apple reduced orders by 20% in fiscal year 2024, what would be the estimated dollar revenue impact on Qorvo? Use Qorvo's FY2024 revenue and its disclosed Apple concentration from its 10-K.",
+      "answerable": true,
+      "ticker": "QRVO",
+      "fiscal_year": 2024,
+      "expected_value": 346994552.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 1.0,
+      "formula": "Revenue * apple_pct / 100 * 0.20",
+      "input_values": {
+        "Revenue": 3769506000.0,
+        "apple_pct": 46.0
+      },
+      "graph_call": {"supplier": "QRVO", "customer": "AAPL", "fiscal_year": 2024},
+      "requires_financials": ["QRVO.Revenue.2024"],
+      "scoring": "numeric",
+      "scoring_notes": "3,769,506,000 * 0.46 * 0.20 = 346,994,552. Agent must call both graph_query and query_financials, then compute."
+    },
+    {
+      "id": "t3_crus_dollar_impact_2024",
+      "tier": 3,
+      "type": "graph_compute",
+      "question": "If Apple reduced orders by 20% in fiscal year 2024, what would be the estimated dollar revenue impact on Cirrus Logic? Use Cirrus Logic's FY2024 revenue and its disclosed Apple concentration from its 10-K.",
+      "answerable": true,
+      "ticker": "CRUS",
+      "fiscal_year": 2024,
+      "expected_value": 311266860.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 1.0,
+      "formula": "Revenue * apple_pct / 100 * 0.20",
+      "input_values": {
+        "Revenue": 1788890000.0,
+        "apple_pct": 87.0
+      },
+      "graph_call": {"supplier": "CRUS", "customer": "AAPL", "fiscal_year": 2024},
+      "requires_financials": ["CRUS.Revenue.2024"],
+      "scoring": "numeric",
+      "scoring_notes": "1,788,890,000 * 0.87 * 0.20 = 311,266,860."
+    },
+    {
+      "id": "t3_rank_apple_exposure_2024",
+      "tier": 3,
+      "type": "graph_compute",
+      "question": "If Apple cut orders by 20% in fiscal year 2024, rank Qorvo, Cirrus Logic, and Skyworks by estimated dollar revenue impact, largest to smallest. Show your calculation for each.",
+      "answerable": true,
+      "fiscal_year": 2024,
+      "expected_ranking": ["QRVO", "CRUS", "SWKS"],
+      "expected_values": {
+        "QRVO": 346994552.0,
+        "CRUS": 311266860.0,
+        "SWKS_minimum": 83560000.0
+      },
+      "graph_call": {"customer": "AAPL", "fiscal_year": 2024},
+      "requires_financials": ["QRVO.Revenue.2024", "CRUS.Revenue.2024", "SWKS.Revenue.2024"],
+      "scoring": "llm_judge",
+      "scoring_notes": "QRVO ~$347M > CRUS ~$311M > SWKS ≥$84M (minimum, threshold_only). Agent must note SWKS figure is a floor. Judge checks ranking order and that SWKS caveat is mentioned."
+    },
+    {
+      "id": "t3_unans_apple_supplier_share",
+      "tier": 3,
+      "type": "unanswerable",
+      "question": "What percentage of Apple's total procurement budget comes from Qorvo?",
+      "answerable": false,
+      "ticker": "AAPL",
+      "fiscal_year": null,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "scoring": "refusal",
+      "scoring_notes": "Apple's 10-K discloses revenue breakdown by product/geography, not supplier concentration. The supply-chain data we have is from the supplier side (Qorvo's 10-K). Agent must refuse rather than invert the relationship."
+    }
+  ]
+}

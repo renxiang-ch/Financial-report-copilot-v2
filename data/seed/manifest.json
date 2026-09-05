@@ -1,0 +1,92 @@
+{
+  "created": "2026-08-25T15:18:10-05:00",
+  "fingerprint": {
+    "companies": 15,
+    "filings": 148,
+    "financial_facts": 38966,
+    "text_chunks": 16342,
+    "supply_edges": 128,
+    "named_edges": 103,
+    "embedded_chunks": 16342
+  },
+  "embeddings": {
+    "included": false,
+    "model": "BAAI/bge-small-en-v1.5",
+    "dim": 384,
+    "regenerate_with": "python -m copilot.pipeline.embed_chunks"
+  },
+  "tables": {
+    "companies": {
+      "rows": 15,
+      "columns": [
+        "ticker",
+        "name",
+        "cik",
+        "created_at"
+      ],
+      "gz_mb": 0.0
+    },
+    "filings": {
+      "rows": 148,
+      "columns": [
+        "accn",
+        "ticker",
+        "form",
+        "filed_date",
+        "fiscal_year",
+        "doc_url"
+      ],
+      "gz_mb": 0.0
+    },
+    "financial_facts": {
+      "rows": 38966,
+      "columns": [
+        "ticker",
+        "tag",
+        "label",
+        "value",
+        "unit",
+        "period_start",
+        "period_end",
+        "fiscal_year",
+        "fiscal_period",
+        "form",
+        "accn"
+      ],
+      "gz_mb": 0.27
+    },
+    "text_chunks": {
+      "rows": 16342,
+      "columns": [
+        "accn",
+        "ticker",
+        "section",
+        "chunk_index",
+        "text",
+        "token_count",
+        "chunk_type"
+      ],
+      "gz_mb": 8.75
+    },
+    "supply_edges": {
+      "rows": 128,
+      "columns": [
+        "supplier_ticker",
+        "customer_ticker",
+        "revenue_pct",
+        "fiscal_year",
+        "disclosure_status",
+        "accn",
+        "source_text",
+        "threshold_only",
+        "extracted_at"
+      ],
+      "gz_mb": 0.01
+    }
+  },
+  "chunk_links": {
+    "resolvable": 0,
+    "edges_with_a_chunk_id": 33,
+    "note": "dangling on the source database"
+  }
+}

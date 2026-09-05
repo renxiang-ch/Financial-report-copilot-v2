@@ -1,0 +1,155 @@
+{
+  "version": "1.0",
+  "purpose": "One question per defect that actually happened. Each item is the test that would have caught a specific bug before it shipped, written from the trace that exposed it. This set is not a capability benchmark and its accuracy is not comparable to eval_set.json -- every question here is chosen because the system once failed it, so a low score means the defects are back, not that the system is bad.",
+  "created": "2026-08-24",
+  "items": [
+    {
+      "id": "def_threshold_floor_arithmetic",
+      "tier": 3,
+      "type": "grounded",
+      "category": "threshold_disclosure",
+      "answerable": true,
+      "question": "If Apple cut its orders by 20% in fiscal year 2024, what would the dollar impact be on Skyworks Solutions?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "golden_fact_keywords": [
+        [
+          "lower bound",
+          "floor",
+          "at least",
+          "more than ten percent",
+          "more than 10%",
+          ">10%",
+          "minimum"
+        ]
+      ],
+      "require_citation": true,
+      "required_values": [
+        83560000
+      ],
+      "forbidden_values": [
+        835600000
+      ],
+      "allowed_pct_values": [
+        10,
+        20
+      ],
+      "verification": "SWKS FY2024 Revenue = 4,178,000,000 via query_financials (agent's own path) 2026-08-24; supply_edges SWKS->AAPL FY2024 revenue_pct=10.0 threshold_only=true. 4.178e9 * 0.10 * 0.20 = 83,560,000.",
+      "design_intent": "graph_query used to hand the model a bare '>10%' string with no number in it, so the model dropped the percentage term from the arithmetic entirely and computed revenue * 0.20 -- treating a supplier known to be AT LEAST 10% dependent as 100% dependent. The error was exactly 10x and moved SWKS from last place to first. forbidden_values names that wrong figure directly, so the question fails loudly if the defect returns in any phrasing. FIRST RUN, 2026-08-24: the defect this was written for is gone -- graph_query now returns a number -- but the question failed anyway, on something worse. The model reached for APPLE's revenue (391,035,000,000) instead of Skyworks', and described the relationship backwards as 'Skyworks makes up 10% of Apple's revenue' when the disclosure says Apple is more than 10% of SKYWORKS'. The answer was 94x too large and fully sourced: every operand came from a tool, so the grounding check passed it. That is the documented bound of grounding.py -- it verifies a figure has a source, not that the source was the right one -- reproduced on a real question rather than a constructed one.",
+      "fails_means": "Two distinct failures share this question now. If the answer states 835,600,000 the old floor-arithmetic bug is back. If it states a figure derived from the CUSTOMER's revenue instead of the supplier's, the relationship direction is being inverted -- a Rule 8 failure, and the one currently live."
+    },
+    {
+      "id": "def_supplier_set_completeness",
+      "tier": 3,
+      "type": "grounded",
+      "category": "set_completeness",
+      "answerable": true,
+      "question": "List every company that disclosed Apple as a customer in fiscal year 2024, and give each one's revenue concentration.",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "golden_fact_keywords": [
+        [
+          "CRUS",
+          "Cirrus"
+        ],
+        [
+          "QRVO",
+          "Qorvo"
+        ],
+        [
+          "JBL",
+          "Jabil"
+        ],
+        [
+          "SWKS",
+          "Skyworks"
+        ]
+      ],
+      "require_citation": true,
+      "verification": "graph_query(customer='AAPL', fiscal_year=2024) returns exactly four named edges 2026-08-24: CRUS 87%, QRVO 46%, JBL 11%, SWKS 10% (floor).",
+      "design_intent": "graph_query returned four FY2024 edges and the agent fetched revenue for three of them, silently dropping JBL, in 20 consecutive runs. The frozen set's equivalent question scores by containment, so an answer missing a supplier still passed. Every group here is required, so an incomplete set fails.",
+      "fails_means": "The agent is not consuming the full edge list it was given. This is not a data problem -- the edges are there. Look at whether the answer enumerates what graph_query returned or summarises it."
+    },
+    {
+      "id": "def_router_fp_supplier_side_exposure",
+      "tier": 3,
+      "type": "grounded",
+      "category": "router_precision",
+      "answerable": true,
+      "question": "Which of Apple's suppliers is most at risk if Apple's procurement spending goes to competitors instead?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "golden_fact_keywords": [
+        [
+          "CRUS",
+          "Cirrus"
+        ]
+      ],
+      "require_citation": true,
+      "verification": "Answerable from supply_edges: CRUS is the most Apple-dependent named supplier at 87% of its own revenue (FY2024), so it is the one most exposed to Apple redirecting spend. Verified 2026-08-24.",
+      "design_intent": "The regex router refuses anything matching 'procurement/purchasing/spending' near 'comes from / goes to', without checking which side of the relationship is being asked about. This question is supplier-side and perfectly answerable, and the router hard-refuses it with zero tokens and no way for the model to disagree. A refusal contains no supplier name, so requiring one makes the false positive fail deterministically.",
+      "fails_means": "The router is refusing questions it can answer. A false refusal is worse than a wrong tool choice: the user gets nothing and cannot tell whether the data is missing or the classifier misfired."
+    },
+    {
+      "id": "def_router_fn_customer_side_spend",
+      "tier": 3,
+      "type": "unanswerable",
+      "category": "router_recall",
+      "answerable": false,
+      "question": "What fraction of Apple's total supplier spend went to Qorvo in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "verification": "Structurally undisclosed. 10-K customer-concentration disclosures are supplier-reported: they state what share of the SUPPLIER's revenue came from a named customer. No filing states the customer's share of spend. Confirmed against the supply_edges schema 2026-08-24.",
+      "design_intent": "The mirror of the previous question. This one IS structurally unanswerable and the regex router lets it through, because the phrasing says 'supplier spend' rather than any of the words the patterns were written around. Scored on the outcome -- did the system refuse -- not on which path produced the refusal, so a correct answer from the system prompt counts just as much as one from the router.",
+      "fails_means": "Either the router missed it and the prompt rule did not catch it either, or the model produced a number for a quantity no filing reports. The second is the serious one."
+    },
+    {
+      "id": "def_formula_invention_missing_input",
+      "tier": 2,
+      "type": "unanswerable",
+      "category": "formula_discipline",
+      "answerable": false,
+      "question": "What was Apple's days sales outstanding in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "verification": "DSO needs accounts receivable. list_metrics('AAPL') returns 23 labels on 2026-08-24 and receivables is not among them (Revenue, COGS, Inventory, CurrentAssets, TotalAssets ... are). Not derivable from what is stored.",
+      "design_intent": "compute takes whatever expression the model writes, and when the model does not know a formula it invents a plausible one: the saved traces contain 'net_income + operating_income - R&D - COGS' offered as free cash flow, which is not free cash flow under any definition. The grounding check cannot catch this -- if every input was fetched, an invented formula is still fully sourced. The only defence available today is refusing when an input is absent, so that is what this tests. DSO is chosen because the missing input is real and the available metrics (CurrentAssets, Revenue) are tempting proxies.",
+      "fails_means": "The model built a ratio out of whatever was available rather than saying the input is missing. This is the same failure as the fabricated FCF formula, and it is the reason the formula library is on the roadmap."
+    },
+    {
+      "id": "def_answered_from_the_asked_year",
+      "tier": 1,
+      "type": "grounded",
+      "category": "year_provenance",
+      "answerable": true,
+      "question": "According to Skyworks Solutions' fiscal year 2024 10-K, how much of its net revenue came from Apple?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "golden_fact_keywords": [
+        [
+          "more than ten percent",
+          "more than 10%",
+          ">10%",
+          "over ten percent",
+          "ten percent or more",
+          "10% or more",
+          "threshold",
+          "at least 10",
+          "over 10%",
+          "floor of 10",
+          "floor"
+        ]
+      ],
+      "require_citation": true,
+      "required_accessions": [
+        "0000004127-24-000131"
+      ],
+      "allowed_pct_values": [
+        10
+      ],
+      "verification": "SWKS FY2024 10-K accession 0000004127-24-000131; the disclosure \"constituted more than ten percent of our net revenue\" verified present in that filing's chunks 2026-08-24. Skyworks discloses no exact figure, so 10 is the only admissible percentage.",
+      "design_intent": "A citation check that only asks 'is there an accession' cannot tell whether the answer came from the right filing. ret_swks_rf_customer_concentration_risk scored correct for months while answering a FY2024 question out of the FY2023 filing -- its phrase does not exist in FY2024 at all -- and nothing in the harness could see it. This item names the accession the answer must cite, so answering from a neighbouring year fails. allowed_pct_values also blocks the tempting fabricated 69% that WRDS reports and no filing does. KEYWORD LIST CORRECTED 2026-08-26: the group tests whether the answer conveys that this is a threshold rather than an exact figure, and it listed 'over ten percent' in words but not 'over 10%' in digits, and omitted 'floor' -- the word the system's own pct_is_floor mechanism uses and the clearest way to say it. An answer reading 'derived over 10% of its net revenue... stated as a floor of 10%' was scored wrong. That is a gap in the list, not a pass the system did not earn; the accession and percentage checks were already passing.",
+      "fails_means": "Either retrieval is satisfying a year-specific question from a different year's filing, or the answer cites nothing. The first is the dangerous one because the answer looks sourced."
+    }
+  ]
+}

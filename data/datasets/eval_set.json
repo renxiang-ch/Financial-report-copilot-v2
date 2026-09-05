@@ -1,0 +1,548 @@
+{
+  "version": "1.4",
+  "items": [
+    {
+      "id": "t1_aapl_revenue_2024",
+      "tier": 1,
+      "question": "What was Apple's total revenue in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 391035000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_aapl_netincome_2024",
+      "tier": 1,
+      "question": "What was Apple's net income in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 93736000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_aapl_eps_diluted_2024",
+      "tier": 1,
+      "question": "What was Apple's diluted EPS in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 6.08,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_swks_revenue_2024",
+      "tier": 1,
+      "question": "What was Skyworks Solutions' revenue in fiscal year 2024?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "expected_value": 4178000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_swks_netincome_2024",
+      "tier": 1,
+      "question": "What was Skyworks Solutions' net income in fiscal year 2024?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "expected_value": 596000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_qrvo_netincome_2024",
+      "tier": 1,
+      "question": "What was Qorvo's net income in fiscal year 2024?",
+      "ticker": "QRVO",
+      "fiscal_year": 2024,
+      "expected_value": -70322000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_crus_revenue_2024",
+      "tier": 1,
+      "question": "What was Cirrus Logic's revenue in fiscal year 2024?",
+      "ticker": "CRUS",
+      "fiscal_year": 2024,
+      "expected_value": 1788890000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_glw_revenue_2024",
+      "tier": 1,
+      "question": "What was Corning's total revenue in fiscal year 2024?",
+      "ticker": "GLW",
+      "fiscal_year": 2024,
+      "expected_value": 13118000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_avgo_revenue_2024",
+      "tier": 1,
+      "question": "What was Broadcom's total revenue in fiscal year 2024?",
+      "ticker": "AVGO",
+      "fiscal_year": 2024,
+      "expected_value": 51574000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t1_avgo_randd_2024",
+      "tier": 1,
+      "question": "How much did Broadcom spend on R&D in fiscal year 2024?",
+      "ticker": "AVGO",
+      "fiscal_year": 2024,
+      "expected_value": 9310000000.0,
+      "expected_unit": "USD",
+      "tolerance_pct": 0.5,
+      "answerable": true
+    },
+    {
+      "id": "t2_aapl_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Apple's gross margin percentage in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 46.2063,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "GrossProfit / Revenue * 100",
+      "input_values": {
+        "GrossProfit": 180683000000.0,
+        "Revenue": 391035000000.0
+      }
+    },
+    {
+      "id": "t2_aapl_operatingincome_pct_2024",
+      "tier": 2,
+      "question": "What was Apple's operating margin percentage in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 31.5102,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "OperatingIncome / Revenue * 100",
+      "input_values": {
+        "OperatingIncome": 123216000000.0,
+        "Revenue": 391035000000.0
+      }
+    },
+    {
+      "id": "t2_aapl_netincome_pct_2024",
+      "tier": 2,
+      "question": "What was Apple's net profit margin in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 23.9713,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "NetIncome / Revenue * 100",
+      "input_values": {
+        "NetIncome": 93736000000.0,
+        "Revenue": 391035000000.0
+      }
+    },
+    {
+      "id": "t2_avgo_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Broadcom's gross margin percentage in fiscal year 2024?",
+      "ticker": "AVGO",
+      "fiscal_year": 2024,
+      "expected_value": 63.0337,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "GrossProfit / Revenue * 100",
+      "input_values": {
+        "GrossProfit": 32509000000.0,
+        "Revenue": 51574000000.0
+      }
+    },
+    {
+      "id": "t2_qrvo_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Qorvo's gross margin percentage in fiscal year 2024?",
+      "ticker": "QRVO",
+      "fiscal_year": 2024,
+      "expected_value": 39.4878,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "GrossProfit / Revenue * 100",
+      "input_values": {
+        "GrossProfit": 1488495000.0,
+        "Revenue": 3769506000.0
+      }
+    },
+    {
+      "id": "t2_aapl_revenue_yoy_2023_2024",
+      "tier": 2,
+      "question": "By what percentage did Apple's revenue grow from fiscal year 2023 to 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "expected_value": 2.022,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "(Revenue_2024 - Revenue_2023) / Revenue_2023 * 100",
+      "input_values": {
+        "Revenue_2024": 391035000000.0,
+        "Revenue_2023": 383285000000.0
+      }
+    },
+    {
+      "id": "t2_aapl_revenue_yoy_2022_2023",
+      "tier": 2,
+      "question": "By what percentage did Apple's revenue change from fiscal year 2022 to 2023?",
+      "ticker": "AAPL",
+      "fiscal_year": 2023,
+      "expected_value": -2.8005,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "(Revenue_2023 - Revenue_2022) / Revenue_2022 * 100",
+      "input_values": {
+        "Revenue_2023": 383285000000.0,
+        "Revenue_2022": 394328000000.0
+      }
+    },
+    {
+      "id": "t2_swks_revenue_yoy_2023_2024",
+      "tier": 2,
+      "question": "By what percentage did Skyworks' revenue change from fiscal year 2023 to 2024?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "expected_value": -12.4549,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "(Revenue_2024 - Revenue_2023) / Revenue_2023 * 100",
+      "input_values": {
+        "Revenue_2024": 4178000000.0,
+        "Revenue_2023": 4772400000.0
+      }
+    },
+    {
+      "id": "t2_avgo_revenue_yoy_2023_2024",
+      "tier": 2,
+      "question": "By what percentage did Broadcom's revenue grow from fiscal year 2023 to 2024?",
+      "ticker": "AVGO",
+      "fiscal_year": 2024,
+      "expected_value": 43.985,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "(Revenue_2024 - Revenue_2023) / Revenue_2023 * 100",
+      "input_values": {
+        "Revenue_2024": 51574000000.0,
+        "Revenue_2023": 35819000000.0
+      }
+    },
+    {
+      "id": "t2_glw_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Corning's gross margin percentage in fiscal year 2024?",
+      "ticker": "GLW",
+      "fiscal_year": 2024,
+      "expected_value": 32.5964,
+      "expected_unit": "%",
+      "tolerance_pct": 0.5,
+      "answerable": true,
+      "formula": "GrossProfit / Revenue * 100",
+      "input_values": {
+        "GrossProfit": 4276000000.0,
+        "Revenue": 13118000000.0
+      }
+    },
+    {
+      "id": "unans_aapl_fcf_2024",
+      "tier": 1,
+      "question": "What was Apple's free cash flow in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": null,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "answerable": false,
+      "retired": true,
+      "retired_date": "2026-08-21",
+      "retired_reason": "OperatingCashFlow and CapEx were both ingested after this set was frozen, so free cash flow is now derivable (AAPL FY2024: 122,151,000,000 - 10,959,000,000). Scoring a refusal here rewarded obedience to a stale prompt whitelist, not honest refusal. Replaced by v2_aapl_fcf_2024, which requires the correct answer."
+    },
+    {
+      "id": "unans_aapl_china_rev_2023",
+      "tier": 1,
+      "question": "What percentage of Apple's revenue came from China in fiscal year 2023?",
+      "ticker": "AAPL",
+      "fiscal_year": null,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "answerable": false
+    },
+    {
+      "id": "unans_swks_dte_2024",
+      "tier": 1,
+      "question": "What was Skyworks Solutions' debt-to-equity ratio in fiscal year 2024?",
+      "ticker": "SWKS",
+      "fiscal_year": null,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "answerable": false,
+      "retired": true,
+      "retired_date": "2026-08-21",
+      "retired_reason": "TotalDebt and TotalEquity were both ingested after this set was frozen, so debt-to-equity is now derivable (SWKS FY2024: 994,300,000 / 6,336,700,000). Replaced by v2_swks_dte_2024."
+    },
+    {
+      "id": "unans_tsmc_rev_2024",
+      "tier": 1,
+      "question": "What was TSMC's revenue in fiscal year 2024?",
+      "ticker": null,
+      "fiscal_year": null,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "answerable": false
+    },
+    {
+      "id": "unans_aapl_div_yield_2024",
+      "tier": 1,
+      "question": "What was Apple's dividend yield in fiscal year 2024?",
+      "ticker": "AAPL",
+      "fiscal_year": null,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "answerable": false
+    },
+    {
+      "id": "ret_swks_apple_concentration_2024",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "How dependent is Skyworks Solutions on Apple as a customer, according to its fiscal year 2024 10-K?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "SWKS",
+          "section": "Business",
+          "key_phrase": "constituted more than ten percent of our net revenue"
+        }
+      ],
+      "golden_answer": "A small number of OEMs historically has accounted for a significant portion of our net revenue. In each of the fiscal years ended September 27, 2024 (fiscal 2024), September 29, 2023 (fiscal 2023), and September 30, 2022 (fiscal 2022), Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue. Further, the Company's three largest accounts receivable balances comprised 80% and 83% of aggregate gross accounts receivable as of September 27, 2024 and September 29, 2023, respectively.",
+      "keywords": [
+        "Apple",
+        "ten percent",
+        "net revenue",
+        "customer"
+      ]
+    },
+    {
+      "id": "ret_swks_markets_served_2024",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "What end markets and applications does Skyworks Solutions serve, according to its fiscal year 2024 10-K?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "SWKS",
+          "section": "Business",
+          "key_phrase": "aerospace, automotive, broadband, cellular infrastructure, connected home, defense, entertainment and gaming, industrial, medical, smartphone, tablet, and wearables"
+        }
+      ],
+      "golden_answer": "Skyworks Solutions, Inc., together with its consolidated subsidiaries (Skyworks or the Company), is a leading developer, manufacturer and provider of analog and mixed-signal semiconductor products and solutions for numerous applications, including aerospace, automotive, broadband, cellular infrastructure, connected home, defense, entertainment and gaming, industrial, medical, smartphone, tablet, and wearables.",
+      "keywords": [
+        "aerospace",
+        "automotive",
+        "smartphone",
+        "semiconductor"
+      ]
+    },
+    {
+      "id": "ret_avgo_vmware_acquisition",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "How does Broadcom describe its history and the role of the VMware acquisition, according to its fiscal year 2024 10-K?",
+      "ticker": "AVGO",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "AVGO",
+          "section": "Business",
+          "key_phrase": "60-year history of innovation dates back to our diverse origins from AT&T/Bell Labs"
+        }
+      ],
+      "golden_answer": "We are a global technology leader that designs, develops and supplies a broad range of semiconductor and semiconductor-based solutions and infrastructure software solutions. Our more than 60-year history of innovation dates back to our diverse origins from AT&T/Bell Labs, Lucent and Hewlett-Packard Company, and has evolved through acquisitions, including LSI Corporation, Broadcom Corporation, Brocade Communications Systems, Inc., CA, Inc., Symantec Enterprise Security, and VMware, Inc. (VMware). Over the years, we have assembled a large team of semiconductor and software design engineers around the world.",
+      "keywords": [
+        "VMware",
+        "acquisition",
+        "infrastructure software",
+        "semiconductor"
+      ]
+    },
+    {
+      "id": "ret_aapl_product_categories",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "What product and service categories does Apple report revenue from in its fiscal year 2024 10-K?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "AAPL",
+          "section": "Business",
+          "key_phrase": "designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories"
+        }
+      ],
+      "golden_answer": "The Company designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related services. Hardware products: iPhone (smartphones based on iOS), Mac (personal computers based on macOS, including MacBook Air, MacBook Pro, iMac, Mac mini, Mac Studio, Mac Pro), iPad (multipurpose tablets based on iPadOS), and Wearables, Home and Accessories (smartwatches, wireless headphones, spatial computers). Services: Advertising (the Company's own advertising platforms), AppleCare (fee-based service and support products), Cloud Services, and Digital Content (App Store, Apple Arcade, Apple Fitness+, and other subscription-based services).",
+      "keywords": [
+        "iPhone",
+        "Mac",
+        "iPad",
+        "Services",
+        "AppleCare"
+      ]
+    },
+    {
+      "id": "ret_aapl_applecare_description",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "How does Apple describe its AppleCare service offerings in its fiscal year 2024 10-K?",
+      "ticker": "AAPL",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "AAPL",
+          "section": "Business",
+          "key_phrase": "portfolio of fee-based service and support products under the AppleCare"
+        }
+      ],
+      "golden_answer": "The Company offers a portfolio of fee-based service and support products under the AppleCare brand. The offerings provide priority access to Apple technical support, access to the global Apple authorized service network for repair and replacement services, and in many cases additional coverage for instances of accidental damage or theft and loss, depending on the country and type of product.",
+      "keywords": [
+        "AppleCare",
+        "fee-based",
+        "support",
+        "service"
+      ]
+    },
+    {
+      "id": "ret_qrvo_customer_risk",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "What does Qorvo's fiscal year 2024 10-K say about customer concentration risk?",
+      "ticker": "QRVO",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "QRVO",
+          "section": "Business",
+          "key_phrase": "accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023"
+        }
+      ],
+      "golden_answer": "We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively. Samsung Electronics Co., Ltd. ('Samsung') accounted for 12% of total revenue in both fiscal years 2024 and 2023. These customers primarily purchase RF solutions for a variety of mobile devices.",
+      "keywords": [
+        "customer",
+        "concentration",
+        "revenue",
+        "Apple"
+      ]
+    },
+    {
+      "id": "ret_glw_business_segments",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "What are Corning's main business segments described in its fiscal year 2024 10-K?",
+      "ticker": "GLW",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "GLW",
+          "section": "Business",
+          "key_phrase": "The Optical Communications segment is divided into two main product groupi"
+        }
+      ],
+      "golden_answer": "Corning operates through five reportable segments. Optical Communications: fiber and connectivity solutions for telecommunications carrier networks and enterprise/data center networks. Display Technologies: glass substrates for flat panel LCDs and OLEDs used in televisions, notebook computers, monitors, tablets and handheld devices; manufacturing operations in China, South Korea and Taiwan. Specialty Materials: Gorilla Glass for mobile devices and semiconductor optics (ultra-flat glass wafers for advanced semiconductor packaging, 3D sensing, and augmented reality). Environmental Technologies: automotive and diesel emission control products. Life Sciences: laboratory equipment and vessels.",
+      "keywords": [
+        "Optical",
+        "Display",
+        "specialty glass",
+        "segment"
+      ]
+    },
+    {
+      "id": "ret_swks_rf_customer_concentration_risk",
+      "tier": 1,
+      "type": "retrieval",
+      "question": "What risk factors does Skyworks identify related to reliance on a small number of customers?",
+      "ticker": "SWKS",
+      "fiscal_year": 2024,
+      "answerable": true,
+      "expected_value": null,
+      "expected_unit": null,
+      "tolerance_pct": null,
+      "golden_citations": [
+        {
+          "ticker": "SWKS",
+          "section": "Risk Factors",
+          "key_phrase": "Significant portions of our sales are concentrated among a limited number of customers"
+        }
+      ],
+      "golden_answer": "Significant portions of our sales are concentrated among a limited number of customers. If we lost one or more of these major customers, or if one or more major customers significantly decreased its orders for our products, our business, results of operations, and financial condition could be materially and adversely impacted, which could adversely affect our stock price. In each of fiscal 2023, fiscal 2022, and fiscal 2021, one customer accounted for greater than ten percent of our net revenue.",
+      "keywords": [
+        "risk",
+        "customer",
+        "materially",
+        "adversely"
+      ],
+      "retired": true,
+      "retired_date": "2026-08-24",
+      "retired_reason": "Premise no longer holds. The item asks about SWKS fiscal year 2024 and its key_phrase (\"Significant portions of our sales are concentrated among a limited number of customers\") does not appear anywhere in the FY2024 filing -- only in FY2016 through FY2023, where Skyworks used that wording. The question has been scoring as correct by retrieving the FY2023 text to answer a FY2024 question, which the harness could not see because it checks whether the phrase was retrieved and never which filing it came from. Exposed on 2026-08-24 by scoping retrieval to the asked-for fiscal year, where it correctly stopped matching. Replaced by def_answered_from_the_asked_year in eval_set_defects.json, which requires the FY2024 accession specifically."
+    }
+  ]
+}

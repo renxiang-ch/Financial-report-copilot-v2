@@ -1,0 +1,851 @@
+{
+  "generated_at": "20260904T234252Z",
+  "n": 38,
+  "summary": {
+    "status_counts": {
+      "OK": 38
+    },
+    "by_tier": {
+      "tier1": {
+        "n": 20,
+        "correct": 17,
+        "needs_review": 0
+      },
+      "tier2": {
+        "n": 10,
+        "correct": 10,
+        "needs_review": 0
+      },
+      "tier3": {
+        "n": 8,
+        "correct": 6,
+        "needs_review": 0
+      }
+    },
+    "accuracy_excl_pending": {
+      "tier1": 0.85,
+      "tier2": 1.0,
+      "tier3": 0.75
+    }
+  },
+  "rows": [
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s total revenue (net sales) in fiscal year 2024 was **$391.035 billion**.\n\nSource: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>)",
+      "latency_s": 21.7,
+      "usage": {
+        "input_tokens": 82947,
+        "cached_input_tokens": 53504,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 445,
+        "reasoning_output_tokens": 27
+      },
+      "id": "t1_aapl_revenue_2024",
+      "tier": 1,
+      "question": "What was Apple's total revenue in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 391035000000.0,
+      "got_raw": 391.035,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s fiscal 2024 net income was **$93.736 billion**.\n\nSource: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>).",
+      "latency_s": 23.8,
+      "usage": {
+        "input_tokens": 96528,
+        "cached_input_tokens": 62720,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 439,
+        "reasoning_output_tokens": 26
+      },
+      "id": "t1_aapl_netincome_2024",
+      "tier": 1,
+      "question": "What was Apple's net income in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 93736000000.0,
+      "got_raw": 93.736,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s diluted EPS was **$6.08** in fiscal year 2024.\n\nSource: `AAPL/2024_10-K_0000320193-24-000123.htm`",
+      "latency_s": 25.3,
+      "usage": {
+        "input_tokens": 86273,
+        "cached_input_tokens": 67328,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 399,
+        "reasoning_output_tokens": 30
+      },
+      "id": "t1_aapl_eps_diluted_2024",
+      "tier": 1,
+      "question": "What was Apple's diluted EPS in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 6.08,
+      "got_raw": 6.08,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Skyworks Solutions\u2019 fiscal 2024 revenue was **$4.178 billion**.\n\nSource: [SWKS/2024_10-K_0000004127-24-000131.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/SWKS/2024_10-K_0000004127-24-000131.htm>).",
+      "latency_s": 28.7,
+      "usage": {
+        "input_tokens": 130717,
+        "cached_input_tokens": 109824,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 677,
+        "reasoning_output_tokens": 76
+      },
+      "id": "t1_swks_revenue_2024",
+      "tier": 1,
+      "question": "What was Skyworks Solutions' revenue in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 4178000000.0,
+      "got_raw": 4.178,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Skyworks Solutions\u2019 net income in fiscal year 2024 was **$596.0 million**.\n\nSource: [2024_10-K_0000004127-24-000131.htm](/Users/ethan/Financial%20Report%20Copilot%20v2/baseline/raw_filings/SWKS/2024_10-K_0000004127-24-000131.htm).",
+      "latency_s": 27.5,
+      "usage": {
+        "input_tokens": 125059,
+        "cached_input_tokens": 108160,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 578,
+        "reasoning_output_tokens": 59
+      },
+      "id": "t1_swks_netincome_2024",
+      "tier": 1,
+      "question": "What was Skyworks Solutions' net income in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 596000000.0,
+      "got_raw": 596.0,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Qorvo reported a **net loss of $70.322 million** in fiscal year 2024.\n\nSource: [QRVO/2024_10-K_0001604778-24-000036.htm](/Users/ethan/Financial%20Report%20Copilot%20v2/baseline/raw_filings/QRVO/2024_10-K_0001604778-24-000036.htm).",
+      "latency_s": 29.9,
+      "usage": {
+        "input_tokens": 130915,
+        "cached_input_tokens": 104576,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 650,
+        "reasoning_output_tokens": 62
+      },
+      "id": "t1_qrvo_netincome_2024",
+      "tier": 1,
+      "question": "What was Qorvo's net income in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": -70322000.0,
+      "got_raw": 70.322,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Cirrus Logic\u2019s fiscal year 2024 revenue was **$1.789 billion** ($1,788.9 million).\n\nSource: [CRUS/2024_10-K_0000772406-24-000031.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2024_10-K_0000772406-24-000031.htm>).",
+      "latency_s": 29.0,
+      "usage": {
+        "input_tokens": 131382,
+        "cached_input_tokens": 110080,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 699,
+        "reasoning_output_tokens": 41
+      },
+      "id": "t1_crus_revenue_2024",
+      "tier": 1,
+      "question": "What was Cirrus Logic's revenue in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 1788890000.0,
+      "got_raw": 1.789,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Corning\u2019s total revenue in fiscal year 2024 was **$13.118 billion**.\n\nSource: [GLW/2024_10-K_0001628280-25-005347.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/GLW/2024_10-K_0001628280-25-005347.htm>).",
+      "latency_s": 31.1,
+      "usage": {
+        "input_tokens": 131142,
+        "cached_input_tokens": 105856,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 845,
+        "reasoning_output_tokens": 151
+      },
+      "id": "t1_glw_revenue_2024",
+      "tier": 1,
+      "question": "What was Corning's total revenue in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 13118000000.0,
+      "got_raw": 13.118,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Broadcom\u2019s total revenue in fiscal year 2024 was **$51.574 billion**.\n\nSource: [AVGO/2024_10-K_0001730168-24-000139.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AVGO/2024_10-K_0001730168-24-000139.htm>).",
+      "latency_s": 30.8,
+      "usage": {
+        "input_tokens": 116756,
+        "cached_input_tokens": 99456,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 663,
+        "reasoning_output_tokens": 42
+      },
+      "id": "t1_avgo_revenue_2024",
+      "tier": 1,
+      "question": "What was Broadcom's total revenue in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 51574000000.0,
+      "got_raw": 51.574,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Broadcom spent **$9.31 billion on research and development (R&D)** in fiscal year 2024.\n\nSource: [AVGO/2024_10-K_0001730168-24-000139.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AVGO/2024_10-K_0001730168-24-000139.htm>).",
+      "latency_s": 26.7,
+      "usage": {
+        "input_tokens": 112062,
+        "cached_input_tokens": 92032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 604,
+        "reasoning_output_tokens": 68
+      },
+      "id": "t1_avgo_randd_2024",
+      "tier": 1,
+      "question": "How much did Broadcom spend on R&D in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 9310000000.0,
+      "got_raw": 9.31,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s gross margin percentage was **46.2%** in fiscal year 2024.\n\nSource: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>).",
+      "latency_s": 29.1,
+      "usage": {
+        "input_tokens": 107840,
+        "cached_input_tokens": 98816,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 701,
+        "reasoning_output_tokens": 76
+      },
+      "id": "t2_aapl_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Apple's gross margin percentage in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 46.2063,
+      "got_raw": 46.2,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s fiscal 2024 operating margin was **31.5%**.\n\nCalculation: $123.216B operating income \u00f7 $391.035B net sales = **31.51%**.\n\nSource: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>)",
+      "latency_s": 28.9,
+      "usage": {
+        "input_tokens": 109666,
+        "cached_input_tokens": 93824,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 649,
+        "reasoning_output_tokens": 68
+      },
+      "id": "t2_aapl_operatingincome_pct_2024",
+      "tier": 2,
+      "question": "What was Apple's operating margin percentage in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 31.5102,
+      "got_raw": 31.51,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s fiscal 2024 net profit margin was **24.0%**.\n\nCalculation: **$93.736B net income \u00f7 $391.035B net sales = 23.97%**\n\nFile used: [2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>)",
+      "latency_s": 36.8,
+      "usage": {
+        "input_tokens": 138011,
+        "cached_input_tokens": 118400,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 841,
+        "reasoning_output_tokens": 47
+      },
+      "id": "t2_aapl_netincome_pct_2024",
+      "tier": 2,
+      "question": "What was Apple's net profit margin in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 23.9713,
+      "got_raw": 23.97,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Broadcom\u2019s fiscal 2024 gross margin was **63.0%**.\n\nCalculation: **$32.509B gross profit \u00f7 $51.574B revenue = 63.03%**\n\nFile used: [AVGO/2024_10-K_0001730168-24-000139.htm](/Users/ethan/Financial%20Report%20Copilot%20v2/baseline/raw_filings/AVGO/2024_10-K_0001730168-24-000139.htm)",
+      "latency_s": 48.3,
+      "usage": {
+        "input_tokens": 184007,
+        "cached_input_tokens": 156928,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1204,
+        "reasoning_output_tokens": 132
+      },
+      "id": "t2_avgo_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Broadcom's gross margin percentage in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 63.0337,
+      "got_raw": 63.03,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Qorvo\u2019s gross margin was **39.5% in fiscal year 2024**.\n\nSource: [2024_10-K_0001604778-24-000036.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/QRVO/2024_10-K_0001604778-24-000036.htm>).",
+      "latency_s": 30.6,
+      "usage": {
+        "input_tokens": 106946,
+        "cached_input_tokens": 88960,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 654,
+        "reasoning_output_tokens": 84
+      },
+      "id": "t2_qrvo_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Qorvo's gross margin percentage in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 39.4878,
+      "got_raw": 39.5,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s revenue grew **2.02%** from fiscal 2023 to 2024.\n\n- 2023 revenue: **$383.285 billion**\n- 2024 revenue: **$391.035 billion**\n- Calculation: \\((391.035 - 383.285) / 383.285 \\times 100 = 2.02\\%\\)\n\nSource: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>)",
+      "latency_s": 23.4,
+      "usage": {
+        "input_tokens": 83399,
+        "cached_input_tokens": 49280,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 603,
+        "reasoning_output_tokens": 130
+      },
+      "id": "t2_aapl_revenue_yoy_2023_2024",
+      "tier": 2,
+      "question": "By what percentage did Apple's revenue grow from fiscal year 2023 to 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 2.022,
+      "got_raw": 2.02,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s revenue **decreased by 2.8%**, from **$394.328 billion in fiscal 2022** to **$383.285 billion in fiscal 2023**.\n\nCalculation: \\((383.285 - 394.328) / 394.328 \\times 100 = -2.80\\%\\)\n\nFile used: [AAPL 2023 Form 10-K](/Users/ethan/Financial%20Report%20Copilot%20v2/baseline/raw_filings/AAPL/2023_10-K_0000320193-23-000106.htm)",
+      "latency_s": 33.6,
+      "usage": {
+        "input_tokens": 126773,
+        "cached_input_tokens": 98816,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 816,
+        "reasoning_output_tokens": 112
+      },
+      "id": "t2_aapl_revenue_yoy_2022_2023",
+      "tier": 2,
+      "question": "By what percentage did Apple's revenue change from fiscal year 2022 to 2023?",
+      "type": "numeric",
+      "correct": true,
+      "expected": -2.8005,
+      "got_raw": -2.8,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Skyworks\u2019 revenue **decreased by 12.5%**, from **$4.772 billion in fiscal 2023** to **$4.178 billion in fiscal 2024**.\n\nCalculation: \\((4.178 - 4.7724) / 4.7724 \\times 100 = -12.45\\%\\)\n\nSource: [SWKS 2024 10-K](/Users/ethan/Financial%20Report%20Copilot%20v2/baseline/raw_filings/SWKS/2024_10-K_0000004127-24-000131.htm)",
+      "latency_s": 39.9,
+      "usage": {
+        "input_tokens": 163648,
+        "cached_input_tokens": 142336,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1117,
+        "reasoning_output_tokens": 129
+      },
+      "id": "t2_swks_revenue_yoy_2023_2024",
+      "tier": 2,
+      "question": "By what percentage did Skyworks' revenue change from fiscal year 2023 to 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": -12.4549,
+      "got_raw": -12.45,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Broadcom\u2019s revenue grew **approximately 44.0%**, from **$35.819 billion in fiscal 2023** to **$51.574 billion in fiscal 2024**.\n\nCalculation: \\((51.574 - 35.819) / 35.819 \\times 100 = 44.0\\%\\)\n\nFile used: `AVGO/2024_10-K_0001730168-24-000139.htm`",
+      "latency_s": 22.3,
+      "usage": {
+        "input_tokens": 83461,
+        "cached_input_tokens": 74240,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 485,
+        "reasoning_output_tokens": 63
+      },
+      "id": "t2_avgo_revenue_yoy_2023_2024",
+      "tier": 2,
+      "question": "By what percentage did Broadcom's revenue grow from fiscal year 2023 to 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 43.985,
+      "got_raw": 44.0,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Corning\u2019s fiscal 2024 gross margin was **32.6%**.\n\nCalculation: **$4.276B gross profit \u00f7 $13.118B net sales = 32.6%**\n\nFile used: `GLW/2024_10-K_0001628280-25-005347.htm`",
+      "latency_s": 28.7,
+      "usage": {
+        "input_tokens": 131429,
+        "cached_input_tokens": 99968,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 685,
+        "reasoning_output_tokens": 116
+      },
+      "id": "t2_glw_grossprofit_pct_2024",
+      "tier": 2,
+      "question": "What was Corning's gross margin percentage in fiscal year 2024?",
+      "type": "numeric",
+      "correct": true,
+      "expected": 32.5964,
+      "got_raw": 32.6,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s **Greater China** revenue was **18.9%** of total revenue in fiscal 2023.\n\nCalculation: $72.559B \u00f7 $383.285B \u00d7 100 = **18.93%**\n\nFile used: [2023_10-K_0000320193-23-000106.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2023_10-K_0000320193-23-000106.htm>)\n\n*Apple defines Greater China as mainland China, Hong Kong, and Taiwan.*",
+      "latency_s": 31.1,
+      "usage": {
+        "input_tokens": 142545,
+        "cached_input_tokens": 120832,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 697,
+        "reasoning_output_tokens": 60
+      },
+      "id": "unans_aapl_china_rev_2023",
+      "tier": 1,
+      "question": "What percentage of Apple's revenue came from China in fiscal year 2023?",
+      "type": "unanswerable",
+      "correct": false,
+      "refusal_detected": false,
+      "unanswerable_reason": "v1_schema_gap"
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "TSMC\u2019s fiscal 2024 revenue was **NT$2.894 trillion** (approximately **US$90.1 billion**).\n\nThe provided directory contains no TSM/TSMC filing, so no local filing was used.",
+      "latency_s": 28.5,
+      "usage": {
+        "input_tokens": 90159,
+        "cached_input_tokens": 86912,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 644,
+        "reasoning_output_tokens": 219
+      },
+      "id": "unans_tsmc_rev_2024",
+      "tier": 1,
+      "question": "What was TSMC's revenue in fiscal year 2024?",
+      "type": "unanswerable",
+      "correct": false,
+      "refusal_detected": false,
+      "unanswerable_reason": "out_of_scope"
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple\u2019s fiscal 2024 dividend yield was approximately **0.43%**.\n\nCalculation: **$0.98 annual dividends per share \u00f7 $227.79 fiscal year-end share price = 0.43%**.\n\nFiling used: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>).",
+      "latency_s": 34.0,
+      "usage": {
+        "input_tokens": 129399,
+        "cached_input_tokens": 108160,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 928,
+        "reasoning_output_tokens": 368
+      },
+      "id": "unans_aapl_div_yield_2024",
+      "tier": 1,
+      "question": "What was Apple's dividend yield in fiscal year 2024?",
+      "type": "unanswerable",
+      "correct": false,
+      "refusal_detected": false,
+      "unanswerable_reason": "v1_schema_gap"
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Skyworks Solutions was **highly dependent on Apple** in fiscal 2024:\n\n- Apple accounted for **69% of Skyworks\u2019 net revenue**, up from 66% in 2023 and 58% in 2022.\n- This exposure included direct sales and sales through distributors and contract manufacturers for Apple products such as iPhones, iPads, Macs, and Watches.\n- Therefore, reduced Apple orders, lost product designs, or a shift to competing suppliers could materially hurt Skyworks\u2019 financial results.\n\nFiling consulted: [SWKS/2024_10-K_0000004127-24-000131.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/SWKS/2024_10-K_0000004127-24-000131.htm>).",
+      "latency_s": 31.8,
+      "usage": {
+        "input_tokens": 179593,
+        "cached_input_tokens": 149760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 847,
+        "reasoning_output_tokens": 108
+      },
+      "id": "ret_swks_apple_concentration_2024",
+      "tier": 1,
+      "question": "How dependent is Skyworks Solutions on Apple as a customer, according to its fiscal year 2024 10-K?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer accurately summarizes Skyworks Solutions' high dependence on Apple, providing correct revenue percentages and context from the 10-K filing.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "According to Skyworks Solutions\u2019 fiscal 2024 10-K, it serves these end markets and applications:\n\n- Aerospace and defense\n- Automotive, including electric/hybrid vehicles, infotainment, safety systems, drivetrains, and charging stations\n- Broadband and wireless networking\n- Cellular/5G infrastructure\n- Connected and smart homes\n- Entertainment and gaming\n- Industrial applications, including factory automation, motor control, and power supplies\n- Medical devices\n- Smartphones, tablets, and wearables\n- Data centers and optical communications/networking\n- Solar energy and smart-energy applications\n- Wireless audio devices\n\nFile consulted: [SWKS/2024_10-K_0000004127-24-000131.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/SWKS/2024_10-K_0000004127-24-000131.htm>).",
+      "latency_s": 29.7,
+      "usage": {
+        "input_tokens": 128792,
+        "cached_input_tokens": 102656,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 745,
+        "reasoning_output_tokens": 100
+      },
+      "id": "ret_swks_markets_served_2024",
+      "tier": 1,
+      "question": "What end markets and applications does Skyworks Solutions serve, according to its fiscal year 2024 10-K?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 2,
+      "judge_reason": "The generated answer captures the majority of end markets and applications but includes additional specifics and categories not mentioned in the reference, reflecting minor inaccuracies.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Broadcom describes itself as having a **more than 60-year history of innovation**, originating from AT&T/Bell Labs, Lucent, and Hewlett-Packard and evolving through acquisitions including LSI, the former Broadcom Corporation, Brocade, CA, Symantec Enterprise Security, and VMware.\n\nIt presents the November 22, 2023 VMware acquisition as the latest major step in that evolution. Broadcom says VMware:\n\n- Bolstered its infrastructure-software portfolio.\n- Increased its ability to address customers\u2019 complex IT-infrastructure needs.\n- Added a core private-cloud business focused on large enterprises.\n- Accelerated Broadcom\u2019s shift toward subscription licensing and a simplified software portfolio.\n\nBroadcom subsequently sold VMware\u2019s non-core end-user computing business for $3.5 billion. The filing also acknowledges that realizing the acquisition\u2019s expected benefits depends on successful integration and customer acceptance of Broadcom\u2019s strategy.\n\nFile consulted: [AVGO/2024_10-K_0001730168-24-000139.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AVGO/2024_10-K_0001730168-24-000139.htm>).",
+      "latency_s": 36.1,
+      "usage": {
+        "input_tokens": 138490,
+        "cached_input_tokens": 107136,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 824,
+        "reasoning_output_tokens": 142
+      },
+      "id": "ret_avgo_vmware_acquisition",
+      "tier": 1,
+      "question": "How does Broadcom describe its history and the role of the VMware acquisition, according to its fiscal year 2024 10-K?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer accurately summarizes Broadcom's history, mentions key acquisitions including VMware, and correctly highlights the role and implications of the VMware acquisition as stated in the 10-K.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple reported fiscal 2024 revenue across five categories:\n\n- **iPhone**\n- **Mac**\n- **iPad**\n- **Wearables, Home and Accessories**\n- **Services**, including advertising, AppleCare, cloud services, digital content and subscriptions, and payment services.\n\nSource consulted: [AAPL/2024_10-K_0000320193-24-000123.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/AAPL/2024_10-K_0000320193-24-000123.htm>).",
+      "latency_s": 37.5,
+      "usage": {
+        "input_tokens": 140650,
+        "cached_input_tokens": 123776,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 805,
+        "reasoning_output_tokens": 132
+      },
+      "id": "ret_aapl_product_categories",
+      "tier": 1,
+      "question": "What product and service categories does Apple report revenue from in its fiscal year 2024 10-K?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer accurately captures all key product and service categories reported by Apple in its fiscal year 2024 10-K without any omissions or inaccuracies.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Apple describes AppleCare as a portfolio of fee-based service and support products that provides:\n\n- Priority access to Apple technical support\n- Access to Apple\u2019s global authorized service network for repairs and replacements\n- In many cases, added coverage for accidental damage or theft and loss, depending on the country and product type\n\nSource: [AAPL/2024_10-K_0000320193-24-000123.htm](/AAPL/2024_10-K_0000320193-24-000123.htm).",
+      "latency_s": 29.2,
+      "usage": {
+        "input_tokens": 128325,
+        "cached_input_tokens": 112384,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 676,
+        "reasoning_output_tokens": 42
+      },
+      "id": "ret_aapl_applecare_description",
+      "tier": 1,
+      "question": "How does Apple describe its AppleCare service offerings in its fiscal year 2024 10-K?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 3,
+      "judge_reason": "The generated answer includes all key facts from the reference and accurately summarizes AppleCare's offerings.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Qorvo\u2019s fiscal 2024 10-K identifies significant customer concentration risk:\n\n- Apple represented approximately **46% of FY2024 revenue**, through multiple contract manufacturers.\n- Samsung represented approximately **12% of FY2024 revenue**.\n- Together, the two largest end customers generated approximately **58% of revenue**, up from 49% in FY2023 and 44% in FY2022.\n- The three largest accounts-receivable balances represented approximately **60% of gross accounts receivable** at March 30, 2024.\n\nQorvo warns that customers can reduce purchases, cancel or delay device launches, or stop incorporating its products with little notice or penalty. Consequently, losing a major customer\u2014or failing to replace that revenue\u2014could materially harm its business, financial condition, and operating results. The company says credit risk is partly moderated by its major customers\u2019 financial stability, conservative payment terms, and strict credit policies.\n\nFile consulted: [QRVO/2024_10-K_0001604778-24-000036.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/QRVO/2024_10-K_0001604778-24-000036.htm>).",
+      "latency_s": 36.8,
+      "usage": {
+        "input_tokens": 173439,
+        "cached_input_tokens": 140288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 877,
+        "reasoning_output_tokens": 69
+      },
+      "id": "ret_qrvo_customer_risk",
+      "tier": 1,
+      "question": "What does Qorvo's fiscal year 2024 10-K say about customer concentration risk?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 3,
+      "judge_reason": "The answer accurately captures key facts about customer concentration risk, including specific revenue percentages for Apple and Samsung, as well as the implications for Qorvo's business.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set",
+      "status": "OK",
+      "answer": "Corning had five reportable business segments in fiscal 2024:\n\n- **Optical Communications:** Fiber, cable, and connectivity products for telecommunications carrier and enterprise networks.\n- **Display Technologies:** Glass substrates for LCD and OLED displays used in televisions, computers, tablets, and handheld devices.\n- **Specialty Materials:** Specialized glass, glass ceramics, crystals, and related products for consumer electronics, semiconductors, aerospace, defense, telecommunications, and other markets.\n- **Environmental Technologies:** Ceramic substrates and filters for vehicle emissions-control systems.\n- **Life Sciences:** Laboratory products\u2014including labware, equipment, media, serum, and reagents\u2014for drug discovery and bioproduction.\n\nCorning also grouped smaller operations under **Hemlock and Emerging Growth Businesses**, but this was not a separately reportable segment.\n\nSource consulted: [GLW/2024_10-K_0001628280-25-005347.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/GLW/2024_10-K_0001628280-25-005347.htm>).",
+      "latency_s": 34.4,
+      "usage": {
+        "input_tokens": 127183,
+        "cached_input_tokens": 106496,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 737,
+        "reasoning_output_tokens": 49
+      },
+      "id": "ret_glw_business_segments",
+      "tier": 1,
+      "question": "What are Corning's main business segments described in its fiscal year 2024 10-K?",
+      "type": "retrieval",
+      "correct": true,
+      "passage_hit": false,
+      "judge_available": true,
+      "judge_score": 2,
+      "judge_reason": "The generated answer captures the main segments but has minor inaccuracies and omits some details from the reference answer.",
+      "needs_review": false
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Based on fiscal-year 2024 customer-concentration disclosures, three companies identify Apple as a major end customer:\n\n- **Cirrus Logic (CRUS):** Apple represented approximately **87% of total sales**.  \n  Filing: `CRUS/2024_10-K_0000772406-24-000031.htm`\n\n- **Skyworks Solutions (SWKS):** Apple represented **69% of net revenue**, including sales through distributors, contract manufacturers, and direct sales.  \n  Filing: `SWKS/2024_10-K_0000004127-24-000131.htm`\n\n- **Qorvo (QRVO):** Apple represented approximately **46% of total revenue**, supplied through multiple contract manufacturers.  \n  Filing: `QRVO/2024_10-K_0001604778-24-000036.htm`\n\nThus, the Apple suppliers identifiable from the database\u2019s FY2024 customer-concentration disclosures are **Cirrus Logic, Skyworks Solutions, and Qorvo**.\n\nCorning mentions collaborating with Apple, but its FY2024 filing does not identify Apple in a customer-concentration disclosure, so I did not include it. Broadcom\u2019s filing does not name Apple as a concentrated customer.",
+      "latency_s": 46.2,
+      "usage": {
+        "input_tokens": 95951,
+        "cached_input_tokens": 85120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1296,
+        "reasoning_output_tokens": 361
+      },
+      "id": "t3_aapl_suppliers_2024",
+      "tier": 3,
+      "question": "Which companies in the database directly supply Apple, based on 10-K customer concentration disclosures? Use fiscal year 2024 data.",
+      "type": "graph_lookup",
+      "correct": true,
+      "suppliers_ok": true,
+      "edges_ok": true,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Apple accounted for approximately **46% of Qorvo\u2019s total revenue in fiscal year 2024**.\n\nSource: [QRVO/2024_10-K_0001604778-24-000036.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/QRVO/2024_10-K_0001604778-24-000036.htm>)",
+      "latency_s": 25.7,
+      "usage": {
+        "input_tokens": 125135,
+        "cached_input_tokens": 100992,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 573,
+        "reasoning_output_tokens": 60
+      },
+      "id": "t3_qrvo_apple_pct_2024",
+      "tier": 3,
+      "question": "What percentage of Qorvo's revenue came from Apple in fiscal year 2024, according to Qorvo's 10-K?",
+      "type": "numeric",
+      "correct": true,
+      "suppliers_ok": true,
+      "edges_ok": true,
+      "refusal_detected": false,
+      "expected": 46.0,
+      "got_raw": 46.0
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Cirrus Logic\u2019s revenue dependency on Apple has increased substantially overall, from 72% in FY2015 to 91% in FY2026\u2014a 19-percentage-point rise.\n\n| Fiscal year | Apple share of revenue |\n|---|---:|\n| 2015 | 72% |\n| 2016 | 66% |\n| 2017 | 79% |\n| 2018 | 81% |\n| 2019 | 78% |\n| 2020 | 79% |\n| 2021 | 83% |\n| 2022 | 79% |\n| 2023 | 83% |\n| 2024 | 87% |\n| 2025 | 89% |\n| 2026 | 91% |\n\n**Trend:** `72 \u2192 66 \u2192 79 \u2192 81 \u2192 78 \u2192 79 \u2192 83 \u2192 79 \u2192 83 \u2192 87 \u2192 89 \u2192 91%`\n\nAfter reaching a low of 66% in FY2016, Apple\u2019s share generally climbed. There were temporary declines in FY2019 and FY2022, but dependency has risen uninterrupted since FY2022, reaching a record 91% in FY2026. In short, Cirrus Logic was already highly concentrated in Apple and has become even more dependent on it.\n\nFilings used:\n\n- [2017 10-K](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2017_10-K_0001193125-17-181625.htm>) \u2014 FY2015\u2013FY2017\n- [2020 10-K](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2020_10-K_0000772406-20-000007.htm>) \u2014 FY2018\u2013FY2020\n- [2023 10-K](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2023_10-K_0000772406-23-000019.htm>) \u2014 FY2021\u2013FY2023\n- [2026 10-K](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2026_10-K_0000772406-26-000018.htm>) \u2014 FY2024\u2013FY2026",
+      "latency_s": 63.4,
+      "usage": {
+        "input_tokens": 229841,
+        "cached_input_tokens": 214656,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2009,
+        "reasoning_output_tokens": 345
+      },
+      "id": "t3_crus_apple_trend",
+      "tier": 3,
+      "question": "How has Cirrus Logic's revenue dependency on Apple changed over all available fiscal years? Show the trend.",
+      "type": "graph_trend",
+      "correct": true,
+      "suppliers_ok": true,
+      "edges_ok": true,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "**Cirrus Logic (CRUS)** disclosed the highest Apple revenue concentration in fiscal 2024: **approximately 87% of total sales**.\n\nFiling consulted: [CRUS/2024_10-K_0000772406-24-000031.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2024_10-K_0000772406-24-000031.htm>).",
+      "latency_s": 27.6,
+      "usage": {
+        "input_tokens": 76926,
+        "cached_input_tokens": 62976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 767,
+        "reasoning_output_tokens": 192
+      },
+      "id": "t3_most_exposed_supplier_2024",
+      "tier": 3,
+      "question": "Among Apple's suppliers in the database, which one disclosed the highest Apple revenue concentration in fiscal year 2024?",
+      "type": "graph_comparison",
+      "correct": true,
+      "suppliers_ok": true,
+      "edges_ok": false,
+      "refusal_detected": false,
+      "needs_review": false,
+      "judge_available": true,
+      "judge_score": 3,
+      "judge_reason": "The agent correctly identified Cirrus Logic (CRUS) as having the highest Apple revenue concentration at approximately 87% in fiscal 2024."
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Estimated Qorvo revenue impact: **approximately $346.8 million decrease**.\n\nCalculation:\n\n`FY2024 revenue $3.7695B \u00d7 Apple concentration 46% \u00d7 order reduction 20% = $346.8M`\n\nThis assumes Apple-related revenue declines proportionally with orders.\n\nFiling used: [QRVO/2024_10-K_0001604778-24-000036.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/QRVO/2024_10-K_0001604778-24-000036.htm>).",
+      "latency_s": 31.7,
+      "usage": {
+        "input_tokens": 133565,
+        "cached_input_tokens": 101632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 632,
+        "reasoning_output_tokens": 99
+      },
+      "id": "t3_qrvo_dollar_impact_2024",
+      "tier": 3,
+      "question": "If Apple reduced orders by 20% in fiscal year 2024, what would be the estimated dollar revenue impact on Qorvo? Use Qorvo's FY2024 revenue and its disclosed Apple concentration from its 10-K.",
+      "type": "numeric",
+      "correct": true,
+      "expected": 346994552.0,
+      "got_raw": 346.8,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Estimated revenue impact: **approximately a $311.3 million decrease**.\n\nCalculation:\n\n- Cirrus Logic FY2024 revenue: **$1.7889 billion**\n- Apple concentration: **87%**\n- Apple-related revenue: $1.7889B \u00d7 87% = **$1.5563 billion**\n- Impact of a 20% order reduction: $1.5563B \u00d7 20% = **$311.3 million**\n\nThis assumes orders and revenue decline proportionally. Cirrus Logic\u2019s resulting revenue would be approximately **$1.478 billion**.\n\nSource: [CRUS/2024_10-K_0000772406-24-000031.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2024_10-K_0000772406-24-000031.htm>)",
+      "latency_s": 42.2,
+      "usage": {
+        "input_tokens": 219320,
+        "cached_input_tokens": 189440,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 941,
+        "reasoning_output_tokens": 91
+      },
+      "id": "t3_crus_dollar_impact_2024",
+      "tier": 3,
+      "question": "If Apple reduced orders by 20% in fiscal year 2024, what would be the estimated dollar revenue impact on Cirrus Logic? Use Cirrus Logic's FY2024 revenue and its disclosed Apple concentration from its 10-K.",
+      "type": "numeric",
+      "correct": true,
+      "expected": 311266860.0,
+      "got_raw": 311.3,
+      "refusal_detected": false
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Assuming a 20% cut applies proportionally to each supplier\u2019s Apple-attributable fiscal 2024 revenue:\n\n| Rank | Company | FY2024 revenue | Apple share | Calculation | Estimated revenue impact |\n|---|---|---:|---:|---:|---:|\n| 1 | **Skyworks** | $4,178.0M | 69% | $4,178.0M \u00d7 69% \u00d7 20% | **$576.6M decrease** |\n| 2 | **Qorvo** | $3,769.506M | 46% | $3,769.506M \u00d7 46% \u00d7 20% | **$346.8M decrease** |\n| 3 | **Cirrus Logic** | $1,788.890M | 87% | $1,788.890M \u00d7 87% \u00d7 20% | **$311.3M decrease** |\n\nThus, the ranking from largest to smallest estimated impact is:\n\n**Skyworks \u2192 Qorvo \u2192 Cirrus Logic**\n\nFilings used:\n\n- Skyworks: [2024_10-K_0000004127-24-000131.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/SWKS/2024_10-K_0000004127-24-000131.htm>)\n- Qorvo: [2024_10-K_0001604778-24-000036.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/QRVO/2024_10-K_0001604778-24-000036.htm>)\n- Cirrus Logic: [2024_10-K_0000772406-24-000031.htm](</Users/ethan/Financial Report Copilot v2/baseline/raw_filings/CRUS/2024_10-K_0000772406-24-000031.htm>)\n\nThese are revenue estimates; they assume no replacement sales, pricing changes, or offsetting demand from other customers.",
+      "latency_s": 56.4,
+      "usage": {
+        "input_tokens": 147492,
+        "cached_input_tokens": 133888,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1658,
+        "reasoning_output_tokens": 348
+      },
+      "id": "t3_rank_apple_exposure_2024",
+      "tier": 3,
+      "question": "If Apple cut orders by 20% in fiscal year 2024, rank Qorvo, Cirrus Logic, and Skyworks by estimated dollar revenue impact, largest to smallest. Show your calculation for each.",
+      "type": "graph_compute",
+      "correct": false,
+      "expected": null,
+      "got_raw": 20.0,
+      "refusal_detected": false,
+      "needs_review": false,
+      "judge_available": true,
+      "judge_score": 0,
+      "judge_reason": "The ranking is incorrect as Skyworks has been erroneously calculated with the highest impact, while Qorvo should be ranked first, and the SWKS figure is inaccurately presented without addressing it as a minimum threshold."
+    },
+    {
+      "dataset": "eval_set_tier3",
+      "status": "OK",
+      "answer": "Approximately **0.79%** of Apple\u2019s procurement budget comes from Qorvo, using cost of sales as a proxy:\n\n- Qorvo\u2019s Apple-related revenue: 47% \u00d7 $3.719 billion = **$1.748 billion**\n- Apple\u2019s total cost of sales: **$220.960 billion**\n- $1.748B \u00f7 $220.960B = **0.79%**\n\nFiles used:\n\n- `QRVO/2025_10-K_0001604778-25-000041.htm`\n- `AAPL/2025_10-K_0000320193-25-000079.htm`\n\nThis is an estimate because Apple does not separately disclose a \u201ctotal procurement budget.\u201d",
+      "latency_s": 62.2,
+      "usage": {
+        "input_tokens": 228439,
+        "cached_input_tokens": 195456,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1456,
+        "reasoning_output_tokens": 574
+      },
+      "id": "t3_unans_apple_supplier_share",
+      "tier": 3,
+      "question": "What percentage of Apple's total procurement budget comes from Qorvo?",
+      "type": "unanswerable",
+      "correct": false,
+      "refusal_detected": false,
+      "unanswerable_reason": "undisclosed"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+# Theme chosen via the ui-ux-pro-max skill's "Data-Dense Dashboard" design system
+# for fintech/analytics SaaS: trustworthy blue primary, high-contrast text,
+# monospace headings for a precise/verifiable-numbers feel. Chart categorical
+# colors mirror SUPPLIER_COLORS in _dash_common.py so any raw Vega-Lite/Altair
+# chart without an explicit color scale still lines up with the rest of the app.
+
+[theme]
+base = "light"
+primaryColor = "#1E40AF"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F1F5F9"
+textColor = "#0F172A"
+borderColor = "#DBEAFE"
+linkColor = "#1E40AF"
+font = "Fira Sans:https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap, sans-serif"
+headingFont = "Fira Code:https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600;700&display=swap, monospace"
+baseRadius = "medium"
+buttonRadius = "medium"
+showWidgetBorder = true
+chartCategoricalColors = [
+    "#2a78d6", # ADI
+    "#1baf7a", # APH
+    "#eda100", # AVGO
+    "#008300", # CRUS
+    "#4a3aa7", # JBL
+    "#e34948", # QCOM
+    "#e87ba4", # QRVO
+    "#eb6834", # SWKS
+]
+
+[theme.sidebar]
+backgroundColor = "#F8FAFC"
+borderColor = "#DBEAFE"
+
+[theme.dark]
+primaryColor = "#60A5FA"
+backgroundColor = "#0B1220"
+secondaryBackgroundColor = "#111827"
+textColor = "#E2E8F0"
+borderColor = "#1E293B"
+linkColor = "#60A5FA"
+font = "Fira Sans:https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap, sans-serif"
+headingFont = "Fira Code:https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600;700&display=swap, monospace"
+baseRadius = "medium"
+buttonRadius = "medium"
+showWidgetBorder = true
+
+[theme.dark.sidebar]
+backgroundColor = "#111827"
+borderColor = "#1E293B"

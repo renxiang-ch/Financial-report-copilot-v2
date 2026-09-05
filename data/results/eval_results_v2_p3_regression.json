@@ -1,0 +1,1789 @@
+{
+  "dataset": "data\\datasets\\eval_set_v2.json",
+  "dataset_version": "2.1",
+  "db_fingerprint": {
+    "companies": 15,
+    "named_edges": 103,
+    "financial_facts": 38966,
+    "filings": 148,
+    "max_fy_edges": 2026
+  },
+  "n_total": 13,
+  "n_held_out_excluded": 0,
+  "n_retired_excluded": 0,
+  "agent_model": "gpt-4o-mini",
+  "cost_basis": "OpenAI list price for gpt-4o-mini",
+  "tier1_accuracy": 100.0,
+  "tier2_accuracy": 100.0,
+  "tier2_input_fetch": 100.0,
+  "retrieval_accuracy": null,
+  "passage_hit_accuracy": null,
+  "avg_judge_score": null,
+  "refusal_accuracy": 50.0,
+  "numeric_accuracy": 100.0,
+  "grounded_accuracy": 100.0,
+  "category_accuracy": {
+    "derived_metric": 100.0,
+    "hard_numeric": 100.0,
+    "outcome_scored": 100.0,
+    "over_refusal_probe": 100.0,
+    "synonym_stress": 100.0,
+    "true_refusal": 50.0,
+    "unit_trap": 100.0
+  },
+  "overall_accuracy": 92.3,
+  "unverified_answers": 0,
+  "unsourced_formula_ids": [],
+  "unverified_ids": [],
+  "figures_checked": 20,
+  "avg_latency_s": 3.92,
+  "total_latency_s": 51.0,
+  "input_tokens": 99119,
+  "output_tokens": 1987,
+  "estimated_cost_usd": 0.0161,
+  "results": [
+    {
+      "id": "v2_aapl_rev_cagr_2022_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": -0.4184,
+      "got_raw": -0.004184211808589633,
+      "got_text": "Apple's revenue CAGR from fiscal year 2022 to fiscal year 2024 was approximately -0.42%. This is based on revenue of $391.04 billion in 2024 (SEC 10-K filing accession 0000320193-24-000123) and $394.33 billion in 2022 (SEC 10-K filing accession 0000320193-22-000108).",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "Revenue_2024": true,
+        "Revenue_2022": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 4.75,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2022
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 394328000000.0,
+            "unit": "USD",
+            "period_end": "2022-09-24",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-22-000108 (https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(revenue_2024 / revenue_2022) ** (1 / (2024 - 2022)) - 1",
+            "variables": {
+              "revenue_2024": 391035000000,
+              "revenue_2022": 394328000000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": -0.004184211808589633,
+            "expression": "(revenue_2024 / revenue_2022) ** (1 / (2024 - 2022)) - 1",
+            "variables": {
+              "revenue_2024": 391035000000,
+              "revenue_2022": 394328000000
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)",
+        "SEC 10-K filing accession 0000320193-22-000108 (https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, Revenue, FY2022) \u2192 394328000000.0  [SEC 10-K filing accession 0000320193-22-000108 (https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm)]",
+        "compute((revenue_2024 / revenue_2022) ** (1 / (2024 - 2022)) - 1) \u2192 -0.004184211808589633"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 2,
+        "passage_values": 0
+      },
+      "category": "hard_numeric"
+    },
+    {
+      "id": "v2_qrvo_netmargin_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": -1.8655,
+      "got_raw": -1.8655494911004253,
+      "got_text": "Qorvo's net profit margin for fiscal year 2024 was approximately -1.87%. This was calculated using a net income of -$70,322,000 and revenue of $3,769,506,000. \n\nCitations: \n- Net Income: SEC 10-K filing accession 0001604778-24-000036\n- Revenue: SEC 10-K filing accession 0001604778-24-000036",
+      "unit": "%",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "NetIncome": true,
+        "Revenue": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 4.01,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "QRVO",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "QRVO",
+            "metric": "NetIncome",
+            "value": -70322000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "QRVO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "QRVO",
+            "metric": "Revenue",
+            "value": 3769506000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "net_income / revenue * 100",
+            "variables": {
+              "net_income": -70322000,
+              "revenue": 3769506000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": -1.8655494911004253,
+            "expression": "net_income / revenue * 100",
+            "variables": {
+              "net_income": -70322000,
+              "revenue": 3769506000
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(QRVO, NetIncome, FY2024) \u2192 -70322000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]",
+        "query_financials(QRVO, Revenue, FY2024) \u2192 3769506000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]",
+        "compute(net_income / revenue * 100) \u2192 -1.8655494911004253"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "hard_numeric"
+    },
+    {
+      "id": "v2_margin_gap_avgo_aapl_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 16.8273,
+      "got_raw": 16.827349335500934,
+      "got_text": "In fiscal year 2024, Broadcom's gross margin was approximately 16.83 percentage points higher than Apple's. \n\n- **Broadcom's Gross Margin**: 63.03% (SEC 10-K filing accession 0001730168-24-000139)\n- **Apple's Gross Margin**: 46.21% (SEC 10-K filing accession 0000320193-24-000123)",
+      "unit": "pp",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "GrossProfit_AVGO": true,
+        "Revenue_AVGO": true,
+        "GrossProfit_AAPL": true,
+        "Revenue_AAPL": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 6.4,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "GrossProfit",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "GrossProfit",
+            "value": 32509000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "GrossProfit",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "GrossProfit",
+            "value": 180683000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "Revenue",
+            "value": 51574000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_profit_avgo / revenue_avgo * 100",
+            "variables": {
+              "gross_profit_avgo": 32509000000,
+              "revenue_avgo": 51574000000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 63.03369915073487,
+            "expression": "gross_profit_avgo / revenue_avgo * 100",
+            "variables": {
+              "gross_profit_avgo": 32509000000,
+              "revenue_avgo": 51574000000
+            }
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_profit_aapl / revenue_aapl * 100",
+            "variables": {
+              "gross_profit_aapl": 180683000000,
+              "revenue_aapl": 391035000000
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 46.206349815233935,
+            "expression": "gross_profit_aapl / revenue_aapl * 100",
+            "variables": {
+              "gross_profit_aapl": 180683000000,
+              "revenue_aapl": 391035000000
+            }
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "gross_margin_avgo - gross_margin_aapl",
+            "variables": {
+              "gross_margin_avgo": 63.03369915073487,
+              "gross_margin_aapl": 46.206349815233935
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 16.827349335500934,
+            "expression": "gross_margin_avgo - gross_margin_aapl",
+            "variables": {
+              "gross_margin_avgo": 63.03369915073487,
+              "gross_margin_aapl": 46.206349815233935
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)",
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AVGO, GrossProfit, FY2024) \u2192 32509000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]",
+        "query_financials(AAPL, GrossProfit, FY2024) \u2192 180683000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AVGO, Revenue, FY2024) \u2192 51574000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]",
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute(gross_profit_avgo / revenue_avgo * 100) \u2192 63.03369915073487",
+        "compute(gross_profit_aapl / revenue_aapl * 100) \u2192 46.206349815233935",
+        "compute(gross_margin_avgo - gross_margin_aapl) \u2192 16.827349335500934"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 2,
+        "passage_values": 0
+      },
+      "category": "hard_numeric"
+    },
+    {
+      "id": "v2_combined_rev_qrvo_crus_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 5558396000.0,
+      "got_raw": 5558396000.0,
+      "got_text": "The combined fiscal year 2024 revenue of Qorvo and Cirrus Logic is $5,558,396,000. \n\n- Qorvo had revenue of $3,769,506,000 (SEC 10-K filing accession 0001604778-24-000036).\n- Cirrus Logic had revenue of $1,788,890,000 (SEC 10-K filing accession 0000772406-24-000031).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "Revenue_QRVO": true,
+        "Revenue_CRUS": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 3.87,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "QRVO",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "QRVO",
+            "metric": "Revenue",
+            "value": 3769506000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "CRUS",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "CRUS",
+            "metric": "Revenue",
+            "value": 1788890000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "qrvo_revenue + crus_revenue",
+            "variables": {
+              "qrvo_revenue": 3769506000.0,
+              "crus_revenue": 1788890000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 5558396000.0,
+            "expression": "qrvo_revenue + crus_revenue",
+            "variables": {
+              "qrvo_revenue": 3769506000.0,
+              "crus_revenue": 1788890000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)",
+        "SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(QRVO, Revenue, FY2024) \u2192 3769506000.0  [SEC 10-K filing accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)]",
+        "query_financials(CRUS, Revenue, FY2024) \u2192 1788890000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]",
+        "compute(qrvo_revenue + crus_revenue) \u2192 5558396000.0"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 2,
+        "passage_values": 0
+      },
+      "category": "hard_numeric"
+    },
+    {
+      "id": "v2_aapl_netincome_millions",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 93736.0,
+      "got_raw": 93736.0,
+      "got_text": "Apple's net income in fiscal year 2024 was $93,736 million. This figure is from the 10-K filing for the period ending September 28, 2024 (SEC accession number 0000320193-24-000123).",
+      "unit": "USD millions",
+      "refusal_detected": false,
+      "latency_s": 2.06,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "NetIncome",
+            "value": 93736000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, NetIncome, FY2024) \u2192 93736000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "unit_trap"
+    },
+    {
+      "id": "v2_aapl_topline_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 391035000000.0,
+      "got_raw": 391.04,
+      "got_text": "Apple's top line (Revenue) for fiscal year 2024 was $391.04 billion USD, for the period ending on September 28, 2024. This information is cited from their SEC 10-K filing accession number 0000320193-24-000123.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.03,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "synonym_stress"
+    },
+    {
+      "id": "v2_crus_bottomline_2024",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 274572000.0,
+      "got_raw": 274572000.0,
+      "got_text": "Cirrus Logic's bottom line for fiscal year 2024 was $274,572,000. This figure is from their SEC 10-K filing for the period ending March 30, 2024 (accession number 0000772406-24-000031).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.17,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "CRUS",
+            "metric": "NetIncome",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "CRUS",
+            "metric": "NetIncome",
+            "value": 274572000.0,
+            "unit": "USD",
+            "period_end": "2024-03-30",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(CRUS, NetIncome, FY2024) \u2192 274572000.0  [SEC 10-K filing accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "synonym_stress"
+    },
+    {
+      "id": "v2_probe_avgo_randd_doubt",
+      "tier": 1,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 9310000000.0,
+      "got_raw": 9.31,
+      "got_text": "Broadcom spent $9.31 billion on R&D in fiscal year 2024. This information is cited from their SEC 10-K filing (accession number 0001730168-24-000139).",
+      "unit": "USD",
+      "refusal_detected": false,
+      "latency_s": 2.47,
+      "steps": [
+        {
+          "tool": "list_metrics",
+          "input": {
+            "ticker": "AVGO"
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "form": "10-K",
+            "metrics": [
+              {
+                "metric": "CapEx",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "COGS",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "CurrentAssets",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "CurrentLiabilities",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "EPS_Basic",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "EPS_Diluted",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "GrossProfit",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "IncomeTaxExpense",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "InterestExpense",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024
+                ],
+                "n_years": 7
+              },
+              {
+                "metric": "Inventory",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "LongTermDebt",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021
+                ],
+                "n_years": 4
+              },
+              {
+                "metric": "NetIncome",
+                "years_available": [
+                  2018,
+                  2024
+                ],
+                "n_years": 2
+              },
+              {
+                "metric": "OperatingCashFlow",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "OperatingIncome",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "PP&E",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "R&D",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "Revenue",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "TotalAssets",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              },
+              {
+                "metric": "TotalDebt",
+                "years_available": [
+                  2018,
+                  2019,
+                  2021
+                ],
+                "n_years": 3
+              },
+              {
+                "metric": "TotalEquity",
+                "years_available": [
+                  2018,
+                  2019
+                ],
+                "n_years": 2
+              },
+              {
+                "metric": "TotalEquityInclNCI",
+                "years_available": [
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 8
+              }
+            ]
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AVGO",
+            "metric": "R&D",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AVGO",
+            "metric": "R&D",
+            "value": 9310000000.0,
+            "unit": "USD",
+            "period_end": "2024-11-03",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)"
+      ],
+      "tool_trace": [
+        "list_metrics(AVGO) \u2192 21 metrics available",
+        "query_financials(AVGO, R&D, FY2024) \u2192 9310000000.0  [SEC 10-K filing accession 0001730168-24-000139 (https://www.sec.gov/Archives/edgar/data/1730168/000173016824000139/avgo-20241103.htm)]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "over_refusal_probe"
+    },
+    {
+      "id": "v2_grounded_swks_apple_2024",
+      "tier": 3,
+      "type": "grounded",
+      "answerable": true,
+      "correct": true,
+      "facts_ok": true,
+      "citation_ok": true,
+      "missing_accns": [],
+      "pct_ok": true,
+      "lead_ok": true,
+      "lead_pct": 10.0,
+      "values_ok": true,
+      "missing_values": [],
+      "forbidden_seen": [],
+      "fabricated_pcts": [],
+      "got_text": "Skyworks Solutions derived more than 10% of its net revenue from Apple in fiscal year 2024. The exact percentage is not stated, but it is confirmed to be at least 10%. \n\n(Source: SEC 10-K accession 0000004127-24-000131)",
+      "latency_s": 1.93,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "supplier": "SWKS",
+            "customer": "AAPL",
+            "fiscal_year": "2024"
+          },
+          "output": {
+            "found": true,
+            "hub": "AAPL",
+            "fiscal_year": "2024",
+            "edge_count": 1,
+            "edges": [
+              {
+                "supplier": "SWKS",
+                "customer": "AAPL",
+                "revenue_pct": 10.0,
+                "pct_display": ">10%",
+                "pct_is_floor": true,
+                "threshold_only": true,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+                "source_text": "Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue."
+              }
+            ],
+            "traversal_trace": [
+              "SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]"
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+      ],
+      "tool_trace": [
+        "graph_query({'supplier': 'SWKS', 'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 2,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "outcome_scored"
+    },
+    {
+      "id": "v2_aapl_fcf_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 108807000000.0,
+      "got_raw": 108807000000.0,
+      "got_text": "Apple's free cash flow for fiscal year 2024 was $108,807,000,000. This figure is based on an operating cash flow of $118,254,000,000 and capital expenditures (CapEx) of $9,447,000,000. \n\n- **Operating Cash Flow**: $118,254,000,000 (SEC 10-K filing accession 0000320193-24-000123)\n- **CapEx**: $9,447,000,000 (SEC 10-K filing accession 0000320193-24-000123) \n\nThe calculation was performed as follows: Free Cash Flow = Operating Cash Flow - CapEx.",
+      "unit": "USD",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "OperatingCashFlow": true,
+        "CapEx": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 6.05,
+      "steps": [
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "OperatingCashFlow",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "OperatingCashFlow",
+            "value": 118254000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "CapEx",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "CapEx",
+            "value": 9447000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "operating_cash_flow - capex",
+            "variables": {
+              "operating_cash_flow": 118254000000.0,
+              "capex": 9447000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 108807000000.0,
+            "expression": "operating_cash_flow - capex",
+            "variables": {
+              "operating_cash_flow": 118254000000.0,
+              "capex": 9447000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "query_financials(AAPL, OperatingCashFlow, FY2024) \u2192 118254000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, CapEx, FY2024) \u2192 9447000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute(operating_cash_flow - capex) \u2192 108807000000.0"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 5,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "derived_metric"
+    },
+    {
+      "id": "v2_swks_dte_2024",
+      "tier": 2,
+      "type": "numeric",
+      "answerable": true,
+      "correct": true,
+      "expected": 0.1569,
+      "got_raw": 0.15691132608455505,
+      "got_text": "Skyworks Solutions' debt-to-equity ratio in fiscal year 2024 was approximately 0.157. This is based on total debt of $994.3 million and total equity of $6.3367 billion (SEC 10-K filing accession number 0000004127-24-000131).",
+      "unit": "ratio",
+      "refusal_detected": false,
+      "input_values_hit": {
+        "TotalDebt": true,
+        "TotalEquity": true
+      },
+      "all_inputs_fetched": true,
+      "latency_s": 4.25,
+      "steps": [
+        {
+          "tool": "list_metrics",
+          "input": {
+            "ticker": "SWKS"
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "form": "10-K",
+            "metrics": [
+              {
+                "metric": "CapEx",
+                "years_available": [
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 6
+              },
+              {
+                "metric": "COGS",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "CurrentAssets",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "CurrentLiabilities",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "EPS_Basic",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "EPS_Diluted",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "GrossProfit",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "IncomeTaxExpense",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "InterestExpense",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 9
+              },
+              {
+                "metric": "Inventory",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "NetIncome",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "OperatingCashFlow",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 10
+              },
+              {
+                "metric": "OperatingIncome",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "PP&E",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "R&D",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "Revenue",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "TotalAssets",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              },
+              {
+                "metric": "TotalDebt",
+                "years_available": [
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 5
+              },
+              {
+                "metric": "TotalEquity",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 16
+              }
+            ]
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "TotalDebt",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "TotalDebt",
+            "value": 994300000.0,
+            "unit": "USD",
+            "period_end": "2024-09-27",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "TotalEquity",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "TotalEquity",
+            "value": 6336700000.0,
+            "unit": "USD",
+            "period_end": "2024-09-27",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "total_debt / total_equity",
+            "variables": {
+              "total_debt": 994300000.0,
+              "total_equity": 6336700000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 0.15691132608455505,
+            "expression": "total_debt / total_equity",
+            "variables": {
+              "total_debt": 994300000.0,
+              "total_equity": 6336700000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+      ],
+      "tool_trace": [
+        "list_metrics(SWKS) \u2192 19 metrics available",
+        "query_financials(SWKS, TotalDebt, FY2024) \u2192 994300000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]",
+        "query_financials(SWKS, TotalEquity, FY2024) \u2192 6336700000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]",
+        "compute(total_debt / total_equity) \u2192 0.15691132608455505"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "derived_metric"
+    },
+    {
+      "id": "v2_unans_aapl_marketcap_2024",
+      "tier": 1,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": true,
+      "refusal_detected": true,
+      "got_text": "I cannot determine that value. Market capitalization figures are not available in the SEC 10-K filings database.",
+      "latency_s": 1.19,
+      "steps": [],
+      "citations": [],
+      "tool_trace": [],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 0,
+        "passage_values": 0
+      },
+      "category": "true_refusal"
+    },
+    {
+      "id": "v2_unans_glw_headcount_2024",
+      "tier": 1,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": false,
+      "refusal_detected": false,
+      "got_text": "At the end of fiscal year 2024, Corning had approximately 56,300 full- and part-time employees. This information is sourced from their SEC filing (accession number 0001628280-25-005347).",
+      "latency_s": 9.8,
+      "steps": [
+        {
+          "tool": "retrieve_text",
+          "input": {
+            "query": "number of employees",
+            "ticker": "GLW",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "query": "number of employees",
+            "ticker": "GLW",
+            "scoped_to_fiscal_year": 2024,
+            "scope_reason": "caller specified this fiscal year",
+            "results": [
+              {
+                "text": " each year. To maintain compliance with such regulations, capital expenditures for pollution control in operations were approximately $10.4 million in 2024 and are estimated to be $14.2 million in 2025.\nOur 2024 consolidated operating results reflect approximately $64.0 million for depreciation, maintenance, waste disposal and other operating expenses associated with pollution control.\nHuman Capital Management Overview\nAt Corning, we are proud of the life-changing innovations we bring to the world. Our unparalleled expertise in our core technologies along with deep manufacturing and engineering capabilities require a talent strategy focused on attracting and retaining exceptional people, building a culture that enables innovation and collaboration and supporting long and successful careers. \nEach of our 56,300 full- and part-time employees in 44 countries make an important contribution, whether in one of our manufacturing or processing facilities, research labs, sales offices or other facilities. Approximately 59% of all employees are in production and maintenance roles and more than 60% of all employees are represented by a union, works council or other representative group.\nValues\nCorning is guided by an enduring set of Values that defines our relationship with employees, customers and our communities: Quality, Integrity, Performance, Leadership, Innovation, Independence and the Individual. Our Values are the key to our business success, a source of pride and excitement for our employees and the factor that ultimately sets us apart from our competitors. In short, we believe that how we do things is as important as what we do. We measure how we live our Values through our annual Voice to Action Workplace Culture Survey. In 2024, we had an 85% response rate with survey participation worldwide. We use the results to pinpoint recurring global themes and develop plans to drive action based on employee feedback. Corning employees all contribute to the success of the Company by Living our Valuesall seven, all the time, all around the world. \nCorning operates around the globe and builds strong, multifaceted teams in which all employees feel included at work. Our efforts are rooted in our Value of the Individual, by which we acknowledge the belief that the commitment and contributions of all of our employees determines our success. The rich diversity of our experiences, thoughts, and who we are as individuals strengthens the impact of our collective achievements. We value the unique ability of each individual to contribute, and we intend that all employees shall have the opportunity to participate fully, to grow professionally, and to develop to their highest potential.\nOur",
+                "ticker": "GLW",
+                "section": "Business",
+                "accn": "0001628280-25-005347",
+                "score": 4.841862132127856,
+                "citation": "SEC filing accession 0001628280-25-005347 \u2014 Business"
+              },
+              {
+                "text": " we are as individuals strengthens the impact of our collective achievements. We value the unique ability of each individual to contribute, and we intend that all employees shall have the opportunity to participate fully, to grow professionally, and to develop to their highest potential.\nOur global workforce is comprised of 60.5% men and 39.5% women. In all regions of the world, we maintain a talent pipeline that includes people of all backgrounds through our effective recruitment process, mentoring and coaching programs, networking opportunities, and proactive career discussions. As a result of these efforts, we have expanded the quality and depth of experience within our leadership teams.\nTalent Management\nEach year we formally evaluate the talent implications of our strategic business plans and align our actions and objectives accordingly. As business needs change, we create human capital objectives to ensure we have the right people with the right skills in place to deliver that growth.\nCorning is committed to attracting and recruiting highly qualified candidates of all backgrounds to sustain our culture of innovation and to stimulate creativity. We have established a strategic talent pipeline by partnering with schools around the world with exceptional strength in the material sciences and other fields relevant to our Company's business, including renowned MBA schools and top engineering and scientific schools. We engage with professional organizations, engineering societies and other industry organizations to connect us with talented candidates from a multitude of backgrounds and disciplines. We offer internships, co-ops, rotational leadership programs and other developmental opportunities to talented candidates. Our recruitment strategy is centered on the belief that when a workforce fosters rich and varied ideas, the overall quality of our solutions is enhanced.\n8\nTable of Contents\nIt is important to Corning that employees continue to grow and develop. We offer a variety of enterprise and on-demand developmental programs and experiences, targeted to all levels in the organization. We provide on-the-job learning experience, mentoring and career planning to ensure immediate application and lasting impact. Talent retention is an ongoing focus area which aligns with our strategy of encouraging and supporting longer-term careers with Corning. Historically, our salaried voluntary turnover has been consistently lower than the markets in which we compete for talent. Salaried talent retention in 2024 remained strong at 95.7%.\nAt Corning, the health and safety of our workforce is always of paramount consideration. Our safety standards meet, and often exceed, local regulatory standards. Corning continued managing Total Recordable Incident Rate (TRIR) performance to world class levels with an annual TR",
+                "ticker": "GLW",
+                "section": "Business",
+                "accn": "0001628280-25-005347",
+                "score": 3.207513178761951,
+                "citation": "SEC filing accession 0001628280-25-005347 \u2014 Business"
+              },
+              {
+                "text": " on our financial results.\nBecause we have a concentrated customer base, future sales and cash flows could be negatively impacted by the actions or loss of one or more key customers\nA relatively small number of end customers account for a high percentage of our net sales in each of our business segments. This concentration subjects us to a variety of risks including:\n\nThe loss or insolvency of one or more of our key customers, could result in a substantial loss of sales and reduction in anticipated cash flows;\n\nCustomers may possess substantial leverage in negotiating contractual obligations, including liability provisions; and \n\nMergers and consolidations between customers could result in further concentration of the customer base.\nThe following table details the number of combined customers of our reportable segments that accounted for a large percentage of segment net sales, not adjusted for constant currency:\nNumber of combined end customers\n% of total segment net sales in 2024\nOptical Communications\n2\n27\n%\nDisplay Technologies\n4\n67\n%\nSpecialty Materials\n2\n43\n%\nEnvironmental Technologies\n3\n71\n%\nLife Sciences\n2\n42\n%\nEvents outside of Cornings control, or those of our contract manufacturers, could cause a disruption to our manufacturing operations and our ability to serve our customers, resulting in a negative impact to Cornings net sales, net income, asset values and liquidity\nDisruption to our manufacturing operations, or those of our contract manufacturers, could significantly impact Cornings ability to supply its customers and could produce a near-term severe impact on our individual business units and the Company. Given the geographical concentration of certain of the Companys and our contract manufacturers plants in Asia Pacific, the highly engineered nature of the facilities and the globally dispersed talent required to run these facilities, any event that adversely affects or restricts movement into or out of a specific geographic area where we, our contract manufacturers, suppliers, or customers have a presence, could adversely impact our results. Due to the specialized nature of our products and single-site manufacturing locations, in the event such a location experiences disruption, it may not be possible to find replacement capacity or substitute production from other facilities. \n14\nTable of Contents\nWe may experience difficulties in enforcing our intellectual property rights, which could result in loss of market share and decreased sales and profits, and we may be subject to claims of infringement of the intellectual property rights of others\nWe rely on patent and trade secret laws, copyright, trademark, confidentiality procedures, controls and contractual commitments to protect our intellectual property",
+                "ticker": "GLW",
+                "section": "Risk Factors",
+                "accn": "0001628280-25-005347",
+                "score": 4.082632558197287,
+                "citation": "SEC filing accession 0001628280-25-005347 \u2014 Risk Factors"
+              },
+              {
+                "text": " optical fiber and hybrid fiber-coax wireless communication systems.\n\nDisplay Technologies: patents relating to glass compositions and methods for the use and manufacture of glass substrates for display applications.\n\nSpecialty Materials: patents relating to protective cover glass materials and coatings, ophthalmic glasses and polarizing dyes and semiconductor/microlithography optics and blanks, metrology instrumentation and laser/precision optics, glass polarizers, specialty fiber and refractories.\n\nEnvironmental Technologies: patents relating to cellular ceramic honeycomb products, together with ceramic batch and binder system compositions, honeycomb extrusion and firing processes, and honeycomb extrusion dies and equipment for the high-volume, low-cost manufacture of such products.\n\nLife Sciences: patents relating to methods and apparatus for the manufacture and use of scientific laboratory equipment including multiwell plates and cell culture products, as well as equipment and processes for cell and gene therapy research.\nThe following table presents the approximate number of patents granted to our reportable segments:\nNumber of patents worldwide\nU.S. patents\nImportant U.S. patents expiring between\n2025 and 2027\nOptical Communications\n4,652\n2,089\n25\nDisplay Technologies\n1,320\n173\n12\nSpecialty Materials\n2,426\n883\n13\nEnvironmental Technologies\n847\n360\n12\nLife Sciences\n547\n161\n6\nMany of our patents are used in operations or are licensed for use by others, and we are licensed to use patents owned by others. We have entered into cross-licensing arrangements with some major competitors, but the scope of such licenses has been limited to specific product areas or technologies.\nOur principal trademarks include the following: Axygen, Celcor, ClearCurve, Contour, Corning, DuraTrap, Eagle XG, Edge8, Everon, Evolv, Falcon, Gorilla, HPFS, Leaf, PYREX, RocketRibbon, SMF-28e, Steuben, UniCam, Valor, Velocity, Victus and Viridian.\n7\nTable of Contents\nProtection of the Environment\nWe have an extensive program to ensure that our facilities comply with state, federal and foreign pollution-control regulations. This program has resulted in capital and operating expenditures each year. To maintain compliance with such regulations, capital expenditures for pollution control in operations were approximately $10.4 million in 2024 and are estimated to be $14.2 million in 2025.\nOur 2024 consolidated operating results",
+                "ticker": "GLW",
+                "section": "Business",
+                "accn": "0001628280-25-005347",
+                "score": 3.7355109235403408,
+                "citation": "SEC filing accession 0001628280-25-005347 \u2014 Business"
+              },
+              {
+                "text": ": Amount reflects certain discrete period tax items such as changes in tax law, the impact of tax audits, changes in tax reserves and changes in deferred tax asset valuation allowances, as well as other tax-related adjustments.\n(6)\nRestructuring, impairment and other charges and credits\n: Amount reflects certain restructuring, impairment losses and other charges and credits, as well as other expenses, including severance, accelerated depreciation, asset write-offs and facility repairs resulting from power outages, and the recognition of cumulative foreign currency translation adjustments upon the substantial liquidation or disposition of a foreign entity, which are not related to ongoing operations. For the year ended December 31, 2024, amount includes $131 million \nof non-cash cumulative foreign currency translation losses required to be recognized upon the substantial liquidation or disposition of foreign entities, which was recorded in other (expense) income, net in the consolidated statements of income\n. Amount also includes $49 million \nof non-cash charges in one of our Emerging Growth Businesses relating to a customer that recently entered into a multi-jurisdictional restructuring effort including insolvency filings in certain countries. These charges primarily relate to the full write-down of upfront payments made to the customer, which were determined to be nonrecoverable, and recorded as a charge to net sales in the consolidated statements of income\n. Other charges recorded during 2024 related to asset write-offs associated with the exit of certain facilities and product lines. The activity in 2023 primarily relates to asset write-offs associated with the exit of certain facilities and product lines and severance charges across all segments. \n(7)\nLitigation, regulatory and other legal matters\n: Amount reflects developments in commercial litigation, intellectual property disputes, adjustments to our estimated liability for environmental-related items and other legal matters.\n(8)\nPension mark-to-market adjustment\n: Amount primarily reflects defined benefit pension mark-to-market gains and losses, which arise from changes in actuarial assumptions and the difference between actual and expected returns on plan assets and discount rates.\n(9)\nLoss (gain) on investments\n: Amount reflects the loss or gain recognized on investments due to mark-to-market adjustments for the change in fair value or the disposition of an investment.\n(10)\nLoss (gain) on sale of assets\n: Amount represents the loss or gain recognized for the sale of assets, recorded in cost of sales, in the consolidated statements of income. \n(11)\nLoss on sale of business\n: Amount",
+                "ticker": "GLW",
+                "section": "MD&A",
+                "score": 0.5681226253509521,
+                "citation": "SEC filing accession 0001628280-25-005347 \u2014 MD&A",
+                "accn": "0001628280-25-005347"
+              }
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC filing accession 0001628280-25-005347 \u2014 Business",
+        "SEC filing accession 0001628280-25-005347 \u2014 Risk Factors",
+        "SEC filing accession 0001628280-25-005347 \u2014 MD&A"
+      ],
+      "tool_trace": [
+        "retrieve_text('number of employees', ticker=GLW) \u2192 5 chunks: [GLW:Business score=4.842, GLW:Business score=3.208, GLW:Risk Factors score=4.083, GLW:Business score=3.736, GLW:MD&A score=0.568]"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "misbound_inputs": [],
+        "unsourced_formulas": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 56
+      },
+      "category": "true_refusal"
+    }
+  ]
+}

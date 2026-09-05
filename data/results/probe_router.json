@@ -1,0 +1,187 @@
+{
+  "run_at": "2026-08-25T16:50:10+00:00",
+  "n": 20,
+  "correct": 20,
+  "accuracy": 1.0,
+  "by_expected_category": {
+    "dependency": {
+      "n": 7,
+      "ok": 7,
+      "accuracy": 1.0
+    },
+    "default": {
+      "n": 6,
+      "ok": 6,
+      "accuracy": 1.0
+    },
+    "procurement_share": {
+      "n": 7,
+      "ok": 7,
+      "accuracy": 1.0
+    }
+  },
+  "false_refusals": [],
+  "missed_refusals": [],
+  "results": [
+    {
+      "question": "How dependent is Cirrus Logic on Apple?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "canonical phrasing; the pattern was written for this"
+    },
+    {
+      "question": "What percentage of Qorvo's revenue came from Apple in fiscal 2024?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "canonical phrasing with an explicit year"
+    },
+    {
+      "question": "What share of Cirrus Logic's sales does Apple account for?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "synonym stress: 'sales' where the pattern says 'revenue'"
+    },
+    {
+      "question": "How much of Skyworks' top line is Apple?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "synonym stress: financial idiom"
+    },
+    {
+      "question": "Is Apple a significant customer of Corning?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "asks the same fact as a yes/no rather than a share"
+    },
+    {
+      "question": "What percentage of Skyworks' revenue comes from purchasing agreements?",
+      "expected": "default",
+      "got": "default",
+      "action": "auto",
+      "ok": true,
+      "note": "false-positive probe: supplier-side, but says 'purchasing'. Expected `dependency` when first written; revised to `default` because 'purchasing agreements' is not a counterparty and there is no principled reason to force graph_query. What this case tests is that it is not REFUSED, and `default` satisfies that while `procurement_share` -- what the regex returns -- does not."
+    },
+    {
+      "question": "How much of Jabil's revenue comes from its purchasing customers?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "false-positive probe: supplier-side, but says 'purchasing'"
+    },
+    {
+      "question": "Which of Apple's suppliers is most at risk if procurement spending goes to competitors?",
+      "expected": "dependency",
+      "got": "dependency",
+      "action": "force_tool",
+      "ok": true,
+      "note": "false-positive probe: supplier-side, but says 'procurement'"
+    },
+    {
+      "question": "What percentage of Apple's procurement budget goes to Qorvo?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "canonical phrasing; the pattern was written for this"
+    },
+    {
+      "question": "How much does Apple buy from Qorvo?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "false-negative probe: plain verb, no pattern word"
+    },
+    {
+      "question": "What fraction of Apple's total supplier spend is Qorvo?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "false-negative probe: 'supplier spend' unmatched"
+    },
+    {
+      "question": "Of everything Apple pays its component vendors, how much goes to Skyworks?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "false-negative probe: paraphrased entirely"
+    },
+    {
+      "question": "What share of Apple's cost of goods sold is attributable to Cirrus Logic?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "false-negative probe: dressed as an XBRL metric"
+    },
+    {
+      "question": "How much of Apple's component sourcing comes from Cirrus Logic?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "ADDED after this probe missed it: the slot router let it through because 'sourcing' was only a prefix in the spend-noun pattern and never a head, so 'component sourcing' matched nothing. harness_router's twelve older questions caught it and these eighteen did not -- and it had passed that afternoon only because the model happened to refuse on its own, which is not the same as being routed correctly."
+    },
+    {
+      "question": "What share of Apple's procurement is with Broadcom?",
+      "expected": "procurement_share",
+      "got": "procurement_share",
+      "action": "refuse",
+      "ok": true,
+      "note": "the same gap with no qualifier in front of the noun"
+    },
+    {
+      "question": "Does Corning disclose where its raw material purchasing comes from?",
+      "expected": "default",
+      "got": "default",
+      "action": "auto",
+      "ok": true,
+      "note": "false-positive probe: 'purchasing' but not a share question"
+    },
+    {
+      "question": "What was Apple's revenue in fiscal year 2024?",
+      "expected": "default",
+      "got": "default",
+      "action": "auto",
+      "ok": true,
+      "note": "plain lookup; must not be captured by either pattern"
+    },
+    {
+      "question": "What risks does Skyworks disclose about customer concentration?",
+      "expected": "default",
+      "got": "default",
+      "action": "auto",
+      "ok": true,
+      "note": "qualitative; belongs to retrieve_text, not graph_query"
+    },
+    {
+      "question": "How did Apple's gross margin change between 2023 and 2024?",
+      "expected": "default",
+      "got": "default",
+      "action": "auto",
+      "ok": true,
+      "note": "multi-step numeric; no supply-chain involvement"
+    },
+    {
+      "question": "Which suppliers disclosed Apple as a customer in fiscal 2024?",
+      "expected": "default",
+      "got": "default",
+      "action": "auto",
+      "ok": true,
+      "note": "set question -- graph_query is right, but forcing it is not required for correctness, so `default` is acceptable here"
+    }
+  ]
+}

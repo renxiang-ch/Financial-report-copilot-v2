@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+
+# Env
+.env
+
+# v1 reference clone — local only, not vendored into v2 history (see devlog D2)
+reference/
+
+# Data (raw filings can be large)
+data/raw/
+data/cache/
+
+# Generic-agent baseline: fetched raw SEC filings, regenerable via
+# scripts/fetch_raw_filings.py (see docs/generic-agent-baseline.md)
+baseline/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Claude Code local
+.claude/
+
+# Local DB dumps
+*.dump
+
+# Eval console capture logs (the JSON result files are the real artifact)
+data/results/_*.log
+
+# Generic-agent baseline raw codex transcripts -- bulky, regenerable via
+# scripts/run_generic_baseline.py; the *_baseline_*.json/.md reports are kept
+data/results/generic_agent_raw/
+
+# Model cache (sentence-transformers / HF)
+.cache/

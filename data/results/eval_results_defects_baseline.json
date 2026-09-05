@@ -1,0 +1,1050 @@
+{
+  "dataset": "data\\datasets\\eval_set_defects.json",
+  "dataset_version": "1.0",
+  "db_fingerprint": {
+    "companies": 15,
+    "named_edges": 103,
+    "financial_facts": 38966,
+    "filings": 148,
+    "max_fy_edges": 2026
+  },
+  "n_total": 6,
+  "n_held_out_excluded": 0,
+  "n_retired_excluded": 0,
+  "agent_model": "default (gpt-4o-mini)",
+  "cost_basis": "OpenAI list price for gpt-4o-mini",
+  "tier1_accuracy": null,
+  "tier2_accuracy": null,
+  "tier2_input_fetch": null,
+  "retrieval_accuracy": null,
+  "passage_hit_accuracy": null,
+  "avg_judge_score": null,
+  "refusal_accuracy": 0.0,
+  "numeric_accuracy": null,
+  "grounded_accuracy": 25.0,
+  "category_accuracy": {
+    "formula_discipline": 0.0,
+    "router_precision": 0.0,
+    "router_recall": 0.0,
+    "set_completeness": 100.0,
+    "threshold_disclosure": 0.0,
+    "year_provenance": 0.0
+  },
+  "overall_accuracy": 16.7,
+  "unverified_answers": 0,
+  "unverified_ids": [],
+  "figures_checked": 12,
+  "avg_latency_s": 3.64,
+  "total_latency_s": 21.9,
+  "input_tokens": 40566,
+  "output_tokens": 1063,
+  "estimated_cost_usd": 0.0067,
+  "results": [
+    {
+      "id": "def_threshold_floor_arithmetic",
+      "tier": 3,
+      "type": "grounded",
+      "answerable": true,
+      "correct": false,
+      "facts_ok": false,
+      "citation_ok": true,
+      "missing_accns": [],
+      "pct_ok": true,
+      "values_ok": false,
+      "missing_values": [
+        83560000
+      ],
+      "forbidden_seen": [],
+      "fabricated_pcts": [],
+      "got_text": "If Apple were to cut its orders by 20% in fiscal year 2024, the dollar impact on Skyworks Solutions would be approximately **$7,820,700,000**. This calculation assumes that Skyworks Solutions makes up 10% of Apple's revenue for that year.\n\n- **Impact Calculation**: \\(391,035,000,000 \\times 0.20 \\times 0.1\\)\n- **Fiscal Year**: 2024\n- **Citations**: \n  - Apple Revenue: SEC 10-K accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)\n  - Skyworks Revenue %: SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+      "latency_s": 6.99,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "customer": "AAPL",
+            "fiscal_year": "2024"
+          },
+          "output": {
+            "found": true,
+            "hub": "AAPL",
+            "fiscal_year": "2024",
+            "edge_count": 4,
+            "edges": [
+              {
+                "supplier": "CRUS",
+                "customer": "AAPL",
+                "revenue_pct": 87.0,
+                "pct_display": "87.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)",
+                "source_text": "Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively."
+              },
+              {
+                "supplier": "QRVO",
+                "customer": "AAPL",
+                "revenue_pct": 46.0,
+                "pct_display": "46.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)",
+                "source_text": "We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively."
+              },
+              {
+                "supplier": "JBL",
+                "customer": "AAPL",
+                "revenue_pct": 11.0,
+                "pct_display": "11.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)",
+                "source_text": "Apple, Inc. 11 % 17 % 19 %"
+              },
+              {
+                "supplier": "SWKS",
+                "customer": "AAPL",
+                "revenue_pct": 10.0,
+                "pct_display": ">10%",
+                "pct_is_floor": true,
+                "threshold_only": true,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+                "source_text": "Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue."
+              }
+            ],
+            "traversal_trace": [
+              "CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+              "QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+              "JBL->AAPL 11.0% FY2024 [0001628280-24-043960]",
+              "SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]"
+            ]
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "SWKS",
+            "metric": "Revenue",
+            "value": 4178000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-27",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(391035000000 * 0.20) * 0.1",
+            "variables": {
+              "revenue_aapl": 391035000000,
+              "pct_cut": 0.2,
+              "pct_swks": 0.1
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 7820700000.0,
+            "expression": "(391035000000 * 0.20) * 0.1",
+            "variables": {
+              "revenue_aapl": 391035000000,
+              "pct_cut": 0.2,
+              "pct_swks": 0.1
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)",
+        "SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)",
+        "SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)",
+        "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+        "SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "graph_query({'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 4, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}, {'supplier': 'JBL', 'customer': 'AAPL', 'revenue_pct': 11.0, 'pct_display': '11.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)', 'source_text': 'Apple, Inc. 11 % 17 % 19 %'}, {'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]', 'JBL->AAPL 11.0% FY2024 [0001628280-24-043960]', 'SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}",
+        "query_financials(SWKS, Revenue, FY2024) \u2192 4178000000.0  [SEC 10-K filing accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)]",
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute((391035000000 * 0.20) * 0.1) \u2192 7820700000.0"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "verified": true,
+        "numbers_checked": 4,
+        "citations_checked": 2,
+        "passage_values": 0
+      },
+      "category": "threshold_disclosure"
+    },
+    {
+      "id": "def_supplier_set_completeness",
+      "tier": 3,
+      "type": "grounded",
+      "answerable": true,
+      "correct": true,
+      "facts_ok": true,
+      "citation_ok": true,
+      "missing_accns": [],
+      "pct_ok": true,
+      "values_ok": true,
+      "missing_values": [],
+      "forbidden_seen": [],
+      "fabricated_pcts": [],
+      "got_text": "In fiscal year 2024, the following companies disclosed Apple as a customer along with their respective revenue concentrations:\n\n1. **CRUS**: 87.0% of total revenue (SEC 10-K accession 0000772406-24-000031)  \n2. **QRVO**: 46.0% of total revenue (SEC 10-K accession 0001604778-24-000036)  \n3. **JBL**: 11.0% of total revenue (SEC 10-K accession 0001628280-24-043960)  \n4. **SWKS**: More than 10% (exact % not stated; SEC 10-K accession 0000004127-24-000131)  \n\nThese figures indicate the percentage of total revenue attributable to Apple for each supplier in the specified fiscal year.",
+      "latency_s": 3.54,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "customer": "AAPL",
+            "fiscal_year": "2024"
+          },
+          "output": {
+            "found": true,
+            "hub": "AAPL",
+            "fiscal_year": "2024",
+            "edge_count": 4,
+            "edges": [
+              {
+                "supplier": "CRUS",
+                "customer": "AAPL",
+                "revenue_pct": 87.0,
+                "pct_display": "87.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)",
+                "source_text": "Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively."
+              },
+              {
+                "supplier": "QRVO",
+                "customer": "AAPL",
+                "revenue_pct": 46.0,
+                "pct_display": "46.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)",
+                "source_text": "We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively."
+              },
+              {
+                "supplier": "JBL",
+                "customer": "AAPL",
+                "revenue_pct": 11.0,
+                "pct_display": "11.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)",
+                "source_text": "Apple, Inc. 11 % 17 % 19 %"
+              },
+              {
+                "supplier": "SWKS",
+                "customer": "AAPL",
+                "revenue_pct": 10.0,
+                "pct_display": ">10%",
+                "pct_is_floor": true,
+                "threshold_only": true,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)",
+                "source_text": "Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue."
+              }
+            ],
+            "traversal_trace": [
+              "CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]",
+              "QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]",
+              "JBL->AAPL 11.0% FY2024 [0001628280-24-043960]",
+              "SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]"
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)",
+        "SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)",
+        "SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)",
+        "SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)"
+      ],
+      "tool_trace": [
+        "graph_query({'customer': 'AAPL', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 4, 'edges': [{'supplier': 'CRUS', 'customer': 'AAPL', 'revenue_pct': 87.0, 'pct_display': '87.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000772406-24-000031 (https://www.sec.gov/Archives/edgar/data/772406/000077240624000031/crus-20240330.htm)', 'source_text': 'Apple Inc., who purchased through multiple contract manufacturers and represented approximately 87 percent, 83 percent and 79 percent of the Companys total sales, respectively.'}, {'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}, {'supplier': 'JBL', 'customer': 'AAPL', 'revenue_pct': 11.0, 'pct_display': '11.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001628280-24-043960 (https://www.sec.gov/Archives/edgar/data/898293/000162828024043960/jbl-20240831.htm)', 'source_text': 'Apple, Inc. 11 % 17 % 19 %'}, {'supplier': 'SWKS', 'customer': 'AAPL', 'revenue_pct': 10.0, 'pct_display': '>10%', 'pct_is_floor': True, 'threshold_only': True, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0000004127-24-000131 (https://www.sec.gov/Archives/edgar/data/4127/000000412724000131/swks-20240927.htm)', 'source_text': 'Apple, through sales to multiple distributors and contract manufacturers for multiple applications including smartphones, tablets, desktop and notebook computers, watches, and other devices, constituted more than ten percent of our net revenue.'}], 'traversal_trace': ['CRUS->AAPL 87.0% FY2024 [0000772406-24-000031]', 'QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]', 'JBL->AAPL 11.0% FY2024 [0001628280-24-043960]', 'SWKS->AAPL >10% (floor; revenue_pct=10.0 is the disclosed lower bound -- exact % not stated in the 10-K) FY2024 [0000004127-24-000131]']}"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "verified": true,
+        "numbers_checked": 4,
+        "citations_checked": 4,
+        "passage_values": 0
+      },
+      "category": "set_completeness"
+    },
+    {
+      "id": "def_router_fp_supplier_side_exposure",
+      "tier": 3,
+      "type": "grounded",
+      "answerable": true,
+      "correct": false,
+      "facts_ok": false,
+      "citation_ok": false,
+      "missing_accns": [],
+      "pct_ok": true,
+      "values_ok": true,
+      "missing_values": [],
+      "forbidden_seen": [],
+      "fabricated_pcts": [],
+      "got_text": "I cannot determine this from available data. 10-K customer-concentration disclosures are supplier-reported: they state what percentage of the SUPPLIER's revenue comes from a named customer, not what percentage of the CUSTOMER's procurement, purchasing, or spending comes from that supplier. That figure is not disclosed in any filing in this database.",
+      "latency_s": 0.0,
+      "steps": [],
+      "citations": [],
+      "tool_trace": [],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 0,
+        "passage_values": 0
+      },
+      "category": "router_precision"
+    },
+    {
+      "id": "def_router_fn_customer_side_spend",
+      "tier": 3,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": false,
+      "refusal_detected": false,
+      "got_text": "In fiscal year 2024, Qorvo accounted for 46.0% of Apple's total supplier spend. This information is sourced from SEC 10-K accession number 0001604778-24-000036.",
+      "latency_s": 2.19,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "customer": "AAPL",
+            "supplier": "QRVO",
+            "fiscal_year": "2024"
+          },
+          "output": {
+            "found": true,
+            "hub": "AAPL",
+            "fiscal_year": "2024",
+            "edge_count": 1,
+            "edges": [
+              {
+                "supplier": "QRVO",
+                "customer": "AAPL",
+                "revenue_pct": 46.0,
+                "pct_display": "46.0%",
+                "pct_is_floor": false,
+                "threshold_only": false,
+                "fiscal_year": 2024,
+                "disclosure_status": "named",
+                "citation": "SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)",
+                "source_text": "We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively."
+              }
+            ],
+            "traversal_trace": [
+              "QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]"
+            ]
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)"
+      ],
+      "tool_trace": [
+        "graph_query({'customer': 'AAPL', 'supplier': 'QRVO', 'fiscal_year': '2024'}) \u2192 {'found': True, 'hub': 'AAPL', 'fiscal_year': '2024', 'edge_count': 1, 'edges': [{'supplier': 'QRVO', 'customer': 'AAPL', 'revenue_pct': 46.0, 'pct_display': '46.0%', 'pct_is_floor': False, 'threshold_only': False, 'fiscal_year': 2024, 'disclosure_status': 'named', 'citation': 'SEC 10-K accession 0001604778-24-000036 (https://www.sec.gov/Archives/edgar/data/1604778/000160477824000036/rfmd-20240330.htm)', 'source_text': \"We provide products to our largest end customer, Apple Inc. ('Apple'), through sales to multiple contract manufacturers, which in the aggregate accounted for 46% and 37% of total revenue in fiscal years 2024 and 2023, respectively.\"}], 'traversal_trace': ['QRVO->AAPL 46.0% FY2024 [0001604778-24-000036]']}"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "verified": true,
+        "numbers_checked": 1,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "router_recall"
+    },
+    {
+      "id": "def_formula_invention_missing_input",
+      "tier": 2,
+      "type": "unanswerable",
+      "answerable": false,
+      "correct": false,
+      "refusal_detected": false,
+      "got_text": "Apple's Days Sales Outstanding (DSO) for fiscal year 2024 was approximately 136 days. This was calculated using the following data points:\n\n- Current Assets: $152,987,000,000 (SEC 10-K filing accession 0000320193-24-000123)\n- Inventory: $7,286,000,000 (SEC 10-K filing accession 0000320193-24-000123)\n- Revenue: $391,035,000,000 (SEC 10-K filing accession 0000320193-24-000123)\n\nThe formula used was \\((\\text{Current Assets} - \\text{Inventory}) / \\text{Revenue} \\times 365\\).",
+      "latency_s": 7.18,
+      "steps": [
+        {
+          "tool": "list_metrics",
+          "input": {
+            "ticker": "AAPL"
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "form": "10-K",
+            "metrics": [
+              {
+                "metric": "CapEx",
+                "years_available": [
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 11
+              },
+              {
+                "metric": "COGS",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "CurrentAssets",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "CurrentLiabilities",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "D&A",
+                "years_available": [
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 9
+              },
+              {
+                "metric": "D&A_Component",
+                "years_available": [
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016
+                ],
+                "n_years": 7
+              },
+              {
+                "metric": "EPS_Basic",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "EPS_Diluted",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "GrossProfit",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "IncomeTaxExpense",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "InterestExpense",
+                "years_available": [
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023
+                ],
+                "n_years": 11
+              },
+              {
+                "metric": "InterestExpenseOnDebt",
+                "years_available": [
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2021
+                ],
+                "n_years": 7
+              },
+              {
+                "metric": "Inventory",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "LongTermDebt",
+                "years_available": [
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 11
+              },
+              {
+                "metric": "NetIncome",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "OperatingCashFlow",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 14
+              },
+              {
+                "metric": "OperatingIncome",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "PP&E",
+                "years_available": [
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 14
+              },
+              {
+                "metric": "R&D",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "Revenue",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "TotalAssets",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              },
+              {
+                "metric": "TotalDebt",
+                "years_available": [
+                  2013,
+                  2014,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 5
+              },
+              {
+                "metric": "TotalEquity",
+                "years_available": [
+                  2009,
+                  2010,
+                  2011,
+                  2012,
+                  2013,
+                  2014,
+                  2015,
+                  2016,
+                  2017,
+                  2018,
+                  2019,
+                  2020,
+                  2021,
+                  2022,
+                  2023,
+                  2024,
+                  2025
+                ],
+                "n_years": 17
+              }
+            ]
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Revenue",
+            "value": 391035000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "CurrentAssets",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "CurrentAssets",
+            "value": 152987000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "query_financials",
+          "input": {
+            "ticker": "AAPL",
+            "metric": "Inventory",
+            "fiscal_year": 2024
+          },
+          "output": {
+            "found": true,
+            "ticker": "AAPL",
+            "metric": "Inventory",
+            "value": 7286000000.0,
+            "unit": "USD",
+            "period_end": "2024-09-28",
+            "fiscal_year": 2024,
+            "form": "10-K",
+            "citation": "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+          }
+        },
+        {
+          "tool": "compute",
+          "input": {
+            "expression": "(current_assets - inventory) / revenue * 365",
+            "variables": {
+              "current_assets": 152987000000.0,
+              "inventory": 7286000000.0,
+              "revenue": 391035000000.0
+            }
+          },
+          "output": {
+            "ok": true,
+            "result": 136.00026851816332,
+            "expression": "(current_assets - inventory) / revenue * 365",
+            "variables": {
+              "current_assets": 152987000000.0,
+              "inventory": 7286000000.0,
+              "revenue": 391035000000.0
+            }
+          }
+        }
+      ],
+      "citations": [
+        "SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)"
+      ],
+      "tool_trace": [
+        "list_metrics(AAPL) \u2192 23 metrics available",
+        "query_financials(AAPL, Revenue, FY2024) \u2192 391035000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, CurrentAssets, FY2024) \u2192 152987000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "query_financials(AAPL, Inventory, FY2024) \u2192 7286000000.0  [SEC 10-K filing accession 0000320193-24-000123 (https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm)]",
+        "compute((current_assets - inventory) / revenue * 365) \u2192 136.00026851816332"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "verified": true,
+        "numbers_checked": 3,
+        "citations_checked": 1,
+        "passage_values": 0
+      },
+      "category": "formula_discipline"
+    },
+    {
+      "id": "def_answered_from_the_asked_year",
+      "tier": 1,
+      "type": "grounded",
+      "answerable": true,
+      "correct": false,
+      "facts_ok": false,
+      "citation_ok": false,
+      "missing_accns": [
+        "0000004127-24-000131"
+      ],
+      "pct_ok": true,
+      "values_ok": true,
+      "missing_values": [],
+      "forbidden_seen": [],
+      "fabricated_pcts": [],
+      "got_text": "I cannot find supply-chain data for Skyworks Solutions in the database for fiscal year 2024.",
+      "latency_s": 1.97,
+      "steps": [
+        {
+          "tool": "graph_query",
+          "input": {
+            "customer": "AAPL",
+            "supplier": "SKWS",
+            "fiscal_year": "2024"
+          },
+          "output": {
+            "found": false,
+            "hub": "AAPL",
+            "fiscal_year": "2024",
+            "edges": []
+          }
+        }
+      ],
+      "citations": [],
+      "tool_trace": [
+        "graph_query({'customer': 'AAPL', 'supplier': 'SKWS', 'fiscal_year': '2024'}) \u2192 {'found': False, 'hub': 'AAPL', 'fiscal_year': '2024', 'edges': []}"
+      ],
+      "verification": {
+        "unverified_numbers": [],
+        "unsourced_inputs": [],
+        "unverified_citations": [],
+        "verified": true,
+        "numbers_checked": 0,
+        "citations_checked": 0,
+        "passage_values": 0
+      },
+      "category": "year_provenance"
+    }
+  ]
+}
