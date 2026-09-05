@@ -1,0 +1,219 @@
+{
+  "dataset": "data/datasets/eval_set_router.json",
+  "dataset_version": "1.0",
+  "mode": "router-enabled",
+  "n_total": 12,
+  "tool_selection_accuracy": 100.0,
+  "dependency_accuracy": 100.0,
+  "qualitative_accuracy": 100.0,
+  "procurement_share_accuracy": 100.0,
+  "avg_tool_calls_procurement_share": 0.0,
+  "avg_latency_s": 2.47,
+  "total_latency_s": 29.69,
+  "input_tokens": 57020,
+  "output_tokens": 1921,
+  "estimated_cost_usd": 0.00971,
+  "results": [
+    {
+      "id": "rt_dep_qrvo_apple",
+      "category": "dependency",
+      "expected_tool_category": "graph_query",
+      "tools_called": [
+        "graph_query"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 1.79,
+      "route": {
+        "category": "dependency",
+        "action": "force_tool",
+        "tool": "graph_query",
+        "why": "dependence runs from the first company to the second"
+      }
+    },
+    {
+      "id": "rt_dep_crus_apple_pct",
+      "category": "dependency",
+      "expected_tool_category": "graph_query",
+      "tools_called": [
+        "graph_query"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 1.44,
+      "route": {
+        "category": "dependency",
+        "action": "force_tool",
+        "tool": "graph_query",
+        "why": "asks for a share of the named company's revenue"
+      }
+    },
+    {
+      "id": "rt_dep_swks_reliance",
+      "category": "dependency",
+      "expected_tool_category": "graph_query",
+      "tools_called": [
+        "graph_query",
+        "graph_query"
+      ],
+      "n_tool_calls": 2,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 6.09,
+      "route": {
+        "category": "dependency",
+        "action": "force_tool",
+        "tool": "graph_query",
+        "why": "dependence runs from the first company to the second"
+      }
+    },
+    {
+      "id": "rt_dep_avgo_concentration",
+      "category": "dependency",
+      "expected_tool_category": "graph_query",
+      "tools_called": [
+        "graph_query"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 1.61,
+      "route": {
+        "category": "dependency",
+        "action": "force_tool",
+        "tool": "graph_query",
+        "why": "dependence runs from the first company to the second"
+      }
+    },
+    {
+      "id": "rt_qual_crus_risk",
+      "category": "qualitative",
+      "expected_tool_category": "retrieve_text",
+      "tools_called": [
+        "retrieve_text"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 9.42,
+      "route": {
+        "category": "default",
+        "action": "auto"
+      }
+    },
+    {
+      "id": "rt_qual_avgo_competitive",
+      "category": "qualitative",
+      "expected_tool_category": "retrieve_text",
+      "tools_called": [
+        "retrieve_text"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 3.14,
+      "route": {
+        "category": "default",
+        "action": "auto"
+      }
+    },
+    {
+      "id": "rt_qual_qrvo_risk",
+      "category": "qualitative",
+      "expected_tool_category": "retrieve_text",
+      "tools_called": [
+        "retrieve_text"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 2.58,
+      "route": {
+        "category": "default",
+        "action": "auto"
+      }
+    },
+    {
+      "id": "rt_qual_swks_supply_chain",
+      "category": "qualitative",
+      "expected_tool_category": "retrieve_text",
+      "tools_called": [
+        "retrieve_text"
+      ],
+      "n_tool_calls": 1,
+      "tool_selection_correct": true,
+      "correct": true,
+      "latency_s": 3.61,
+      "route": {
+        "category": "default",
+        "action": "auto"
+      }
+    },
+    {
+      "id": "rt_ref_apple_qrvo_procurement",
+      "category": "procurement_share",
+      "expected_tool_category": "refuse_no_tool",
+      "tools_called": [],
+      "n_tool_calls": 0,
+      "tool_selection_correct": true,
+      "refused_correctly": true,
+      "correct": true,
+      "latency_s": 0.0,
+      "route": {
+        "category": "procurement_share",
+        "action": "refuse",
+        "why": "asks for a share of the named company's spend"
+      }
+    },
+    {
+      "id": "rt_ref_apple_crus_sourcing",
+      "category": "procurement_share",
+      "expected_tool_category": "refuse_no_tool",
+      "tools_called": [],
+      "n_tool_calls": 0,
+      "tool_selection_correct": true,
+      "refused_correctly": true,
+      "correct": true,
+      "latency_s": 0.0,
+      "route": {
+        "category": "procurement_share",
+        "action": "refuse",
+        "why": "asks for a share of the named company's spend"
+      }
+    },
+    {
+      "id": "rt_ref_apple_swks_spend",
+      "category": "procurement_share",
+      "expected_tool_category": "refuse_no_tool",
+      "tools_called": [],
+      "n_tool_calls": 0,
+      "tool_selection_correct": true,
+      "refused_correctly": true,
+      "correct": true,
+      "latency_s": 0.0,
+      "route": {
+        "category": "procurement_share",
+        "action": "refuse",
+        "why": "asks for a share of the named company's spend"
+      }
+    },
+    {
+      "id": "rt_ref_apple_avgo_purchasing",
+      "category": "procurement_share",
+      "expected_tool_category": "refuse_no_tool",
+      "tools_called": [],
+      "n_tool_calls": 0,
+      "tool_selection_correct": true,
+      "refused_correctly": true,
+      "correct": true,
+      "latency_s": 0.0,
+      "route": {
+        "category": "procurement_share",
+        "action": "refuse",
+        "why": "asks for a share of the named company's spend"
+      }
+    }
+  ]
+}
