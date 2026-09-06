@@ -17,8 +17,8 @@
 
 - **当前里程碑**：**Phase 0 完成**（0a=001, 0b=003）；track-1（通用 Agent 基线）本轮完成（002 补记 2/3）
 - **上次停止点**：Phase 0b 做完 —— DB 灌全量 v1 快照 + embed 16342 chunks；`pytest` **143/0**（8 个 DB 失败转绿）；**v1_loop baseline 三 harness 全 100%**（Tier1/2/3、retrieval、refusal、router 全 100%，grounding 0 flagged），精确复现 v1 发布结果，成本 $0.055。三方对比第一版见 003 Learning。第一个 commit `e4f5d88` 已推到 `github.com/renxiang-ch/Financial-report-copilot-v2`；Phase 0b 的改动**未 commit**
-- **2026-09-05 追加**：应用户要求删除 Phase 0a 的 LangGraph stub（`orchestration/graph/`），项目里在用户学完框架前不出现 LangChain/LangGraph 的*使用*；deps 保留。`ab_compare` graph 侧改为硬编码 STUB。pytest 143/0 不变
-- **下一步动作**：（a）Phase 1 设计决策：plan 里"待确认设计点"我给了 8 条推荐（D1 信封 / D2 错误类型 / D3 粒度 / D4 resolve 层 / D5-8），等用户确认。（b）`v1_loop@strong` 用户已明确不做（v1_loop 已 100%，无 headroom）。（c）`eval_set_v2/defects/multiturn` 过 v1_loop 尚未做（可选）
+- **2026-09-06**：用户学完 `create_agent` 文档，开始 agent loop 端口（devlog 004）。**Step 1 完成**：`orchestration/graph/` 用 `create_agent` + 5 个最小 `@tool` 包装 + v1 SYSTEM prompt + `InMemorySaver` 重建，runner 返回 v1 形状 dict。`ab_compare` eval_set.json（30 题）与 v1_loop **citations/refusal 30/30 匹配、0 语义分歧、延迟/步数一致**。加了 `langchain==1.4.0` 到 deps。pytest 143/0
+- **下一步动作**：devlog 004 Step 3（路由 middleware：refuse 短路 + force_tool）→ 跑 router eval 集；然后 Step 4-6（slots/clarify/history-trim middleware）；再让 graph 过 tier3 + defects + multiturn
 - **阻塞项**：无
 
 ---
@@ -29,8 +29,8 @@
 |----|------|------|------|----------|
 | 001 | Phase 0a — 脚手架与护栏 | done | [001](001-phase0-scaffolding.md) | v1 移植冻结 + LangGraph stub + ab_compare 骨架 + pytest 120/8 |
 | 003 | Phase 0b — 灌库 + v1_loop baseline | done | [003](003-phase0b-v1loop-baseline.md) | DB 全量 + embed；v1_loop 三 harness 全 100%；pytest 143/0 |
-| — | Phase 1 — 工具层标准化重构 | planned | — | — |
-| — | Phase 2 — LangGraph 复刻 v1 循环 | planned | — | — |
+| 004 | Phase 2 — Agent loop 端口（→ `create_agent`） | active | [004](004-agentloop-port.md) | Step 1 完成：eval_set.json 与 v1_loop citations/refusal 30/30 匹配 |
+| — | Phase 1 — 工具层标准化重构 | planned | — | 顺序调整：先 loop 端口，工具最小包装后再重构 |
 | — | Phase 3 — 框架能力成熟化（持久化 / 错误恢复 / HITL / 可观测） | planned | — | — |
 | — | Phase 4 — 能力升级：长难题（指引兑现 / 管理层风格 / 增长模式） | planned | — | — |
 | — | Phase 5 — 产品化（API / 部署 / 回归闸门） | planned | — | — |

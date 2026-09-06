@@ -10,4 +10,5 @@
 | 2026-09-05 | generic-agent-baseline | generic_agent (Codex CLI, **gpt-5.6-sol**, n=1) | 0.85 (17/20) | 1.0 (10/10) | 0.75 (6/8) | — | 47 | ~132K in（87% cached）/ ~818 out | 4.2 | Tier1 只看答得了的题 17/17；3 个非满分是 `v1_schema_gap`/`out_of_scope` unanswerable（单独分桶）。Tier3 2 miss = procurement-share 陷阱 + rank 题与 v1 rubric 分歧。成本按 gpt-5.6-sol 计价 **$4.96/全套、$0.131/题**（vs v1_loop gpt-4o-mini ~$0.001/题，≈117x）。见 `docs/devlog/002` 补记 2/3 |
 | 2026-09-04 | (preliminary，作废) | generic_agent (Codex 默认模型, n=1) | 0.85 | 1.0 | 0.75 | — | 56 | ~132K in | 4.5 | 用最终 scorer 重打后与 gpt-5.6-sol **逐题零差异**（0 item diff）；仅留作 scorer 迭代记录 |
 | 2026-09-05 | Phase 0b | v1_loop (gpt-4o-mini) | 100% | 100% | 100% | — | — | ~7K in / ~140 out（30 题合计 209K/4.2K）| — | v2 环境精确复现 v1 发布结果。retrieval 100%（judge 2.57/3）· refusal 100% · router tool-selection 100% · grounding 0 flagged。3 harness 合计成本 $0.055（≈$0.001/题）。avg latency 2.5–3.2s/题。见 `docs/devlog/003` |
-| —    | (待做) | v1_loop@strong (gpt-5.6-sol) | | | | — | | | | 用户暂缓：v1_loop 换 gpt-5.6-sol 重跑，隔离模型 vs 架构 |
+| —    | (待做) | v1_loop@strong (gpt-5.6-sol) | | | | — | | | | 用户已明确不做（v1_loop 已 100%，无 headroom）|
+| 2026-09-06 | 004 Step 1 | graph (create_agent, gpt-4o-mini) | ✓ | ✓ | 未跑 | — | ~2.3s mean | 同 v1_loop 量级 | 1.7 | eval_set.json 30 题 `ab_compare` 对 v1_loop：citations/refusal 30/30 匹配，0 语义分歧。tier3/router 未跑（Step 3）。见 `docs/devlog/004` |

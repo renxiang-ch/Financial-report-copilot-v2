@@ -44,5 +44,10 @@ data/results/_*.log
 # scripts/run_generic_baseline.py; the *_baseline_*.json/.md reports are kept
 data/results/generic_agent_raw/
 
+# ab_compare reports -- run on every orchestration change; key numbers go in
+# docs/devlog + docs/eval-history, the raw reports are transient
+data/results/ab_*.json
+data/results/ab_*.md
+
 # Model cache (sentence-transformers / HF)
 .cache/

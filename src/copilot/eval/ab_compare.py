@@ -1,9 +1,7 @@
-"""A/B harness: same questions through the frozen v1 loop and the LangGraph impl.
+"""A/B harness: same questions through the frozen v1 loop and the create_agent impl.
 
-Phase 0: skeleton. There is no graph implementation yet (the Phase 0a stub was
-removed 2026-09-05), so the graph side is hard-coded to ``STUB``. Phase 2 wires
-in ``copilot.orchestration.graph`` and this becomes the parity gate -- run it on
-every orchestration change and diff answer / citations / refusal / cost.
+Both sides run for real. This is the parity gate for the agent-loop port -- run
+it on every orchestration change and diff answer / citations / refusal / cost.
 
 Comparison is end-to-end only (answer text, citation set, refusal, latency,
 tokens). Tool internals are deliberately not compared: after Phase 1 the two
@@ -61,9 +59,26 @@ def _run_v1(question: str) -> dict[str, Any]:
 
 
 def _run_graph(question: str) -> dict[str, Any]:
-    # No graph implementation yet -- Phase 2 wires in copilot.orchestration.graph
-    # and this dispatches to it. Until then every row's graph side is STUB.
-    return {"status": "STUB"}
+    from copilot.orchestration.graph import run
+
+    t0 = time.perf_counter()
+    try:
+        r = run(question)
+    except Exception as e:  # noqa: BLE001 -- record, don't crash the sweep
+        return {"status": "ERROR", "reason": f"{type(e).__name__}: {e}",
+                "trace": traceback.format_exc(limit=3)}
+    dt = round((time.perf_counter() - t0) * 1000)
+    usage = r.get("usage") or {}
+    return {
+        "status": "OK",
+        "answer": r.get("answer", ""),
+        "citations": sorted(set(r.get("citations") or [])),
+        "refused": _refused(r.get("answer", "")),
+        "n_steps": len(r.get("steps") or []),
+        "latency_ms": dt,
+        "input_tokens": usage.get("input_tokens"),
+        "output_tokens": usage.get("output_tokens"),
+    }
 
 
 def _dotenv_has_key() -> bool:
@@ -91,6 +106,7 @@ def _diff(v1: dict, graph: dict) -> dict[str, Any]:
 def compare(dataset: str, limit: int | None = None) -> dict[str, Any]:
     data = json.loads(Path(dataset).read_text())
     items = data["items"] if isinstance(data, dict) else data
+    items = [it for it in items if not it.get("retired")]
     if limit:
         items = items[:limit]
 
