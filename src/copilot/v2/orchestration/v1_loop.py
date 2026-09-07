@@ -7,7 +7,7 @@ it a stable, intention-revealing name.
 
 Usage::
 
-    from copilot.orchestration.v1_loop import ask
+    from copilot.v2.orchestration.v1_loop import ask
     result = ask("What was Apple's FY2024 revenue?")
 
 Return shape: see ``copilot.agent.agent.ask`` --

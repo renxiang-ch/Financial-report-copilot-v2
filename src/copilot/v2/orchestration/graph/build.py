@@ -17,7 +17,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 from copilot.agent.agent import SYSTEM
 from copilot.config import settings
-from copilot.orchestration.graph.tools import TOOLS
+from copilot.v2.orchestration.graph.tools import TOOLS
 
 # v1_loop's default agent model (see model_router.select_model / the eval runs).
 DEFAULT_MODEL = "gpt-4o-mini"

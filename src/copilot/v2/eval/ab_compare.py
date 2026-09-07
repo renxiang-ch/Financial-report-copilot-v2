@@ -9,8 +9,8 @@ sides no longer share a tool implementation.
 
 Usage::
 
-    uv run python -m copilot.eval.ab_compare --limit 5
-    uv run python -m copilot.eval.ab_compare --dataset data/datasets/eval_set_tier3.json
+    uv run python -m copilot.v2.eval.ab_compare --limit 5
+    uv run python -m copilot.v2.eval.ab_compare --dataset data/datasets/eval_set_tier3.json
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parents[3]
+_REPO_ROOT = Path(__file__).resolve().parents[4]  # src/copilot/v2/eval/ab_compare.py
 _RESULTS_DIR = _REPO_ROOT / "data" / "results"
 
 
@@ -36,7 +36,7 @@ def _refused(answer: str) -> bool:
 def _run_v1(question: str) -> dict[str, Any]:
     if not os.environ.get("OPENAI_API_KEY") and not _dotenv_has_key():
         return {"status": "SKIP", "reason": "no OPENAI_API_KEY"}
-    from copilot.orchestration.v1_loop import ask
+    from copilot.v2.orchestration.v1_loop import ask
 
     t0 = time.perf_counter()
     try:
@@ -59,7 +59,7 @@ def _run_v1(question: str) -> dict[str, Any]:
 
 
 def _run_graph(question: str) -> dict[str, Any]:
-    from copilot.orchestration.graph import run
+    from copilot.v2.orchestration.graph import run
 
     t0 = time.perf_counter()
     try:

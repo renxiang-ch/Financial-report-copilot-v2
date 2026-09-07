@@ -18,6 +18,7 @@
 - **当前里程碑**：**Phase 0 完成**（0a=001, 0b=003）；track-1（通用 Agent 基线）本轮完成（002 补记 2/3）
 - **上次停止点**：Phase 0b 做完 —— DB 灌全量 v1 快照 + embed 16342 chunks；`pytest` **143/0**（8 个 DB 失败转绿）；**v1_loop baseline 三 harness 全 100%**（Tier1/2/3、retrieval、refusal、router 全 100%，grounding 0 flagged），精确复现 v1 发布结果，成本 $0.055。三方对比第一版见 003 Learning。第一个 commit `e4f5d88` 已推到 `github.com/renxiang-ch/Financial-report-copilot-v2`；Phase 0b 的改动**未 commit**
 - **2026-09-06**：用户学完 `create_agent` 文档，开始 agent loop 端口（devlog 004）。**Step 1 完成**：`orchestration/graph/` 用 `create_agent` + 5 个最小 `@tool` 包装 + v1 SYSTEM prompt + `InMemorySaver` 重建，runner 返回 v1 形状 dict。`ab_compare` eval_set.json（30 题）与 v1_loop **citations/refusal 30/30 匹配、0 语义分歧、延迟/步数一致**。加了 `langchain==1.4.0` 到 deps。pytest 143/0
+- **2026-09-07**：v1/v2 代码分开 —— v2 新写的全部移进 `src/copilot/v2/`（`orchestration/` `tools/` `eval/{ab_compare,generic_scoring}`）。规则：`copilot.v2.*` = 新，其它 = v1/共享。`ab_compare` 的 `_REPO_ROOT` 深度改 `parents[4]`。pytest 143/0，`ab_compare` 正常
 - **下一步动作**：devlog 004 Step 3（路由 middleware：refuse 短路 + force_tool）→ 跑 router eval 集；然后 Step 4-6（slots/clarify/history-trim middleware）；再让 graph 过 tier3 + defects + multiturn
 - **阻塞项**：无
 
@@ -58,16 +59,18 @@
 | `docs/devlog/NNN-*.md` | 各里程碑日志 |
 | `docs/eval-history.md` | 可追加的 Eval 分数 / 延迟 / 成本历史 |
 
-### 代码
-| 路径 | 说明 |
-|------|------|
-| `src/copilot/agent/` | v1 原样拷贝，**冻结只读**，两套编排／基线共用的行为真源 |
-| `src/copilot/orchestration/v1_loop.py` | 一行 shim，re-export `copilot.agent.agent.ask`，给冻结基线一个干净名字 |
-| `src/copilot/orchestration/graph/` | **已删**（2026-09-05）—— Phase 0a 的 LangGraph stub 移除，等用户学完框架再于 Phase 2 重建。deps 仍 pin 在 pyproject 供 REPL 学习 |
-| `src/copilot/tools/` | Phase 1 标准化工具库占位，尚未开始 |
-| `src/copilot/eval/ab_compare.py` | v1_loop vs graph 的端到端 A/B 脚本 |
-| `src/copilot/eval/generic_scoring.py` | 通用 agent 基线的打分器，按题目 `type`/`scoring` 路由，复用 `harness.py`/`harness_tier3.py` 的判分函数 |
-| `scripts/fetch_raw_filings.py` | 抓 58 份真实 10-K 到 `baseline/raw_filings/`（gitignore） |
+### 代码 —— `copilot.v2.*` = 新写的，其它全是 v1/共享（2026-09-07 拆分）
+| 路径 | 类别 | 说明 |
+|------|------|------|
+| `src/copilot/agent/` `api.py` `dashboard.py` | **v1 冻结** | v1 原样拷贝，只读，行为真源 |
+| `src/copilot/{config,storage,retrieval,pipeline}` | **共享** | v1 拷来的基础设施，v2 import 使用不重写 |
+| `src/copilot/eval/{harness*,probe*}.py` | **v1 移植** | Tier 1-3 / router / probe 评测 |
+| `src/copilot/v2/orchestration/v1_loop.py` | v2 | 一行 shim，re-export `copilot.agent.agent.ask` |
+| `src/copilot/v2/orchestration/graph/` | v2 | LangChain 重制版：`tools.py`（@tool 包装）/ `build.py`（create_agent）/ `runner.py`（驱动+重建 v1 形状）|
+| `src/copilot/v2/tools/` | v2 | 正式工具层重构占位，尚未开始 |
+| `src/copilot/v2/eval/ab_compare.py` | v2 | v1_loop vs graph 端到端 A/B（`python -m copilot.v2.eval.ab_compare`）|
+| `src/copilot/v2/eval/generic_scoring.py` | v2 | 通用 agent 基线打分器，复用 `harness.py` 判分函数 |
+| `scripts/fetch_raw_filings.py` | v2 | 抓 58 份真实 10-K 到 `baseline/raw_filings/`（gitignore） |
 | `scripts/run_generic_baseline.py` | 逐题起 `codex exec` 跑通用 agent 基线 |
 | `scripts/rescore_generic_baseline.py` | 用已保存的答案文本离线重新打分，不用重跑 codex |
 

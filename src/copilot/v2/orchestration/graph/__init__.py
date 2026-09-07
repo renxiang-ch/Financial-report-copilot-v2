@@ -6,7 +6,7 @@ v1-shaped result dict. Routing / clarify / slot-inheritance / history-trim are
 added as middleware in later steps.
 """
 
-from copilot.orchestration.graph.build import build_agent
-from copilot.orchestration.graph.runner import run
+from copilot.v2.orchestration.graph.build import build_agent
+from copilot.v2.orchestration.graph.runner import run
 
 __all__ = ["build_agent", "run"]

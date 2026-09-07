@@ -5,8 +5,8 @@ scorer mis-scored (docs/devlog/002). The fix: prefer the number after "=" in
 the shown calculation, and take the sign from prose ("loss", "decreased").
 """
 
-import copilot.eval.generic_scoring as gs
-from copilot.eval.generic_scoring import _extract_answer_number, score_numeric, score_retrieval
+import copilot.v2.eval.generic_scoring as gs
+from copilot.v2.eval.generic_scoring import _extract_answer_number, score_numeric, score_retrieval
 
 _YOY = {"expected_unit": "%", "tolerance_pct": 0.5}
 

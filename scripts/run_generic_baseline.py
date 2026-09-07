@@ -33,7 +33,7 @@ RESULTS_DIR = REPO_ROOT / "data" / "results"
 RAW_LOG_DIR = RESULTS_DIR / "generic_agent_raw"
 
 sys.path.insert(0, str(REPO_ROOT / "src"))
-from copilot.eval.generic_scoring import score_item  # noqa: E402
+from copilot.v2.eval.generic_scoring import score_item  # noqa: E402
 
 DEFAULT_MODEL = "gpt-5.6-sol"
 CODEX_TIMEOUT_S = 300

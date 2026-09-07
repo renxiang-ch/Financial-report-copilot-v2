@@ -9,7 +9,7 @@ carried over from ``copilot.agent.tools`` / ``copilot.retrieval`` unchanged;
 only the interface is rewritten.
 
 Until then, the frozen v1 tools live at ``copilot.agent.tools`` and are used by
-``copilot.orchestration.v1_loop``.
+``copilot.v2.orchestration.v1_loop``.
 
 See ``docs/langgraph-migration-plan.md`` -> Phase 1.
 """

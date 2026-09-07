@@ -119,7 +119,7 @@
   | 针对性功能 | `uv run pytest tests/test_<x>.py -q` |
   | lint | `uv run ruff check <files>` |
   | 编排改动 | 跑 eval harness（参数见 `src/copilot/eval/harness.py::main`）或某 tier 子集 |
-  | graph vs v1 | `uv run python -m copilot.eval.ab_compare --limit N` |
+  | graph vs v1 | `uv run python -m copilot.v2.eval.ab_compare --limit N` |
   | 通用 agent 基线 | `uv run python scripts/run_generic_baseline.py --limit N` |
   | 成本 | 看上面几个 summary 里的 token / 延迟字段，对比 `eval-history.md` 上一行 |
   | 覆盖不到的验收标准 | 现写一个一次性检查脚本 |
@@ -160,7 +160,7 @@
 | INSPECT | 无专门文件，动作落在 `reference/v1/` + `src/copilot/` 搜索；里程碑级 Explore 子 agent |
 | PLAN | devlog 文件 `PLAN` 段；里程碑级 plan mode |
 | BUILD | 代码 + `ruff` |
-| EVAL | `pytest` + `src/copilot/eval/`（harness / `ab_compare` / `generic_scoring`）+ `eval-history.md` |
+| EVAL | `pytest` + `src/copilot/eval/harness*`（v1 移植）+ `src/copilot/v2/eval/{ab_compare,generic_scoring}` + `eval-history.md` |
 | RECORD | devlog `决策 / 死胡同 / Learning` + `README` Current State + commit |
 
 **唯一要改的一处**：`docs/devlog/000-template.md` 的段落对齐成这六步（见下），这样"跑工作流"和"写记录"就是同一件事。

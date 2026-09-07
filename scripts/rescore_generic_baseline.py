@@ -18,7 +18,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
-from copilot.eval.generic_scoring import score_item  # noqa: E402
+from copilot.v2.eval.generic_scoring import score_item  # noqa: E402
 
 
 def _load_items_by_id() -> dict[str, dict]:

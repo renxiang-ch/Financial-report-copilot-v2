@@ -1,6 +1,6 @@
 """Drive the ``create_agent`` agent and return a v1-shaped result dict.
 
-Same call shape and return keys as ``copilot.orchestration.v1_loop.ask`` so
+Same call shape and return keys as ``copilot.v2.orchestration.v1_loop.ask`` so
 ``ab_compare`` can diff the two. Step 1 fills ``answer / steps / citations /
 usage / provenance / verification``; ``route`` and the multi-turn ``history``
 plumbing come with the routing / history middleware in later steps.
@@ -17,7 +17,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from copilot.agent.agent import _collect_citations
 from copilot.agent.grounding import verify_answer
 from copilot.agent.provenance import build_provenance
-from copilot.orchestration.graph.build import DEFAULT_MODEL, build_agent
+from copilot.v2.orchestration.graph.build import DEFAULT_MODEL, build_agent
 
 _AGENT = None
 
