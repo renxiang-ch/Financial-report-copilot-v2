@@ -15,12 +15,13 @@
 
 > 每次开发结束覆盖这一块。
 
-- **当前里程碑**：**Phase 0 完成**（0a=001, 0b=003）；track-1（通用 Agent 基线）本轮完成（002 补记 2/3）
+- **当前里程碑**：**Phase 0 完成**（0a=001, 0b=003）；**Phase 2 完成**（004，agent-loop → `create_agent` + 6 步 middleware）；track-1（通用 Agent 基线）完成（002 补记 2/3）
 - **上次停止点**：Phase 0b 做完 —— DB 灌全量 v1 快照 + embed 16342 chunks；`pytest` **143/0**（8 个 DB 失败转绿）；**v1_loop baseline 三 harness 全 100%**（Tier1/2/3、retrieval、refusal、router 全 100%，grounding 0 flagged），精确复现 v1 发布结果，成本 $0.055。三方对比第一版见 003 Learning。第一个 commit `e4f5d88` 已推到 `github.com/renxiang-ch/Financial-report-copilot-v2`；Phase 0b 的改动**未 commit**
 - **2026-09-06**：用户学完 `create_agent` 文档，开始 agent loop 端口（devlog 004）。**Step 1 完成**：`orchestration/graph/` 用 `create_agent` + 5 个最小 `@tool` 包装 + v1 SYSTEM prompt + `InMemorySaver` 重建，runner 返回 v1 形状 dict。`ab_compare` eval_set.json（30 题）与 v1_loop **citations/refusal 30/30 匹配、0 语义分歧、延迟/步数一致**。加了 `langchain==1.4.0` 到 deps。pytest 143/0
 - **2026-09-07**：v1/v2 代码分开 —— v2 新写的全部移进 `src/copilot/v2/`（`orchestration/` `tools/` `eval/{ab_compare,generic_scoring}`）。规则：`copilot.v2.*` = 新，其它 = v1/共享。`ab_compare` 的 `_REPO_ROOT` 深度改 `parents[4]`。pytest 143/0，`ab_compare` 正常
-- **2026-09-07**：devlog 004 **Step 3 完成** —— 路由 middleware（`graph/middleware.py`：`@before_model` refuse 短路 + `@wrap_model_call` force_tool）。`ab_compare` router 集 12 题对 v1_loop：**refusal 12/12**、`dependency` 首轮 pin `graph_query` 确认；citations 7/12（5 处差异经逐条复查为最小 wrapper 的 `retrieve_text` 年份范围 + gpt-4o-mini 工具参数非确定性，非路由回归，归 Step 4 / Phase 1）。回归：eval_set.json 仍 30/30 citations+refusal，`pytest` 143/0
-- **下一步动作**：devlog 004 Step 4（carried-slots / active-context middleware，需 `state_schema=`）→ 跑 multiturn eval 集，顺带收 Step 3 那 4 处年份范围差异；然后 Step 5-6（clarify / history-trim）；再让 graph 过 tier3 + defects + multiturn
+- **2026-09-07**：devlog 004 **Step 3 完成** —— 路由 middleware（`@before_model` refuse 短路 + `@wrap_model_call` force_tool）
+- **2026-09-07**：devlog 004 **Step 4-6 完成，Phase 2（agent-loop 端口）收尾**。`middleware.py` 重构：模块级纯 helper + `agent_middleware()` 返回 4 hook（`_trim` 历史裁剪 / `_guard` refuse+clarify 短路 / `_active_context` 假设块注入 / `_force_first_tool`）。多轮走 `thread_id`+checkpointer，`carry_from_messages` 折叠回放的历史问题，**不加 `state_schema=`**（slot 是问题序列纯函数）。踩坑：`_before_first_model_call` 要 turn-scoped（"最后一条 Human 之后无 AIMessage"），否则 checkpointer 回放让 t2+ 所有 hook 失效。`ab_compare._refused()` 改用 v1 冻结的 `looks_like_refusal`。加 `compare_multiturn`（v1 喂 history / graph 喂 thread_id）。**5 eval 集 A/B 67 组：refusal 0 不匹配、0 行为回归**；eval_set 30/30+30/30，router 7/12cit+12/12ref，multiturn 10-11/11cit+11/11ref，tier3 6/8+8/8，defects 5/6+6/6（citation 集差异全部是 `retrieve_text` 广度 / `graph_query` 非确定性，非回归，数处 graph 更紧）。`pytest` 149/0（+6）
+- **下一步动作**：Phase 3（持久化 PostgresSaver / 错误恢复 middleware / HITL / LangSmith 可观测）—— 等用户确认再开。遗留归 Phase 1 工具层：`retrieve_text` 年份 resolve + 引用收口、`graph_query` 参数校验
 - **阻塞项**：无
 
 ---
@@ -31,7 +32,7 @@
 |----|------|------|------|----------|
 | 001 | Phase 0a — 脚手架与护栏 | done | [001](001-phase0-scaffolding.md) | v1 移植冻结 + LangGraph stub + ab_compare 骨架 + pytest 120/8 |
 | 003 | Phase 0b — 灌库 + v1_loop baseline | done | [003](003-phase0b-v1loop-baseline.md) | DB 全量 + embed；v1_loop 三 harness 全 100%；pytest 143/0 |
-| 004 | Phase 2 — Agent loop 端口（→ `create_agent`） | active | [004](004-agentloop-port.md) | Step 1+3 完成：eval_set.json 30/30 匹配；router 集 refusal 12/12 + force_tool 确认 |
+| 004 | Phase 2 — Agent loop 端口（→ `create_agent` + 6 步 middleware） | done | [004](004-agentloop-port.md) | 5 eval 集 A/B 67 组：refusal 0 不匹配、0 行为回归；多轮年份继承生效；pytest 149/0 |
 | — | Phase 1 — 工具层标准化重构 | planned | — | 顺序调整：先 loop 端口，工具最小包装后再重构 |
 | — | Phase 3 — 框架能力成熟化（持久化 / 错误恢复 / HITL / 可观测） | planned | — | — |
 | — | Phase 4 — 能力升级：长难题（指引兑现 / 管理层风格 / 增长模式） | planned | — | — |
@@ -67,7 +68,7 @@
 | `src/copilot/{config,storage,retrieval,pipeline}` | **共享** | v1 拷来的基础设施，v2 import 使用不重写 |
 | `src/copilot/eval/{harness*,probe*}.py` | **v1 移植** | Tier 1-3 / router / probe 评测 |
 | `src/copilot/v2/orchestration/v1_loop.py` | v2 | 一行 shim，re-export `copilot.agent.agent.ask` |
-| `src/copilot/v2/orchestration/graph/` | v2 | LangChain 重制版：`tools.py`（@tool 包装）/ `build.py`（create_agent）/ `middleware.py`（路由：refuse 短路 + force_tool）/ `runner.py`（驱动+重建 v1 形状）|
+| `src/copilot/v2/orchestration/graph/` | v2 | LangChain 重制版：`tools.py`（@tool 包装）/ `build.py`（create_agent）/ `middleware.py`（v1 pre-loop 策略 4 hook：trim / refuse+clarify / active-context / force-tool）/ `runner.py`（驱动+重建 v1 形状，多轮切当前轮）|
 | `src/copilot/v2/tools/` | v2 | 正式工具层重构占位，尚未开始 |
 | `src/copilot/v2/eval/ab_compare.py` | v2 | v1_loop vs graph 端到端 A/B（`python -m copilot.v2.eval.ab_compare`）|
 | `src/copilot/v2/eval/generic_scoring.py` | v2 | 通用 agent 基线打分器，复用 `harness.py` 判分函数 |

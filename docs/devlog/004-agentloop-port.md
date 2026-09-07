@@ -3,8 +3,8 @@ id: 004
 phase: 2
 title: Agent loop 端口 —— v1 手写循环 → LangChain create_agent
 started: 2026-09-06
-finished: -
-status: active
+finished: 2026-09-07
+status: done
 plan_ref: ../langgraph-migration-plan.md
 ---
 
@@ -94,6 +94,51 @@ plan_ref: ../langgraph-migration-plan.md
 
 **回归**：`ab_compare` eval_set.json 30 题仍 **30/30 citations + 30/30 refusal**（Step 1 水平未掉）；`pytest` **143/0**。
 
+## BUILD — Step 4-6（slots / clarify / history-trim middleware）
+
+`middleware.py` 重构：模块级放纯 helper（`carry_from_messages` / `slots_from_messages` / `route_from_messages` / `_before_first_model_call` / `_turns`），`routing_middleware()` → `agent_middleware()` 返回 4 个 hook：
+
+| hook | 类型 | 对应 v1 | 做什么 |
+|---|---|---|---|
+| `_trim` | `@before_model` | `trim_history` | 按 turn 分组，保留最近 `MAX_TURNS`(6) / `HISTORY_TOKEN_BUDGET`(3000 est) 内的整轮，其余发 `RemoveMessage` 删掉。复用 `conversation` 的常量和 `_approx_tokens` |
+| `_guard` | `@before_model(can_jump_to=["end"])` | `route_question`→refuse + `clarification_for` | 合一个 hook。先判 refuse（注入 `_PROCUREMENT_REFUSAL_TEXT`），再判 clarify（注入 `as_text(clar)`），都 `jump_to="end"`。顺序同 v1（refuse 优先于 clarify）|
+| `_active_context` | `@wrap_model_call` | `active_context_block` | 首轮把 `active_context_block(slots)` 作为 `SystemMessage` 插进 `request.messages` 倒数第二位（当前问题之前），`request.override(messages=...)`。ephemeral，不写回 state |
+| `_force_first_tool` | `@wrap_model_call` | `route_question`→force_tool | 同 Step 3，`carry` 现在从 messages 折出来 |
+
+**多轮走 `thread_id` + checkpointer，不穿 `history` list**：`carry_from_messages` 把 `extract_slots` 折在 checkpointer 回放的历次 `HumanMessage` 上（除当前那条），等价 `conversation.carried_slots` 对 `history` 的折叠。没加 `state_schema=` —— slot 是问题序列的纯函数，checkpointer 已经存了 messages，再存一份 slot dict 是重复状态。
+
+**中途修的 1 处**（smoke 打回 BUILD）：`_before_first_model_call` 最初查"整个 messages 里没有 AIMessage" → 只在**线程第一轮**为真（checkpointer 把每轮 AIMessage 都回放进 state），t2/t3 的 hook 全不触发，年份不继承（CRUS FY2024 应 87%，实得 FY2026 91%）。改成"最后一条 HumanMessage 之后没有 AIMessage"（= v1 的 `round_idx == 0`）后年份正确继承：t2 → 87%，t3 compute → $311,266,860（与 eval 集 `verification` 逐位一致）。
+
+配套：
+- `runner.py` —— `steps`/`usage`/`answer` 切到当前轮（最后一条 `HumanMessage` 起）；`route` 用 `route_from_messages(全部 messages)` 好让 carry 折叠有料。
+- `ab_compare.py` —— 加 `compare_multiturn`：v1 侧喂 `history` forward、graph 侧喂固定 `thread_id`，逐轮 diff。`main()` 检测 dataset 有 `conversations` 键就走这条。
+- `tests/test_graph_middleware.py` —— 6 个纯逻辑测试（turn-scoped first-call、carry 折叠只含历史轮、`_turns` 分组、trim 保留近 N 轮）。
+
+## EVAL — Step 4-6 通过
+
+`ab_compare` 三集，v1_loop vs graph（gpt-4o-mini）：
+
+| 数据集 | citations | refusal | 备注 |
+|---|---|---|---|
+| eval_set.json (30) | **30/30** | **30/30** | 确认轮。Step 1/3 水平完全保住 |
+| eval_set_router.json (12) | 7/12（复跑 7–9 波动）| **12/12** | 与 Step 3 同。剩 5 处 = `graph_query` 参数非确定性 + `retrieve_text` 年份未锁，工具层 resolve 的活（Phase 1）|
+| eval_set_multiturn.json (11 turns) | 10–11/11 | **11/11** | **新能力**。年份继承生效：`mt_year_carries` t2 → CRUS FY2024 87%（不是 FY2026 91%），t3 compute → $311,266,860（与 eval 集 `verification` 逐位一致）|
+| eval_set_tier3.json (8) | 6/8 | **8/8** | 2 处 miss：`t3_*_dollar_impact` 两侧**算出同一个美元数**，只 citation 集不同 —— graph 只引用它真用到的那份，v1 还带上 5 份 `retrieve_text` 扫出来的无关 accession。graph 更紧 |
+| eval_set_defects.json (6) | 5/6 | **6/6** | 1 处 miss：`def_threshold_floor_arithmetic` 代词有歧义，graph 答了 Skyworks+Qorvo 两家、v1 只答 Skyworks（eval 集设计上容忍这种），citation 集因此不同。均非拒答 |
+
+**5 集合计 67 组对比：refusal 0 处不匹配，0 处行为回归。** citation 集差异全部是 `retrieve_text` 广度 / `graph_query` 参数非确定性 / 代词范围，没有一处是 Steps 4-6 引入的缺陷，其中数处是 graph 比 v1 更紧。
+
+`pytest` **149/0**（+6 中间件纯逻辑测试）。
+
+**首轮回归有 2 处假阳性，逐条查过非 Steps 4-6 回归**：
+1. `unans_aapl_china_rev_2023` —— graph 三次复跑都拒答，那一轮报告里措辞 "cannot be explicitly determined"，旧 `_refused()` 的 3 子串没抓到。→ 改用 v1 冻结的 `looks_like_refusal`（harness 同款检测器）后确认轮 30/30。
+2. `ret_swks_apple_concentration_2024` —— 那轮是 **v1 自己 flake**（ticker 写成 "SKYW" 没查到就拒答）；graph 三次复跑都稳定正确。
+
+### D3. `_refused()` 改用 `copilot.agent.grounding.looks_like_refusal`
+- **背景**：自写的 `"cannot determine" in a` 等 3 子串，抓不到 "cannot be explicitly determined" 这种插了词的措辞。
+- **选择**：直接调 v1 冻结的 `looks_like_refusal`（`REFUSAL_BROAD` 短语表），A/B 两侧"拒答"口径与 v1 harness 一致。
+- **否决**：往子串表里继续加 —— 又会漏下一种措辞，且和 harness 的口径分叉。
+
 ## RECORD
 
 ### 决策
@@ -125,12 +170,21 @@ plan_ref: ../langgraph-migration-plan.md
 - **纯函数重算 vs 穿 state**：`route_question` middleware 和 runner 各调一次，不加自定义 state schema。Step 3 够用；Step 4 要带 `carried_slots` 才需要 `state_schema=`。
 - **意外**：force_tool 那 4 题 citations 有分歧，根因是 gpt-4o-mini 工具参数非确定性 + 最小 wrapper 无年份范围解析，不是路由本身。说明 `ab_compare` 单跑一遍的 citations 差异要复跑确认才能定性。
 
+### Learning（Step 4-6 — 多轮状态 / 消息编辑）
+
+- **checkpointer 就是多轮状态**：同一个 `thread_id`，`agent.invoke({"messages":[新问题]})` 会把新问题 append 到该 thread 已存的 messages 上，`result["messages"]` 是**整个线程**的历史，不是这一轮。要"这一轮"就自己切最后一条 `HumanMessage` 起。
+- **不必给纯函数结果建 state 字段**：v1 的 `carried_slots` 是历次问题的纯函数。checkpointer 已经存了 messages，middleware 里对回放的 `HumanMessage` 重跑一遍 `extract_slots` 折叠即可，加 `state_schema=` 存 slot dict 是重复状态。`state_schema=` 留给"框架无法从 messages 推导、又要跨轮 / 跨节点传"的东西（Phase 3）。
+- **"首轮" 必须 turn-scoped**：`round_idx == 0` 在图里对应"最后一条 HumanMessage 之后没有 AIMessage"。查"整个 messages 无 AIMessage" 只在线程第一轮为真 —— checkpointer 把每轮的 AIMessage 都回放进 state。这个 bug 让 t2+ 的所有 hook 静默失效。
+- **删消息用 `RemoveMessage(id=...)`**：`messages` 是 add-reducer，正常返回只能追加。返回 `{"messages": [RemoveMessage(id=m.id), ...]}` 才能删（按 id 匹配）。要删就得知道每条的 `id` —— checkpointer 回放的都有 id，现构造的可能没有。
+- **改这次 prompt 但不写回历史**：在 `wrap_model_call` 里 `request.override(messages=改过的列表)`，只影响这一次调用。对比在 `before_model` 里返回 `{"messages": [...]}` 会持久化进 state、下一轮还在。active-context 块是"每次调用现拼"的，属前者。
+- **意外**：`_active_context` 让 t2 的 `graph_query` 带上了 `fiscal_year='trend'` 这种怪值，但工具仍解析成 FY2024 拿到 87%。assumption 块是自然语言提示，模型照着走但参数形态不完全可控 —— 真要拧死年份得靠工具层的 resolve（Phase 1）。
+
 ### 死胡同 / 坑
 
 - `create_agent` / `init_chat_model` 静默要求环境变量里有 key，`.env` 里的读不到 → `OpenAIError: Missing credentials`。显式构造 `ChatOpenAI` 解决。
+- `_before_first_model_call` 查全局 AIMessage → 多轮里 t2+ 所有 hook 失效（见 Step 4-6 Learning）。turn-scoped 后解决。
 
 ## 下一步
 
-- Step 4：carried-slots / active-context middleware（需要 `state_schema=`），跑 multiturn eval 集；顺带收掉 Step 3 EVAL 里 `retrieve_text` 年份范围那 4 处 citations 差异。
-- Step 5-6：clarify / history-trim middleware。
-- 之后：graph 过 tier3 + defects + multiturn eval 集，全绿再算 Phase 2 完成。
+- **Phase 2（agent-loop 端口）完成**。6 步全做完，5 个 eval 集 A/B 对 v1_loop：refusal 全绿、citation 集差异全部非回归。STOP 等确认再开 **Phase 3**（持久化 / 错误恢复 / HITL / 可观测性）。
+- 遗留（Phase 1 工具层）：`retrieve_text` 年份未锁 + 引用面偏宽、`graph_query` 参数非确定性。这些是 citation 集 A/B 波动的唯一来源，等工具层 resolve + envelope 收口。

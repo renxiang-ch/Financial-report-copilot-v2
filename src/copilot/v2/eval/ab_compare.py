@@ -29,56 +29,53 @@ _RESULTS_DIR = _REPO_ROOT / "data" / "results"
 
 
 def _refused(answer: str) -> bool:
-    a = (answer or "").lower()
-    return "cannot determine" in a or "cannot find" in a or "unanswerable" in a
+    # The same detector v1's eval harness uses (copilot.eval.harness._is_refusal),
+    # so "refusal" means the same thing on both sides of the A/B.
+    from copilot.agent.grounding import looks_like_refusal
+
+    return looks_like_refusal(answer or "")
 
 
-def _run_v1(question: str) -> dict[str, Any]:
+def _shape(r: dict, dt_ms: int) -> dict[str, Any]:
+    usage = r.get("usage") or {}
+    return {
+        "status": "OK",
+        "answer": r.get("answer", ""),
+        "citations": sorted(set(r.get("citations") or [])),
+        "refused": _refused(r.get("answer", "")),
+        "n_steps": len(r.get("steps") or []),
+        "latency_ms": dt_ms,
+        "input_tokens": usage.get("input_tokens"),
+        "output_tokens": usage.get("output_tokens"),
+    }
+
+
+def _run_v1(question: str, history: list[dict] | None = None) -> dict[str, Any]:
     if not os.environ.get("OPENAI_API_KEY") and not _dotenv_has_key():
         return {"status": "SKIP", "reason": "no OPENAI_API_KEY"}
     from copilot.v2.orchestration.v1_loop import ask
 
     t0 = time.perf_counter()
     try:
-        r = ask(question)
+        r = ask(question, history=history) if history is not None else ask(question)
     except Exception as e:  # noqa: BLE001 -- record, don't crash the sweep
         return {"status": "ERROR", "reason": f"{type(e).__name__}: {e}",
                 "trace": traceback.format_exc(limit=3)}
-    dt = round((time.perf_counter() - t0) * 1000)
-    usage = r.get("usage") or {}
-    return {
-        "status": "OK",
-        "answer": r.get("answer", ""),
-        "citations": sorted(set(r.get("citations") or [])),
-        "refused": _refused(r.get("answer", "")),
-        "n_steps": len(r.get("steps") or []),
-        "latency_ms": dt,
-        "input_tokens": usage.get("input_tokens"),
-        "output_tokens": usage.get("output_tokens"),
-    }
+    out = _shape(r, round((time.perf_counter() - t0) * 1000))
+    out["history"] = r.get("history") or history or []
+    return out
 
 
-def _run_graph(question: str) -> dict[str, Any]:
+def _run_graph(question: str, thread_id: str | None = None) -> dict[str, Any]:
     from copilot.v2.orchestration.graph import run
 
     t0 = time.perf_counter()
     try:
-        r = run(question)
+        r = run(question, thread_id=thread_id)
     except Exception as e:  # noqa: BLE001 -- record, don't crash the sweep
         return {"status": "ERROR", "reason": f"{type(e).__name__}: {e}",
                 "trace": traceback.format_exc(limit=3)}
-    dt = round((time.perf_counter() - t0) * 1000)
-    usage = r.get("usage") or {}
-    return {
-        "status": "OK",
-        "answer": r.get("answer", ""),
-        "citations": sorted(set(r.get("citations") or [])),
-        "refused": _refused(r.get("answer", "")),
-        "n_steps": len(r.get("steps") or []),
-        "latency_ms": dt,
-        "input_tokens": usage.get("input_tokens"),
-        "output_tokens": usage.get("output_tokens"),
-    }
+    return _shape(r, round((time.perf_counter() - t0) * 1000))
 
 
 def _dotenv_has_key() -> bool:
@@ -132,6 +129,37 @@ def compare(dataset: str, limit: int | None = None) -> dict[str, Any]:
     return report
 
 
+def compare_multiturn(dataset: str, limit: int | None = None) -> dict[str, Any]:
+    """A/B each conversation turn-by-turn. v1 side feeds ``history`` forward;
+    graph side feeds a stable ``thread_id`` (checkpointer replays the thread)."""
+    data = json.loads(Path(dataset).read_text())
+    convs = data["conversations"]
+    if limit:
+        convs = convs[:limit]
+
+    rows = []
+    for conv in convs:
+        cid = conv["id"]
+        v1_hist: list[dict] = []
+        for idx, turn in enumerate(conv["turns"], 1):
+            q = turn["question"]
+            v1 = _run_v1(q, history=v1_hist)
+            if v1.get("status") == "OK":
+                v1_hist = v1.pop("history", v1_hist)
+            graph = _run_graph(q, thread_id=cid)
+            rows.append({"id": f"{cid}#t{idx}", "tier": turn.get("tier"),
+                         "question": q, "v1": v1, "graph": graph,
+                         "diff": _diff(v1, graph)})
+
+    ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    report = {"generated_at": ts, "dataset": dataset, "n": len(rows),
+              "summary": _summary(rows), "rows": rows}
+    _RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    (_RESULTS_DIR / f"ab_{ts}.json").write_text(json.dumps(report, indent=2))
+    (_RESULTS_DIR / f"ab_{ts}.md").write_text(_markdown(report))
+    return report
+
+
 def _summary(rows: list[dict]) -> dict[str, Any]:
     from collections import Counter
 
@@ -175,7 +203,9 @@ def main() -> None:
     ap.add_argument("--dataset", default="data/datasets/eval_set.json")
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
-    report = compare(args.dataset, args.limit)
+    is_multiturn = "conversations" in json.loads(Path(args.dataset).read_text())
+    fn = compare_multiturn if is_multiturn else compare
+    report = fn(args.dataset, args.limit)
     print(json.dumps(report["summary"], indent=2))
     print(f"\nwrote data/results/ab_{report['generated_at']}.{{json,md}}")
 
