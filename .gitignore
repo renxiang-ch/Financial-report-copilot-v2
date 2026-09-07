@@ -51,3 +51,4 @@ data/results/ab_*.md
 
 # Model cache (sentence-transformers / HF)
 .cache/
+src/data/
