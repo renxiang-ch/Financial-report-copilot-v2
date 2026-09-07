@@ -144,9 +144,30 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 ---
 
-### Phase 2 — 直译：LangGraph 复刻 v1 循环
+### Phase 2 — 直译：LangGraph 复刻 v1 循环   ✅ done（2026-09-07，devlog 004）
 
 **目标**：功能等价，不追求更强，只把"手写循环"翻译成"图"。
+
+> **实际实现路径（2026-09-07，devlog 004）—— 与下面 1-5 的手搭方案有实质出入，以此为准**
+>
+> **A. 用 `create_agent` 预制 harness，不手搭 `StateGraph`。**
+> 下面 1-5 描述的是手写 `state.py` / `router.py` 节点 / `nodes/`（agent/tool/verify/provenance/clarify）/ `should_continue` 条件边 / `verify` 回边节点。实际用了 LangChain 1.x 的 `create_agent(model, tools, system_prompt, middleware, checkpointer)`，它内部就是 `model ⇄ tools` 循环的图版本。用户已学 `create_agent` 文档并明确选它。
+> - v1 的 `route_question`（refuse / force_tool）、`clarification_for`、`trim_history`、`active_context_block` 全部搬成 **4 个 middleware hook**（`src/copilot/v2/orchestration/graph/middleware.py`）：
+>   - `_trim` `@before_model` —— 按整轮删旧历史（`RemoveMessage`）
+>   - `_guard` `@before_model(can_jump_to=["end"])` —— refuse 短路 + clarify 短路（refuse 优先），注入文本并跳 END
+>   - `_active_context` `@wrap_model_call` —— 首轮把假设块作为 `SystemMessage` 插进 `request.messages`
+>   - `_force_first_tool` `@wrap_model_call` —— 首轮 `request.override(tool_choice=...)`
+> - `verify` / `provenance` / `citations` **不做成图节点**。`runner.py` 事后复用 v1 的 `verify_answer` / `build_provenance` / `_collect_citations`，把 `create_agent` 返回的 `messages` 链重建成 v1 形状 dict（`_steps_from_messages` 按 `tool_call_id` 配对 `AIMessage.tool_calls` + `ToolMessage`）。
+> - 手搭 `StateGraph` 的能力（非线性流程、自定义路由、`verify` 回边补证据）留到真需要时 —— Phase 4 的 supervisor / deep_research 子图。
+>
+> **B. 不加自定义 `state_schema=`（步骤 1 的 `AgentState` 扩展字段没做）。**
+> 计划里 `route` / `carried_slots` / `steps` / `citations` / `verification` 进 state。实际结论：这些是**问题序列的纯函数**，checkpointer 已经存了完整 `messages`，middleware 里对回放的 `HumanMessage` 重跑 `extract_slots` 折叠（`carry_from_messages`，等价 `conversation.carried_slots`）即可，再存一份 slot dict 是重复状态。`state_schema=` 留给"框架无法从 messages 推导、又要跨节点/跨轮传"的东西 —— Phase 4 的 `plan` / `evidence_ledger` / `budget`。
+> - 多轮：走 `thread_id` + `InMemorySaver`，不穿 `history` list。
+> - 坑：middleware 判"首轮"必须 turn-scoped（"最后一条 `HumanMessage` 之后无 `AIMessage`" = v1 的 `round_idx == 0`）；查"整个 messages 无 `AIMessage`"只在线程第一轮为真，会让 t2+ 所有 hook 静默失效。
+>
+> **C. `MAX_ROUNDS` circuit breaker**：`create_agent` 自带递归上限，没另做 guard 节点。
+>
+> **D. 工具**：用的是 Phase 1 之前的**最小 `@tool` 包装**（`tools.py`，直接调 `copilot.agent.tools` 的冻结函数），不是计划里假设的 `tools/registry.py` 标准库。Phase 1 顺序后置。
 
 1. **State 定义**（`state.py`）— 用 `TypedDict` + reducer：
    ```python
@@ -170,6 +191,8 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 **退出标准**：A/B 脚本上，graph 在 Tier 1–3 与 v1_loop 差异 ≤ 容忍阈值（答案语义一致、引用集合一致、拒答行为一致）。latency/token 不显著劣化。
 
+> **实际达标情况（devlog 004）**：5 个 eval 集（eval_set / router / multiturn / tier3 / defects）`ab_compare` 对 v1_loop 共 67 组 —— **拒答 0 处不匹配、0 处行为回归**，延迟/步数持平。引用集合非 100% 精确相等（eval_set 30/30，其余 6-11 处里各差 1-3），差异逐条归因为最小 `@tool` 包装的 `retrieve_text` 引用面偏宽 + `graph_query` 参数非确定性（Phase 1 工具层 resolve 收口），数处是 graph 比 v1 更紧。多轮年份继承生效（`mt_year_carries` t3 compute = $311,266,860，与 eval 集 `verification` 逐位一致）。`pytest` 149/0。**判定：达标**。
+
 ---
 
 ### Phase 3 — 用框架能力做"成熟化"升级
@@ -178,7 +201,7 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 | 关注点 | v1 做法 | LangGraph 做法 | 本阶段动作 |
 |---|---|---|---|
-| 状态管理 | ad-hoc list + 返回 dict | 类型化 `StateGraph` + reducer | 已在 Phase 2 |
+| 状态管理 | ad-hoc list + 返回 dict | `create_agent` 的 `messages` + checkpointer；纯函数状态（route/slots）现算不存 | 已在 Phase 2（未加自定义 `state_schema=`，见 Phase 2 实际注 B）|
 | 持久化 | 无，进程重启即丢 | `PostgresSaver`（复用现有 PG），按 `thread_id` 自动加载 | 切 `MemorySaver` → `PostgresSaver`，会话跨重启可续 |
 | 多轮记忆 | 传入传出 `history` | checkpointer thread + `trim_messages` 预钩子 + 长期记忆 store | 加 `store` 存"跨会话事实"（如用户常问的公司） |
 | 错误恢复 | `recoverable` 标志，模型重试 | `ToolNode(handle_tool_errors)` + 节点 `RetryPolicy` + 独立 repair 节点 | 加 `RetryPolicy(max_attempts=3, ...)`；不可恢复错误进 repair 节点决定降级/拒答 |
@@ -275,7 +298,7 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 
 | 主题 | v1 自建 | LangGraph 对应 | 学到什么 |
 |---|---|---|---|
-| 状态管理 | list + dict 混合 | `StateGraph` + `Annotated` reducer | 状态即 schema，可校验/可合并 |
+| 状态管理 | list + dict 混合 | `create_agent` 的 `messages` + checkpointer；`state_schema=` 只加真正需要跨节点传的派生不出的东西 | 别把纯函数结果（route/slots）也塞进 state —— checkpointer 已存 messages，现算即可。状态即 schema，但最小化 |
 | 工具设计 | 5 个 shape 不一的函数 + 手塞错误 dict | `@tool` + Pydantic schema + 统一信封 + `content_and_artifact` | 工具是 LLM 的 API，契约要像对外 API 一样严 |
 | 工具调用 | 手写 dispatch + 线程池 | `bind_tools` + `ToolNode`（内建并行） | 调用/结果/错误统一成消息 |
 | 错误恢复 | `recoverable` 标志 | `handle_tool_errors` + `RetryPolicy` + fallback | 分层：工具级 / 节点级 / 模型级 |
