@@ -1,8 +1,8 @@
 """Assemble the ``create_agent`` agent.
 
-Step 1: bare prebuilt harness -- v1's SYSTEM prompt, the minimal tool wrappers,
-an in-memory checkpointer. No middleware yet (routing / clarify / slot carry /
-history trim land in later steps).
+v1's SYSTEM prompt, the minimal tool wrappers, an in-memory checkpointer, and
+(Step 3) the routing middleware. Clarify / slot carry / history trim land in
+later steps.
 
 The model is built explicitly from ``copilot.config.settings`` rather than from
 an ``"openai:..."`` string, because the key lives in ``.env`` (loaded by
@@ -17,6 +17,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 from copilot.agent.agent import SYSTEM
 from copilot.config import settings
+from copilot.v2.orchestration.graph.middleware import routing_middleware
 from copilot.v2.orchestration.graph.tools import TOOLS
 
 # v1_loop's default agent model (see model_router.select_model / the eval runs).
@@ -45,5 +46,6 @@ def build_agent(model: str = DEFAULT_MODEL, checkpointer=None):
         model=_model(model),
         tools=TOOLS,
         system_prompt=SYSTEM,
+        middleware=routing_middleware(),
         checkpointer=checkpointer if checkpointer is not None else InMemorySaver(),
     )

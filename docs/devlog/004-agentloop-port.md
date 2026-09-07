@@ -63,6 +63,37 @@ plan_ref: ../langgraph-migration-plan.md
 
 `pytest` 143/0。
 
+## BUILD — Step 3（路由 middleware）
+
+新增 `src/copilot/v2/orchestration/graph/middleware.py` —— v1 `route_question` 的 middleware 版，两个 hook：
+
+- `_refuse_guard` —— `@before_model(can_jump_to=["end"])`。仅首轮（state 里还没 AIMessage）跑 `route_question`；`action == "refuse"` 时注入 `AIMessage(_PROCUREMENT_REFUSAL_TEXT)` + `{"jump_to": "end"}`，一次 model 都不调。对应 v1 `ask()` L751 的 loop 前直接 return。
+- `_force_first_tool` —— `@wrap_model_call`。仅首轮，`action == "force_tool"` 时 `request.override(tool_choice=route["tool"])` 再 `handler(request)`。对应 v1 `_ask_openai` L567 的 `round_idx == 0 and route["action"] == "force_tool"`。
+
+配套：
+- `build.py` —— `create_agent(..., middleware=routing_middleware())`。
+- `runner.py` —— 结果 dict 的 `route` 从硬编码 `{"action": "auto"}` 改成真实 `route_question(question)`（纯函数，再算一次，同 v1 `ask()` L724 对 `extract_slots` 的取舍）。
+
+"首轮" 判定：v1 用 `round_idx == 0`，这里用 `not any(isinstance(m, AIMessage) for m in state["messages"])`。
+
+## EVAL — Step 3 通过
+
+`ab_compare` router 集（12 题），v1_loop vs graph：
+
+| 指标 | 结果 |
+|---|---|
+| status OK | 12/12 both |
+| **refusal 匹配** | **12/12** —— 4 个 `procurement_share` 全部零 token / 零 step 拒答 |
+| force_tool | 确认：`dependency` 4 题首轮被 pin 到 `graph_query` |
+| citations 匹配 | 7/12 |
+
+**citations 5 处差异均非路由回归**，逐条查过：
+
+- `rt_dep_avgo_concentration` —— 直接复跑 graph 侧与 v1 完全一致（`graph_query(customer=AAPL, supplier=AVGO)` → AVGO 20.0% FY2023）。ab_compare 那次的 "CRUS 91%" 是 gpt-4o-mini 工具参数非确定性（偶尔漏传 `supplier`，返回 AAPL 全部供应商）。
+- `rt_qual_crus_risk` / `rt_qual_avgo_competitive` / `rt_qual_qrvo_risk` / `rt_dep_swks_reliance` —— `retrieve_text` 的 `fiscal_year` 年份范围差异：v1 的 slot 层把 "最近" 解析成具体年传给 `retrieve_text`，最小 wrapper 让模型自己选（选了 FY2024 而非 v1 的 FY2026）。→ Step 4（slot / active-context middleware）与 Phase 1（工具层）的范畴。
+
+**回归**：`ab_compare` eval_set.json 30 题仍 **30/30 citations + 30/30 refusal**（Step 1 水平未掉）；`pytest` **143/0**。
+
 ## RECORD
 
 ### 决策
@@ -86,12 +117,20 @@ plan_ref: ../langgraph-migration-plan.md
 - **usage**：每条 `AIMessage` 带 `usage_metadata`（`input_tokens` / `output_tokens` / `input_token_details.cache_read`）。多轮要自己累加。
 - **意外**：Step 1 没写任何路由/routing 逻辑就在 eval_set.json 上 100% 匹配 v1 的拒答和工具选择行为。v1 的 `route_question`（refuse/force_tool）是针对实测失败加的护栏，但 SYSTEM prompt 本身对 gpt-4o-mini 已经够 —— 说明那层护栏的价值要在 router/tier3 eval 集上才显现（Step 3 验证）。
 
+### Learning（Step 3 — middleware 机制）
+
+- **`@before_model` / `@wrap_model_call`**（`langchain.agents.middleware`）：装饰函数即成 middleware。`before_model(state, runtime)` 返回 state-update dict（`messages` 走 add reducer 会 append）；带 `{"jump_to": "end"}` 可跳出图，但 `can_jump_to=["end"]` 必须在装饰器上声明。`wrap_model_call(request, handler)` 包住每次 model 调用，`handler(request)` 才是真调用 —— retry / fallback / 改 tool_choice 都在这层。
+- **`ModelRequest`**：dataclass，字段 `model / messages / system_message / tool_choice / tools / response_format / state / runtime / model_settings`。`request.override(tool_choice=...)` 返回改过的副本。`tool_choice` 传工具名字符串即可，ChatOpenAI 自己转成 OpenAI 的 `{"type":"function",...}`。
+- **middleware = create_agent 的定制点**：v1 手写在 loop 里的 pre-classification（route → tool_choice / 早退），这里拆成两个 hook 挂在图的 model 节点前后。行为等价，代码从"改循环体"变成"加一个装饰函数"。
+- **纯函数重算 vs 穿 state**：`route_question` middleware 和 runner 各调一次，不加自定义 state schema。Step 3 够用；Step 4 要带 `carried_slots` 才需要 `state_schema=`。
+- **意外**：force_tool 那 4 题 citations 有分歧，根因是 gpt-4o-mini 工具参数非确定性 + 最小 wrapper 无年份范围解析，不是路由本身。说明 `ab_compare` 单跑一遍的 citations 差异要复跑确认才能定性。
+
 ### 死胡同 / 坑
 
 - `create_agent` / `init_chat_model` 静默要求环境变量里有 key，`.env` 里的读不到 → `OpenAIError: Missing credentials`。显式构造 `ChatOpenAI` 解决。
 
 ## 下一步
 
-- Step 3：路由 middleware（refuse 短路 + force_tool），跑 router eval 集验证。
-- Step 4-6：carried-slots / clarify / history-trim middleware。
+- Step 4：carried-slots / active-context middleware（需要 `state_schema=`），跑 multiturn eval 集；顺带收掉 Step 3 EVAL 里 `retrieve_text` 年份范围那 4 处 citations 差异。
+- Step 5-6：clarify / history-trim middleware。
 - 之后：graph 过 tier3 + defects + multiturn eval 集，全绿再算 Phase 2 完成。
