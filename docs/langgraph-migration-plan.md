@@ -265,7 +265,39 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 - B：至少 N 年样本 / 是否量化保守度（guidance vs actual 系统性差）/ 是否举原文证据。
 - C：增长拆解是否 MECE / 是否区分有机与并购 / 是否含利润率与再投资视角 / 是否有同业对照。
 
-**退出标准**：新 Tier 4（见下）rubric 平均分达标；每条结论都有 `evidence_ledger` 支撑；预算护栏生效（无失控 fan-out）。
+#### 4.5 模型编排：按角色分模型（不是按难度分层）
+
+> 加这节的动机：长难问题拆成多个子任务后，不同子任务对模型的要求确实不同（planner 要强推理、extractor 要便宜稳定、judge 反而要更便宜）。用 LangChain 的多模型能力给每个角色配一个模型。
+
+**先明确不做什么。** v1 `agent/model_router.py` 已经论证过并**否决**了"按问题难度自动分层 / 按答案质量升级模型"：
+- 冻结 eval 集已饱和 —— gpt-4o vs gpt-4o-mini 每个确定性指标同分、成本 16x，分层表是死配置（drift-from-data 缺陷）。
+- 所有主流框架只在**异常**（429 / 5xx / 超时 / 超上下文）上自动切模型，从不在"答案看着不对"上切。更强的模型只会更流畅地编造 —— 对"错答案"的正解是**验证**（`grounding.py`），不是花更多钱。
+
+**这条结论 Phase 4 继续有效，不推翻。** Phase 4 不同的地方是：deep_research 子图把一个长问题拆成**结构上不同的子任务**，不是同一个扁平 Q&A 循环跑十遍。按角色（role）分模型，不是按难度（tier）分层：
+
+| 角色 | 子任务 | 模型取向 | 依据 |
+|---|---|---|---|
+| `planner` | 写研究计划、拆子问题、指派专家 | 强指令遵循 + 推理 | 计划错，整棵树错 |
+| `extractor` | 从 transcript / MD&A 抽 guidance 成 schema（`extract_guidance`，跑很多次）| 便宜 + 稳定 JSON | 高频、结构化、可校验 |
+| `specialist`（guidance / profiler / growth）| 单个子问题的检索 + 判断 | 中档，够用即可（≈ 现在的 simple_qa）| Phase 2 已证 gpt-4o-mini 够 |
+| `synthesizer` | 按 rubric 汇总多个子结论 | 强 | 综合是这类问题真正难的一步 |
+| `verifier` / judge | 证据覆盖率、数字可追溯性、rubric 打分 | 比被评的**更便宜**一档 | LangChain rubric middleware 就这么做：判断比生产容易 |
+
+算术不在此表 —— v1 铁律"LLM 永不自己算数"保留，`compute` 沙箱工具照旧。
+
+**LangChain 机制**（已用 docs MCP 核对 `oss/python/langchain/models` "Dynamic model selection"）：
+- **子图 / subagent 各带 `model=`**：`create_agent(model=synth_model, tools=..., system_prompt=...)`；deepagents 直接 `subagents=[{..., "model": "openai:..."}]`。
+- **一个 agent 内按 state 动态换**：`@wrap_model_call` + `request.override(model=chosen)`（文档原样模式，按 `len(request.state["messages"])` 或自定义 context 选）。
+- **运行时可配**：`init_chat_model(configurable_fields=("model",))` + `config={"configurable": {"model": ...}}`。
+- **异常降级**：`ModelFallbackMiddleware` / `.with_fallbacks([...])` —— v1 已认可的唯一"自动切模型"场景。
+- 模型都从 `copilot.config.settings` 的 OpenAI 兼容端点构造（同 Phase 2 `build.py::_model`，key 在 `.env`）。
+
+**怎么验（否则又是一张死配置表）**：
+- Tier 4 跑两遍 —— (A) 全程单一模型；(B) 按上表分角色 —— 比 rubric 均分、证据覆盖率、总 token 成本、p95 延迟。
+- 分角色只在"某指标真变好"或"同分但成本显著降"时保留；否则退回单模型 + 一句注释。
+- 每个角色的模型 id 进 `graph/subgraphs/<name>/` 的配置，单一改动点（照 `model_router.DEFAULT_MODEL` 的先例）。
+
+**退出标准**：新 Tier 4（见下）rubric 平均分达标；每条结论都有 `evidence_ledger` 支撑；预算护栏生效（无失控 fan-out）；**4.5 的分角色配置有 A/B 数据支撑，不是"感觉强的地方用强模型"**。
 
 ---
 
@@ -307,6 +339,7 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 | 可扩展性 | 改循环主干 | 加节点/子图/supervisor | 编排即图，增量不侵入 |
 | 人在环 | 前置澄清 pass | `interrupt()` 任意点暂停 | 澄清从"预判"变"按需" |
 | 多轮记忆 | append-only + trim | checkpointer + `trim_messages` | 记忆策略与编排解耦 |
+| 模型选择 | `model_router.py`：只让调用方显式选，否决自动分层/升级 | 子图各带 `model=` + `@wrap_model_call` 动态换 + `ModelFallbackMiddleware` 异常降级 | 按**角色**分模型（planner/extractor/synth/judge 要求不同）是真的；按**难度**分层要 A/B 数据，否则是死配置。自动切模型只在异常上，不在"答案看着不对"上 |
 
 ---
 
@@ -319,6 +352,7 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 | 过度设计（没对齐就上 supervisor） | Phase 2 未达退出标准不进 Phase 4 |
 | LLM-as-judge 不稳 | Tier 4 保留人工锚定集，judge 与人工一致性 < 0.8 则重写 rubric |
 | 深度研究 fan-out 成本失控 | state 里带 `budget`，planner 限子问题数，超预算降级为浅层回答并标注 |
+| 4.5 按角色分模型退化成按难度分层 | 沿用 v1 `model_router` 结论：自动切模型只在异常（429/5xx/超时/超上下文）上。分角色配置必须有 Tier 4 A/B（rubric / 覆盖率 / 成本 / 延迟）支撑，无提升即退回单模型 |
 | 工具层重构引入行为回归 | v1_loop 用 `_v1_frozen` 旧工具作行为基线；新工具库每个工具带错误路径单测；A/B 只比端到端，回归立即可见 |
 | 工具层过度设计（信封/抽象层做太多） | Phase 1 设计点"到时候再定"，先满足 5 个现有工具 + 4.2 节新工具，不为假想需求加维度 |
 
