@@ -35,7 +35,13 @@ def _agent():
 
 
 def _steps_from_messages(messages: list) -> list[dict]:
-    """Rebuild v1's ``steps`` -- {tool, input, output} per executed tool call."""
+    """Rebuild v1's ``steps`` -- {tool, input, output} per executed tool call.
+
+    ``output`` is the tool's ``ToolMessage.artifact`` (the full structured dict,
+    ``content_and_artifact``); v1's ``_collect_citations`` / ``build_provenance``
+    read the same keys (``citation``, ``results``, ``traversal_trace``, ...).
+    An error ``ToolMessage`` has no artifact -- fall back to its text.
+    """
     pending: dict[str, dict] = {}
     steps: list[dict] = []
     for m in messages:
@@ -44,11 +50,14 @@ def _steps_from_messages(messages: list) -> list[dict]:
                 pending[tc["id"]] = {"tool": tc["name"], "input": tc.get("args", {})}
         elif isinstance(m, ToolMessage):
             base = pending.pop(m.tool_call_id, {"tool": m.name, "input": {}})
-            raw = m.content if isinstance(m.content, str) else json.dumps(m.content)
-            try:
-                out = json.loads(raw)
-            except (ValueError, TypeError):
-                out = raw
+            if getattr(m, "artifact", None) is not None:
+                out = m.artifact
+            else:
+                raw = m.content if isinstance(m.content, str) else json.dumps(m.content)
+                try:
+                    out = json.loads(raw)
+                except (ValueError, TypeError):
+                    out = raw
             steps.append({"tool": base["tool"], "input": base["input"], "output": out})
     return steps
 

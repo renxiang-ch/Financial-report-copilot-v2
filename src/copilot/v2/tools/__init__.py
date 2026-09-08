@@ -1,15 +1,18 @@
-"""Standardized tool library (Phase 1).
+"""Standardized tool library (Phase 1 -- devlog 005).
 
-Empty placeholder. Phase 1 rebuilds the five v1 tools
-(``query_financials``, ``list_metrics``, ``retrieve_text``, ``graph_query``,
-``compute``) into a uniform library: shared result envelope, typed ``ToolError``,
-Pydantic arg schemas, provenance, a ``resolve`` cross-cutting layer, caching and
-rate limiting. Domain logic (SQL, RRF fusion, recursive CTE, the AST sandbox) is
-carried over from ``copilot.agent.tools`` / ``copilot.retrieval`` unchanged;
-only the interface is rewritten.
+The five v1 tools rebuilt into a uniform library:
 
-Until then, the frozen v1 tools live at ``copilot.agent.tools`` and are used by
-``copilot.v2.orchestration.v1_loop``.
+* ``base`` -- ``ToolError`` / ``ToolErrorKind``, the ``content_and_artifact``
+  ``pack`` helper, and the ``financial_tool`` decorator.
+* ``resolve`` -- ticker resolution (+ typo hints), fiscal-year scope, relation
+  side; one implementation, shared by the tools.
+* ``schemas`` -- one Pydantic ``args_schema`` per tool.
+* ``financials`` / ``retrieval`` / ``graph`` / ``compute`` -- one module each.
+  Domain logic (SQL, RRF fusion, recursive CTE, the AST sandbox) is carried over
+  from ``copilot.agent.tools`` verbatim; only the interface is rewritten.
+* ``registry`` -- the single ``TOOLS`` list the graph binds.
 
-See ``docs/langgraph-migration-plan.md`` -> Phase 1.
+Errors ``raise ToolError``; the graph wires ``ToolRetryMiddleware`` +
+``ToolErrorMiddleware`` + ``ToolCallLimitMiddleware`` around it. The frozen v1
+tools still live at ``copilot.agent.tools`` for ``copilot.v2.orchestration.v1_loop``.
 """

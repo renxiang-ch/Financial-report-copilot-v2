@@ -3,8 +3,8 @@ id: 005
 phase: 1
 title: 工具层标准化重构 —— 最小 @tool 包装 → copilot/v2/tools/ 标准库
 started: 2026-09-07
-finished: -
-status: planned
+finished: 2026-09-08
+status: done
 plan_ref: ../langgraph-migration-plan.md#phase-1--工具层标准化重构
 ---
 
@@ -42,32 +42,74 @@ plan_ref: ../langgraph-migration-plan.md#phase-1--工具层标准化重构
 
 ## BUILD
 
--
+新增 `src/copilot/v2/tools/`：
+
+- `base.py` —— `ToolErrorKind`(StrEnum) + `ToolError`(异常，`retryable` 从 kind 默认)、`pack(content, artifact)`、`_Memo`(JSON-key 的有界 FIFO)、`financial_tool(name, args_schema, cache=)` 装饰器（= `@tool(response_format="content_and_artifact")` + 可选 memo）。
+- `resolve.py` —— `known_tickers` / `latest_filing_year` / `edge_sides`（`@lru_cache`，DB）、`resolve_ticker`（未知 ticker → `raise ToolError(UNKNOWN_TICKER, did_you_mean=…)`）、`relation_side_error`（问错方向 → `raise WRONG_RELATION_SIDE`；两边都给或真无边 → 不 raise）、`year_scope`（保留 v1 的 `(year, reason)`，含 latest-filing 兜底）。
+- `schemas.py` —— 每工具 Pydantic `args_schema`。`QueryFinancialsArgs.metric`：`json_schema_extra={"enum": _METRICS}` + `field_validator` 对不在 DB label 集里的 `raise ToolError(BAD_ARGUMENT, did_you_mean=…)`。`RetrieveTextArgs` 无 `query` 字段。
+- `financials.py` / `retrieval.py` / `graph.py` / `compute.py` —— 一工具一模块。SQL / RRF / 递归 CTE / AST 沙箱**逐字**从 `copilot.agent.tools` 搬。返回 `pack(一行摘要, 完整 dict)`。`retrieve_text(runtime: ToolRuntime, ...)`：question 从 `runtime.state["resolved"]` 取（兜底最后一条 HumanMessage）、year 用 `模型给的 arg or resolved["fiscal_year"] or year_scope(...)`。
+- `registry.py` —— `TOOLS = [query_financials, list_metrics, retrieve_text, graph_query, compute]`。
+
+改 `orchestration/graph/`：
+
+- `build.py` —— `GraphState(AgentState)` 加 `resolved: NotRequired[dict]`；`tools=` 换成 `copilot.v2.tools.registry.TOOLS`；middleware 列表尾部加 `_tool_middleware()` = `ToolRetryMiddleware(retry_on=<ToolError.retryable>, on_failure="error")` + `ToolErrorMiddleware(on_error=on_tool_error)` + `ToolCallLimitMiddleware(run_limit=12, thread_limit=40)`；`create_agent(state_schema=GraphState)`。
+- `middleware.py` —— 加 `_resolve` `@before_model`（每轮首调写 `state["resolved"] = {question, fiscal_year(from slots)}`）；模块级 `on_tool_error(exc, request)`（`ToolError` → 披露 `kind`+`hint`+`did_you_mean`；其它 → `None` 传播）。列表变 `[_trim, _resolve, _guard, _active_context, _force_first_tool]`。
+- `runner.py` —— `_steps_from_messages` 优先读 `ToolMessage.artifact`（就是 v1 形状的完整 dict），error message 无 artifact 时回落 content。
+- **删** `orchestration/graph/tools.py`（最小包装）。
+
+`tests/test_v2_tools.py` —— 18 个：resolve（known/typo/wrong-side/year_scope）、metric validator、每工具 happy + error 路径、`on_tool_error` 只披露 `ToolError`、`_Memo` 缓存、registry 形状（`retrieve_text.args` 不含 `runtime`）。
+
+**中途修**：`ToolErrorKind(str, enum.Enum)` → ruff 要 `enum.StrEnum`（Py3.12）。
 
 ## EVAL
 
--
+- **单元**：`pytest` **167/0**（+18）；`ruff` 干净。
+- **工具直调 smoke**：5 工具 happy + 5 error 路径逐一验证（`APPL`→UNKNOWN_TICKER retryable、FY1999→NOT_FOUND terminal、`graph_query(customer=CRUS)`→WRONG_RELATION_SIDE、`__import__`→BAD_EXPRESSION 等）。
+- **端到端 smoke**（单轮 4 题）：`query_financials` / `refuse` / `retrieve_text`(自动 scope 到 CRUS FY2026) / `graph_query` 均正常；input token/问 ~4.4K（Phase 2 同题 ~5.5–7.8K，**artifact 分流生效**）。
+- **A/B 5 集回归**（v1_loop vs graph，gpt-4o-mini）：
 
-| 指标 | 值 | 对比 baseline |
-|------|-----|--------------|
-| ab_compare 5 集 citations/refusal | | vs devlog 004 |
-| 平均 input token / 问 | | vs devlog 004（artifact 分流后应降）|
-| pytest | | 149 → ? |
+| 集 | citations | refusal | vs Phase 2 (devlog 004) |
+|---|---|---|---|
+| eval_set (30) | 29/30 | **30/30** | cit 30→29（那 1 处是模型没内联引用，非确定性）|
+| router (12) | 9/12（复跑 7–9）| **12/12** | 持平（`graph_query` 参数非确定性 + 引用面）|
+| multiturn (11t) | **11/11** | 11/11 | cit ↑（10–11 → 11，年份继承稳）|
+| tier3 (8) | **8/8** | 8/8 | **cit ↑ 6→8**（年份 scope 修复）|
+| defects (6) | 5/6 | 6/6 | 持平 |
+
+**5 集合计：refusal 66/67，0 行为回归。tier3 引用 6→8、multiturn 引用变满 —— 年份 scope 的目标达成。**剩余 citation 集差异逐条查过：`graph_query` 选 `trend` vs latest、模型偶尔不内联引用，均非工具层引入。
+
+- **成本**：单轮 smoke input token/问 ~4.4K（Phase 2 同题 ~5.5–7.8K）—— `content_and_artifact` 把结构化数据移出上下文。
+- **单元**：`pytest` **167/0**（+18 `test_v2_tools.py`）；`ruff` 干净。
 
 ## RECORD
 
 ### 决策
 
-<见 plan Phase 1 定案表；执行中若有偏离在此记 D1/D2…>
+见 plan Phase 1 定案表。执行中的偏离：
+
+### D1. `retrieve_text` 的 `content` 必须带段落全文，不能只放 artifact
+- **背景**：第一版按数值工具的思路做 —— `content` = `"5 passage(s)... Top: '<160字预览>'"`，完整段落进 artifact。A/B 首轮 eval_set 退化到 24/30 cit + 26/30 ref，6 道 `ret_*` 定性题模型拿到 5 段却答"I cannot find"。
+- **根因**：`retrieve_text` 的任务就是把 prose 喂给模型，段落文本**是模型完成任务所需**，不是"仅供程序追溯"。
+- **修复**：`content` = 每段 ≤700 字全文 + 其 citation；artifact 仍留完整记录（score/section）。重测退化全消（29/30 + 30/30）。
+- **教训**：`content_and_artifact` 的划分标准是"模型完成任务所需 vs 仅供程序追溯"，不是"摘要 vs 全量"。每个工具单独判。
 
 ### 死胡同 / 坑
 
--
+- `ToolErrorKind(str, enum.Enum)` → ruff `UP042` 要 `enum.StrEnum`（Py3.11+）。
+- 计划过用 `context_schema` 传 resolve 结果 —— `context` 是 invoke 静态只读，middleware 写不了。改 `state_schema` 的 `resolved` 字段（`GraphState(AgentState)` + `NotRequired[dict]`）。
 
 ### Learning（框架机制）
 
--
+- **`content_and_artifact`**：`@tool(response_format="content_and_artifact")` 返回 `(text, dict)` → `ToolMessage(content=text, artifact=dict)`。`content` 进模型上下文，`artifact` 只给程序（`runner.py` 读它重建 v1 形状 `steps`）。省 token，但"什么该进 content"要按工具判（见 D1）。
+- **错误处理不用手写**：`ToolRetryMiddleware(retry_on=<判 ToolError.retryable>, on_failure="error")` 放 inner + `ToolErrorMiddleware(on_error=…)` 放 outer + `ToolCallLimitMiddleware(run_limit=…)`。我们只写 `ToolError` 异常类型和 15 行 `on_tool_error` 披露策略。
+- **`state_schema` 何时才该加**：Phase 2 没加（route/slots 是 messages 的纯函数）；Phase 1 加了（`resolved` 是 middleware 每轮加工、跨节点传、messages 里没有的派生值）。判据：能从 messages 推的现算，middleware 加工要跨节点传的进 state，调用方 invoke 时就知道的静态依赖进 context。
+- **`ToolRuntime`**：`runtime: ToolRuntime` 参数（保留名，schema 里不出现），给 `.state`/`.context`/`.store`/`.tool_call_id`。取代 `InjectedState` 等散装注入。传 `args_schema` 时它仍被识别注入（`retrieve_text.args` 不含 `runtime`，但运行时能拿到 state）。
+- **横切逻辑的位置**：跨轮的（年份继承，需要完整历史）放 `_resolve` middleware，每轮一次；单次调用的（"没给年→用最新 filing"）留在工具里。别把需要历史的塞进工具。
+- **重接口不动领域逻辑**：SQL / RRF / 递归 CTE / AST 沙箱逐字从 `copilot.agent.tools` 拷；变的只有信封、错误契约、schema、横切层。A/B 只比端到端就是为了让"接口变了行为没变"可验证。
+- **先查预制件**：错误处理、循环熔断两处第一版都想手写 middleware，MCP 查文档才知有 `ToolRetryMiddleware`/`ToolErrorMiddleware`/`ToolCallLimitMiddleware`，且文档写明组合顺序。
 
 ## 下一步 / 解锁了什么
 
-- 工具层稳定后可进 Phase 3（持久化 / 错误恢复 / HITL / 可观测），错误恢复 middleware 直接建在 `ToolError.retryable` 上。
+- **Phase 1 完成**。工具层是标准库了：`content_and_artifact` + Pydantic schema + `ToolError` + 预制 retry/error/limit middleware + `resolve` 层 + `state_schema` 的 `resolved`。
+- **解锁 Phase 3**：错误恢复 middleware 直接建在 `ToolError.retryable` 上（`ToolRetryMiddleware` 已在，可加 repair 节点 / `.with_fallbacks`）；`ToolRuntime.store` 给长期记忆；`ToolRuntime.stream_writer` 给 Phase 5 SSE 进度。
+- 遗留（非阻塞）：`graph_query` 选 `trend` vs latest 的引用面差异、模型偶尔不内联引用 —— 提示词层面，非工具层。

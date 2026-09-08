@@ -103,6 +103,26 @@ def _turns(messages: list) -> list[list]:
     return turns
 
 
+def on_tool_error(exc: Exception, request) -> str | None:
+    """``ToolErrorMiddleware`` handler: disclose our ``ToolError``s, propagate the rest.
+
+    A ``ToolError`` (including a retryable one whose retries were exhausted)
+    carries a hint written for the model -- surface it so the model can correct
+    the call or change approach. Anything unexpected returns ``None`` and
+    propagates, halting the run rather than being hidden.
+    """
+    from copilot.v2.tools.base import ToolError
+
+    if not isinstance(exc, ToolError):
+        return None
+    name = request.tool_call["name"]
+    msg = f"{name} error ({exc.kind}): {exc.hint}"
+    dym = exc.data.get("did_you_mean")
+    if dym:
+        msg += f"  did you mean: {', '.join(map(str, dym))}"
+    return msg
+
+
 def agent_middleware() -> list:
     """v1's pre-loop policy as [trim, guard, active-context, force-first-tool]."""
     from langchain.agents.middleware import before_model, wrap_model_call
@@ -128,6 +148,18 @@ def agent_middleware() -> list:
         if not drop:
             return None
         return {"messages": [RemoveMessage(id=m.id) for m in drop]}
+
+    @before_model(name="Resolve")
+    def _resolve(state, runtime):
+        # Once per turn: the raw question + the fiscal year the slots inherit
+        # from earlier turns (needs message history, so it can't ride the
+        # immutable context). Tools read runtime.state["resolved"].
+        msgs = state["messages"]
+        if not _before_first_model_call(msgs):
+            return None
+        slots = slots_from_messages(msgs)
+        return {"resolved": {"question": latest_question(msgs),
+                             "fiscal_year": slots.get("fiscal_year")}}
 
     @before_model(can_jump_to=["end"], name="RefuseAndClarifyGuard")
     def _guard(state, runtime):
@@ -165,4 +197,4 @@ def agent_middleware() -> list:
                 request = request.override(tool_choice=route["tool"])
         return handler(request)
 
-    return [_trim, _guard, _active_context, _force_first_tool]
+    return [_trim, _resolve, _guard, _active_context, _force_first_tool]
