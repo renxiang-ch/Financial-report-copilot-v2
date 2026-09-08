@@ -123,7 +123,7 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 ---
 
-### Phase 1 — 工具层标准化重构   （devlog 005；2026-09-07 定案，用 docs MCP 核对过 API）
+### Phase 1 — 工具层标准化重构   （devlog 005；2026-09-07 定案，2 轮用 docs+reference MCP 核对过 API）
 
 **目标**：把现在的最小 `@tool` 包装（`copilot/v2/orchestration/graph/tools.py`，直接调 `copilot.agent.tools` 冻结函数）换成一套标准工具库 `copilot/v2/tools/`。领域逻辑（SQL / BM25+pgvector RRF / 递归 CTE / AST 沙箱）**保留**，接口 / 信封 / 横切层重写。直接收益：关掉 Phase 2 A/B 里 citation 集波动的两个根因（`retrieve_text` 年份没锁、`graph_query` 漏传 `supplier`）。
 
@@ -133,40 +133,41 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 | 设计点 | 决定 | 依据 |
 |---|---|---|
-| **返回信封** 【本次】 | `@tool(response_format="content_and_artifact")` —— 返回 `(给模型的紧凑文本, 完整 dict artifact)`。**不**自造 `{ok,data,error}` 包装 | 框架原生；artifact 不进模型上下文（省 token）；`runner.py` 读 artifact 重建 v1 形状 `steps` |
-| **错误** 【本次】 | `raise ToolError(kind: Enum, retryable: bool, hint: str)`；一个 `@wrap_tool_call` middleware 把它映射成 `ToolMessage`（retryable → 带 hint 让模型重试；否则 → 终态呈现）。取代 v1 手塞的 `recoverable` dict | docs：`create_agent` 的工具错误就是走 `wrap_tool_call` middleware（`ToolCallRequest → ToolMessage`），不是 `ToolNode(handle_tool_errors=)` |
-| **args schema** 【本次】 | 每工具一个 Pydantic v2 `args_schema`，字段级 `Field(description=...)`；`metric` 用 `Literal[...]`（label 清单从 DB 读，同 v1 `advertised_metrics()`）。干掉现在 `_desc()` 拼字符串的 hack | docs "Advanced schema definition" |
-| **resolve 层** 【本次】 | `copilot/v2/tools/resolve.py`：搬 v1 `_resolve_ticker`（ticker + typo 建议）、`_year_scope`（fiscal-year scoping）、单位归一。工具内部调用。**外加**：一个 middleware 在进 model 前 resolve 一次，把 `question` / `fiscal_year` 塞进 `context_schema`；`retrieve_text` / `graph_query` 从 `runtime.context` 读，不再各自从 messages 里刨 | 这是关掉 A/B 年份差异的关键；`ToolRuntime.context` 是 docs 推荐的 per-run 只读数据通道 |
-| **`ToolRuntime` 迁移** 【本次】 | `retrieve_text` 的 `Annotated[dict, InjectedState]` → `runtime: ToolRuntime`（`runtime` 是保留参数名，模型看不到）。读 `runtime.context` 优先、`runtime.state` 兜底 | docs 明确 `InjectedState` 已过时，1.x 统一走 `ToolRuntime` |
+| **返回信封** 【本次】 | `@tool(response_format="content_and_artifact")` —— 返回二元组 `(给模型的紧凑文本, 完整 dict)` → 框架建成 `ToolMessage(content=…, artifact=…)`。**不**自造 `{ok,data,error}` 包装 | reference 核对：`response_format: Literal['content','content_and_artifact']`。`runner.py` 读 `ToolMessage.artifact` 重建 v1 形状 `steps`；docs 的 retrieval-metadata 例子就是这个用法（content=模型引用的段落，artifact=accession/分数/年份）|
+| **错误** 【本次，改用预制件】 | 定义 `ToolError(kind: Enum, retryable: bool, hint: str)` 当异常类型（这是我们的）。**管道用两个预制 middleware**：`ToolRetryMiddleware`（inner，`retry_on=lambda e: isinstance(e, ToolError) and e.retryable`，`on_failure="error"`，指数退避+jitter）+ `ToolErrorMiddleware`（outer，`on_error(exc, req)`：`ToolError` 非 retryable → 返回 `hint` 字符串给模型；其它异常 → 返回 `None` 传播）。取代 v1 手塞的 `recoverable` dict | reference：`ToolErrorMiddleware`（需 `langchain>=1.3.14`，当前 pin `1.4.0` ✓）、`ToolRetryMiddleware`。docs 明确 retry 放 inner + `on_failure="error"` 让异常穿到 error middleware。**修正**：不再手写 `@wrap_tool_call` |
+| **循环护栏** 【本次，新增】 | `ToolCallLimitMiddleware(run_limit=…, thread_limit=…, exit_behavior="continue")` —— 单工具 / 全局调用次数上限。框架版的 v1 `MAX_ROUNDS=10`，也是 Phase 4 fan-out 预算的种子 | reference：`ToolCallLimitMiddleware`。廉价安全网，顺手加 |
+| **args schema** 【本次】 | 每工具一个 Pydantic v2 `args_schema`，字段级 `Field(description=…)`；`metric` 用 `Literal[…]`（label 清单从 DB 读，同 v1 `advertised_metrics()`）。干掉现在 `_desc()` 拼字符串的 hack。简单签名的（`compute` / `list_metrics`）可退而用 `@tool(parse_docstring=True)` 解析 Google 风格 docstring | docs "Advanced schema definition"；reference `tool(parse_docstring=…)` |
+| **resolve 层** 【本次】 | `copilot/v2/tools/resolve.py`：搬 v1 `_resolve_ticker`（ticker + typo 建议）、`_year_scope` / `_latest_filing_year`（fiscal-year scoping）、单位归一。工具内部调用。**外加**：一个 `@before_model` middleware 每轮 resolve 一次，结果写进**自定义 `state_schema`** 字段（如 `state["resolved"] = {"question","fiscal_year","tickers"}`），`retrieve_text` / `graph_query` 用 `runtime.state["resolved"]` 读 | **修正**：`context` 是 invoke 时传入的**静态只读**数据（docs/runtime：user id、db 连接），middleware **写不了**它。resolve 结果是"middleware 每轮算一次、tool 读"的派生值 → 必须走 `state_schema=`。这是整个端口第一次真正需要自定义 state（理由正当）。`context_schema` 留给静态 per-run 依赖（如调用方传的 `as_of_date`）|
+| **`ToolRuntime` 迁移** 【本次】 | `retrieve_text` 的 `Annotated[dict, InjectedState]` → `runtime: ToolRuntime`（`runtime` 保留名，模型看不到）。读 `runtime.state["resolved"]` 优先、原始 `runtime.state["messages"]` 兜底 | docs/reference 明确 `InjectedState`/`InjectedToolCallId`/`get_runtime()` 已过时，1.x 统一走 `ToolRuntime`（给 `.state`/`.context`/`.store`/`.stream_writer`/`.tool_call_id`/`.execution_info`）|
 | **粒度** 【本次保持 / 合并推迟】 | 5 个工具维持 1:1，不合并 `query_financials`+`list_metrics`。`timeseries` / `get_segment_financials` 等是 Phase 4 新增 | 合并会动 A/B 基线，收益不明；先稳 |
 | **compute 沙箱** 【本次】 | AST 白名单沙箱**逐字**从 v1 拷（安全关键），只换签名 + 信封 | 安全代码不重写 |
-| **只读缓存** 【本次，轻量】 | `query_financials` / `list_metrics` / `graph_query` 稳定 cache key 做进程内缓存；`compute` memoize。不引缓存中间件 | 纯函数、DB 快照期内不变 |
+| **只读缓存** 【本次，轻量】 | `query_financials` / `list_metrics` / `graph_query` 稳定 cache key 做进程内缓存（`functools` / `cachetools`）；`compute` memoize | 纯函数、DB 快照期内不变。**MCP 核对：LangChain 没有原生 tool-result 缓存中间件**，手做即可 |
 | **注册表** 【本次】 | `copilot/v2/tools/registry.py` 单一 `TOOLS`，`orchestration/graph` import 它 | — |
 | **v1_loop 兼容** 【本次：不做 adapter】 | v1_loop 继续冻结在 `copilot.agent.tools`，**不**迁到新层。A/B 只比端到端（铁律 3），不需要 adapter | 保基线不动 |
-| **`bind_tools` / `ToolNode`** 【本次只碰 TOOLS + wrap_tool_call】 | `create_agent` 内部自己 `bind_tools` + 跑内建 ToolNode；我们的暴露面只有 `TOOLS` 列表 + 错误 middleware。手搭 `ToolNode(handle_tool_errors=…)` 是 Phase 4 子图的事 | 见"关注点 1" |
+| **`bind_tools` / `ToolNode`** 【本次只碰 TOOLS + 预制 middleware】 | `create_agent` 内部自己 `bind_tools` + 跑内建 ToolNode；我们的暴露面只有 `TOOLS` 列表 + 上面那几个预制 middleware。手搭 `ToolNode(handle_tool_errors=…)` / `Command` 写 state 是 Phase 4 子图的事 | 见"关注点 1" |
 | **限流 `RateLimiter`** 【推迟 Phase 4】 | 当前数据路径全是本地 Postgres，无外部 API。等 Phase 4 `extract_guidance` 打 transcript / SEC 源再加 | 无假想需求 |
 | **同步 / 异步工具** 【推迟 Phase 5】 | 工具保持同步。`create_agent` 会把同步工具丢线程池，不阻塞事件循环 | 见"关注点 3" |
 
 #### 关注点回应（用户看完 tools 文档提的三点）
 
-1. **`bind_tools` vs `ToolNode`**：`bind_tools` 是**模型侧**（把 schema 绑上去让模型能*发起*调用）；`ToolNode` 是**图侧**（*执行*调用：分发 / 并行 / 错误）。用 `create_agent` 时两者都在内部，我们碰不到也不用碰 —— 只交付一个好的 `TOOLS` 列表 + `wrap_tool_call` 错误 middleware。裸 `ToolNode`（`handle_tool_errors=`、`Command` 写 state）留到 Phase 4 手搭 deep_research 子图时再学。**本次涉及**：`TOOLS` + `wrap_tool_call`。
-2. **tool runtime 访问上下文**：`ToolRuntime` 参数（`runtime: ToolRuntime`，保留名、对模型隐藏）给 `.state` / `.context` / `.store` / `.stream_writer` / `.tool_call_id` / `.execution_info`。**本次涉及**：把 `retrieve_text` 从 `InjectedState` 迁到 `ToolRuntime`；用 `context_schema` 把 resolve 过的 `question`/`fiscal_year` 作为 per-run 只读数据传进工具（这正是"resolve 层"落地方式）。`.store`（长期记忆）留 Phase 3，`.stream_writer`（进度流）留 Phase 5 SSE。
+1. **`bind_tools` vs `ToolNode`**：`bind_tools` 是**模型侧**（把 schema 绑上去让模型能*发起*调用）；`ToolNode` 是**图侧**（*执行*调用：分发 / 并行 / 错误）。用 `create_agent` 时两者都在内部，我们碰不到也不用碰 —— 只交付一个好的 `TOOLS` 列表 + 预制的 `ToolRetryMiddleware` / `ToolErrorMiddleware` / `ToolCallLimitMiddleware`。裸 `ToolNode`（`handle_tool_errors=`、`Command` 写 state）留到 Phase 4 手搭 deep_research 子图时再学。**本次涉及**：`TOOLS` + 3 个预制 middleware。
+2. **tool runtime 访问上下文**：`ToolRuntime` 参数（`runtime: ToolRuntime`，保留名、对模型隐藏）给 `.state` / `.context` / `.store` / `.stream_writer` / `.tool_call_id` / `.execution_info`。**关键区分**（MCP 核对）：`context` = invoke 时传的**静态只读**依赖（user id、db 连接、`as_of_date`），middleware 不能改；`state` = 本轮可变数据（messages + 自定义字段），middleware 能写。resolve 结果是 middleware 每轮算的派生值 → 走 **自定义 `state_schema`**，不是 `context_schema`。**本次涉及**：`retrieve_text` 从 `InjectedState` 迁到 `ToolRuntime`；加 `state_schema` 的 `resolved` 字段。`.store`（长期记忆）留 Phase 3，`.stream_writer`（进度流）留 Phase 5 SSE。
 3. **同步 / 异步工具**：docs 说同步工具会被丢到线程池执行，原生 async 省掉线程开销。我们的工具全是同步 `psycopg2` 阻塞调用，转 async 要动 `copilot.storage.db`（共享基础设施）换 async 连接池 —— 收益（并发吞吐）只在 Phase 5 产品化 + FastAPI `ainvoke` 时才兑现。**本次不做**，标为 Phase 5 前置项：`tools/*` 加 `a*` 变体 + async DB pool。
 
 #### 构建顺序（devlog 005）
 
-1. `tools/base.py` —— `content_and_artifact` 打包 helper、`ToolError` + `ToolErrorKind` 枚举、`@financial_tool` 装饰器（统一名字 / 描述 / 缓存）。
-2. `tools/resolve.py` —— 搬 v1 `_resolve_ticker` + `_year_scope` + 单位归一，带单测。
+1. `tools/base.py` —— `content_and_artifact` 打包 helper（紧凑文本 + 完整 dict）、`ToolError` + `ToolErrorKind` 枚举、`@financial_tool` 装饰器（统一名字 / 描述 / 进程内缓存）。
+2. `tools/resolve.py` —— 搬 v1 `_resolve_ticker` + `_year_scope` + `_latest_filing_year` + 单位归一，带单测。
 3. `tools/schemas.py` —— 每工具 Pydantic `args_schema`；`metric` 的 `Literal` 从 DB 生成。
-4. `tools/{financials,retrieval,graph,compute}.py` —— 一工具一模块，调 `copilot.retrieval` / `copilot.storage`（共享，不改）；compute 沙箱逐字拷。
+4. `tools/{financials,retrieval,graph,compute}.py` —— 一工具一模块，调 `copilot.retrieval` / `copilot.storage`（共享，不改）；compute 沙箱逐字拷；`retrieve_text` 加 `runtime: ToolRuntime`。
 5. `tools/registry.py` —— `TOOLS`。
-6. `orchestration/graph/` —— `tools.py` 最小包装 → `from copilot.v2.tools.registry import TOOLS`；加 `wrap_tool_call` 错误 middleware；`context_schema` 带 resolve 结果；`runner.py` 改读 artifact 拿 `steps`。
-7. 每工具单测（含错误路径）+ resolve 层单测。
-8. EVAL：`ab_compare` 5 集全跑 —— 目标是 citation 集差异（年份 scope 那几处）测得到地收窄，其余不劣化。
+6. `orchestration/graph/` —— `tools.py` 最小包装 → `from copilot.v2.tools.registry import TOOLS`；`build.py` 加 `ToolRetryMiddleware` + `ToolErrorMiddleware` + `ToolCallLimitMiddleware` + `state_schema`（`resolved` 字段）；`middleware.py` 加 `_resolve` `@before_model` hook 写 `state["resolved"]`；`runner.py` 改读 `ToolMessage.artifact` 拿 `steps`。
+7. 每工具单测（含 `ToolError` retryable / 非 retryable 两条路径）+ resolve 层单测 + `_resolve` middleware 单测。
+8. EVAL：`ab_compare` 5 集全跑 —— 目标是 citation 集差异（年份 scope 那几处）测得到地收窄，其余不劣化；对比 input token（artifact 分流后应降）。
 
-**产出**：`copilot/v2/tools/{base,resolve,schemas,financials,retrieval,graph,compute,registry}.py` + `tests/test_tools_*.py`。
+**产出**：`copilot/v2/tools/{base,resolve,schemas,financials,retrieval,graph,compute,registry}.py` + `tests/test_tools_*.py`；`orchestration/graph` 里 `state_schema` + 3 个预制 middleware + `_resolve` hook。
 
-**退出标准**：所有工具统一 `content_and_artifact` 信封 + `ToolError` 类型化错误 + Pydantic schema + 单测（含错误路径）通过；`ab_compare` 5 集不劣于 Phase 2，且年份 scope 的 citation 差异测得到地收窄；v1_loop 冻结不受影响；`pytest` 全绿。
+**退出标准**：所有工具统一 `content_and_artifact` 信封 + `ToolError` 类型化错误（`ToolRetryMiddleware`+`ToolErrorMiddleware` 接管）+ Pydantic schema + 单测（含 retryable/非 retryable 路径）通过；`ab_compare` 5 集不劣于 Phase 2，且年份 scope 的 citation 差异测得到地收窄，input token/问 不升；v1_loop 冻结不受影响；`pytest` 全绿。
 
 ---
 
@@ -357,8 +358,8 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 | 主题 | v1 自建 | LangGraph 对应 | 学到什么 |
 |---|---|---|---|
 | 状态管理 | list + dict 混合 | `create_agent` 的 `messages` + checkpointer；`state_schema=` 只加真正需要跨节点传的派生不出的东西 | 别把纯函数结果（route/slots）也塞进 state —— checkpointer 已存 messages，现算即可。状态即 schema，但最小化 |
-| 工具设计 | 5 个 shape 不一的函数 + 手塞 `recoverable` dict | `@tool(response_format="content_and_artifact")` + Pydantic `args_schema`（`Literal` 枚举）+ `raise ToolError` → `wrap_tool_call` middleware | 工具是 LLM 的 API：schema 严、错误类型化、给模型的文本和完整数据分开（artifact 不吃上下文） |
-| 工具访问上下文 | 循环里手动 `inp["query"]=question` / 散落的 ticker·年份解析 | `runtime: ToolRuntime`（`.state`/`.context`/`.store`）+ `context_schema` 传 per-run 只读数据 | resolve 一次、放进 context，工具读 context，不各自从 messages 刨。`InjectedState` 已过时 |
+| 工具设计 | 5 个 shape 不一的函数 + 手塞 `recoverable` dict | `@tool(response_format="content_and_artifact")` + Pydantic `args_schema`（`Literal` 枚举）+ `raise ToolError` → 预制 `ToolRetryMiddleware`+`ToolErrorMiddleware`+`ToolCallLimitMiddleware` | 工具是 LLM 的 API：schema 严、错误类型化、给模型的文本和完整数据分开（artifact 不吃上下文）。错误/重试/限流有预制件，别手写 |
+| 工具访问上下文 | 循环里手动 `inp["query"]=question` / 散落的 ticker·年份解析 | `runtime: ToolRuntime`（`.state`/`.context`/`.store`）；派生值走 `state_schema`，静态依赖走 `context_schema` | `context` 是 invoke 时传的静态只读，middleware 改不了；middleware 每轮算的 resolve 结果必须走 state。`InjectedState` 已过时 |
 | 工具调用 | 手写 dispatch + 线程池 | `bind_tools` + `ToolNode`（内建并行） | 调用/结果/错误统一成消息 |
 | 错误恢复 | `recoverable` 标志 | `handle_tool_errors` + `RetryPolicy` + fallback | 分层：工具级 / 节点级 / 模型级 |
 | 持久化 | 无 | Checkpointer（thread）+ Store（跨会话） | 断点续跑、时间旅行、崩溃恢复 |

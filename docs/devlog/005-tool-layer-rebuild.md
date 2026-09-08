@@ -24,9 +24,11 @@ plan_ref: ../langgraph-migration-plan.md#phase-1--工具层标准化重构
   - `copilot.agent.tools._resolve_ticker`（ticker + difflib typo 建议）、`_year_scope` / `_latest_filing_year`（fiscal-year scoping）、`_no_edges`（graph 空结果带原因）、AST 沙箱（`_alias_non_identifier_vars` / `_reject_unsafe` / `_depth` / `compute`）—— 逐字搬。
   - `copilot.agent.agent.advertised_metrics()`（从 DB 读 metric label 清单，带 fallback）—— `metric` 的 `Literal` 来源。
   - `copilot.retrieval.hybrid.retrieve_hybrid`、`copilot.storage.db.get_conn` —— 共享基础设施，import 用，不改。
-  - `runner.py::_steps_from_messages` 已按 `tool_call_id` 配对 —— 改成读 artifact 即可。
-- **新写**：`copilot/v2/tools/{base,resolve,schemas,financials,retrieval,graph,compute,registry}.py` + `tests/test_tools_*.py`。`orchestration/graph` 加 `wrap_tool_call` 错误 middleware + `context_schema`。
-- **会影响**：`orchestration/graph/{tools.py 删,build.py,runner.py,middleware.py}`、`ab_compare`（artifact 形状）。**不碰** `src/copilot/agent/`（v1 冻结）、`src/copilot/{storage,retrieval}`（共享，只 import）。v1_loop 完全不动。
+  - `runner.py::_steps_from_messages` 已按 `tool_call_id` 配对 —— 改成读 `ToolMessage.artifact` 即可。
+  - **预制 middleware**（不手写）：`ToolRetryMiddleware` / `ToolErrorMiddleware`（需 `langchain>=1.3.14`，pin `1.4.0` ✓）/ `ToolCallLimitMiddleware`。MCP 核对：LangChain 无原生 tool-result 缓存中间件 → 进程内缓存手做。
+- **新写**：`copilot/v2/tools/{base,resolve,schemas,financials,retrieval,graph,compute,registry}.py` + `tests/test_tools_*.py`。`orchestration/graph`：`build.py` 加 3 个预制 middleware + `state_schema`（`resolved` 字段）；`middleware.py` 加 `_resolve` `@before_model` hook。
+- **会影响**：`orchestration/graph/{tools.py 删,build.py,runner.py,middleware.py}`、`ab_compare`（改读 `.artifact`）。**不碰** `src/copilot/agent/`（v1 冻结）、`src/copilot/{storage,retrieval}`（共享，只 import）。v1_loop 完全不动。
+- **修正（2 轮 MCP 核对）**：resolve 结果原计划塞 `context_schema` —— 错，`context` 是 invoke 静态只读、middleware 写不了。改走自定义 `state_schema`（端口首次真正需要 `state_schema=`，理由正当）。错误处理原计划手写 `@wrap_tool_call` —— 改用预制 `ToolRetryMiddleware`（inner，`on_failure="error"`）+ `ToolErrorMiddleware`（outer）。
 
 ## PLAN
 
