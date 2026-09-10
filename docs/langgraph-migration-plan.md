@@ -330,11 +330,58 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 
 ### Phase 5 — 产品化
 
-1. FastAPI 换成调用 graph（`ainvoke` / `astream`），SSE 流式中间步骤。
-2. Streamlit 展示：研究计划、子结论、证据台账、rubric 得分。
+1. FastAPI 换成调用 graph（`ainvoke` / `astream_events`），SSE 流式中间步骤 —— 细节见下「Phase 5.F 前端 / 交互层」。
+2. 前端展示：研究计划、子结论、证据台账、rubric 得分 —— 见 5.F。
 3. 部署：`PostgresSaver` 生产库；LangSmith 项目分 dev/prod。
 4. 回归闸门：CI 跑 Tier 1–3（硬闸）+ Tier 4（软闸，记录趋势）+ A/B 对 v1。
 5. 成本/延迟预算：每问 token、tool 调用数、p95 延迟设阈值，超阈告警。
+
+---
+
+### Phase 5.F — 前端 / 交互层（累积式规划，非阻塞）
+
+> **现在没有展示机会**，编排层唯一的消费者是 `ab_compare`（批量评测，`agent.invoke()` 阻塞返回终态即对）。这一节是**前端相关学习的存放处** —— 边学 LangChain 的流式 / UI 部分边往里记，等 Phase 5 真做 UI 时落地。不阻塞任何 Phase。`run()` 的批量路径全程保持 `invoke()`，流式是加法不是替换。
+
+#### F.1 传输：用 `stream_events(version="v3")`，不是裸 `stream_mode`
+
+`docs/oss/python/langchain/event-streaming` 明说：应用 / 前端场景用 **Event Streaming**（`agent.stream_events(input, version="v3")`），它返回一个 run 对象带**分类投影**，每种独立消费；`graph.stream(stream_mode="messages"/"updates")` 是底层 Pregel API，前端不直接用。
+
+- FastAPI：一个 `/ask` 的 SSE 端点，`async for` 消费投影 → 转 SSE event。
+- 同步场景 `stream.interleave("messages","tool_calls","values")`；异步 `astream_events` + `asyncio.gather`。
+
+#### F.2 投影 → 这个项目的 UI 需求
+
+| 投影 | UI 显示 | 何时 |
+|---|---|---|
+| `stream.messages` 的 `.text` | 答案逐 token 出 | Phase 5 |
+| `stream.tool_calls`（`.tool_name` / `.input` / `.output_deltas` / `.error`）| 活动条："查 AAPL Revenue FY2024" / "检索 CRUS 10-K（scope FY2026）" / 工具报错 | Phase 5 |
+| 自定义 transformer（`AgentMiddleware.transformers` 注册）| `retrieve_text` 的 scope 决策、unscoped 回退、命中数；`graph_query` 的 traversal 展开 | Phase 5，只在有 UI 消费时加 |
+| `stream.values` on `plan` / `sub_results` / `evidence_ledger` / `budget` | 研究计划、子结论、证据台账**逐步填充** | Phase 4 起 |
+| `stream.subagents`（`.name` + `.cause`）| 每个专家子 agent（`guidance_analyst` …）一个面板，标明由哪次工具调用派发 | Phase 4 |
+| `stream.output` | 收尾：最终答案 + provenance / verification 徽章 | Phase 5 |
+
+#### F.3 组件清单（Streamlit 或换框架后一样适用）
+
+- **答案区**：流式 markdown；citation 渲染成可点的 SEC EDGAR 链接。
+- **活动区**：工具调用时间线（名字 + 关键参数 + 耗时 + 成功/错误）。数据来自 `stream.tool_calls`。
+- **证据台账**：每个数字 → accession → 章节，可展开。数据来自 `evidence_ledger`（Phase 4）/ 现在的 `provenance`。
+- **校验徽章**：`verify_answer` 的结果（每个数字过没过 grounding：grounded / flagged）。
+- **研究计划树**（Phase 4）：planner 的子问题 + 每个状态（pending / running / done），`stream.values` 驱动。
+- **澄清交互**（Phase 3 HITL）：`interrupt()` 抛出的澄清选项渲染成按钮，点击 → `Command(resume=…)` 继续。
+
+#### F.4 工具里的进度：`runtime.stream_writer`
+
+`retrieve_text` 是多步（BM25 + embedding + RRF + 可能的 unscoped 回退）。加 `runtime.stream_writer("scoping to FY2024…")` 发进度，经 middleware 注册的自定义 transformer 投影成 `stream.extensions["retrieval_activity"]`。**只在有 UI 消费时加**，否则是噪声 —— 现在不加。
+
+#### F.5 v1 `dashboard.py` 的迁移
+
+v1 的 Streamlit dashboard（`copilot/dashboard.py`，共享 / 冻结）直接调 v1 函数。Phase 5：新写 `copilot/v2/ui/`，调 FastAPI SSE 端点（或 `astream_events` 直连 graph）。不动 v1 的。
+
+#### F.6 不要提前做
+
+- Phase 2 / 3 稳定前不碰 UI。
+- eval 全程 `invoke()`，不依赖流式；A/B 报告不需要流式。
+- 前端选型（保留 Streamlit vs 换 React）**等 Phase 5 再定**；这一节只记"需要显示什么、数据从哪个投影来"，不定"用什么框架"。
 
 ---
 
@@ -368,6 +415,7 @@ State 增加：`plan`、`sub_results`、`evidence_ledger`（全树 provenance）
 | 人在环 | 前置澄清 pass | `interrupt()` 任意点暂停 | 澄清从"预判"变"按需" |
 | 多轮记忆 | append-only + trim | checkpointer + `trim_messages` | 记忆策略与编排解耦 |
 | 模型选择 | `model_router.py`：只让调用方显式选，否决自动分层/升级 | 子图各带 `model=` + `@wrap_model_call` 动态换 + `ModelFallbackMiddleware` 异常降级 | 按**角色**分模型（planner/extractor/synth/judge 要求不同）是真的；按**难度**分层要 A/B 数据，否则是死配置。自动切模型只在异常上，不在"答案看着不对"上 |
+| 流式 / 前端 | 无（v1 dashboard 直调函数）| `stream_events(version="v3")` 分类投影（`messages`/`tool_calls`/`values`/`subagents`）| 应用层用 v3 事件流、不用裸 `stream_mode`；子 agent 走 `stream.subagents`。批量评测保持 `invoke()`，流式是加法（见 Phase 5.F）|
 
 ---
 
