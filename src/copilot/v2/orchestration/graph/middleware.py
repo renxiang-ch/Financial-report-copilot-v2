@@ -1,34 +1,50 @@
 """Middleware for the ``create_agent`` port -- v1's pre-loop policy, as hooks.
 
 v1 (``copilot.agent.agent.ask``) runs a fixed sequence of pure classifiers
-before the agent loop and acts on their verdicts. Each piece maps to one hook:
+before the agent loop and acts on their verdicts. Each piece maps to one hook,
+chosen by the granularity the logic actually needs:
 
-  ==========================  ==================  ============================
-  v1 step                     hook                what it does
-  ==========================  ==================  ============================
-  trim_history                _trim               drop oldest whole turns past
-                              (@before_model)     MAX_TURNS / token budget
-  route_question -> refuse    _guard              inject canned refusal, end
-  clarification_for           _guard              inject clarify text, end
-                              (@before_model,
+  ==========================  ===================  ===========================
+  v1 step                     hook                 what it does
+  ==========================  ===================  ===========================
+  trim_history                _trim                drop oldest whole turns past
+                              (@before_agent)      MAX_TURNS / token budget
+  (slots for the turn)        _resolve             write state["resolved"]
+                              (@before_agent)      -- question + carried year
+  route_question -> refuse    _guard               inject canned refusal, end
+  clarification_for           _guard               inject clarify text, end
+                              (@before_agent,
                                can_jump_to=end)
-  active_context_block        _active_context     insert an assumption
-                              (@wrap_model_call)  SystemMessage before the Q
-  route_question ->           _force_first_tool   pin round-0 tool_choice
+  active_context_block        _active_context      insert an assumption
+                              (@wrap_model_call)   SystemMessage before the Q
+  route_question ->           _force_first_tool    pin round-0 tool_choice
     force_tool                (@wrap_model_call)
-  ==========================  ==================  ============================
+  ==========================  ===================  ===========================
 
-"First model call of the turn" is ``no AIMessage in state`` here, where v1 uses
-``round_idx == 0``. The slot classifiers are pure and take a ``carry`` folded
-from the earlier turns' questions -- multi-turn state is the checkpointer's
-message history, re-parsed, not a stored slot dict (``conversation.carried_slots``
-does the same fold over its kept ``history``). ``runner.py`` recomputes the
-route/slots from the returned messages for the result dict rather than threading
-them through a custom state schema.
+The first three are ``@before_agent`` because they are **once per turn**, which
+is what that hook means (one ``agent.invoke()`` = one turn here). They used to be
+``@before_model`` -- which fires before *every* model call -- with a hand-written
+"is this the first call of the turn?" guard. That guard was already the source of
+one silent bug: checking "no AIMessage anywhere in state" is only true on a
+thread's *first* turn, because the checkpointer replays every earlier turn's
+AIMessages, so every hook quietly no-opped from turn 2 on. ``before_agent``
+removes the need to hand-roll the semantics.
+
+The two ``@wrap_model_call`` hooks still need ``_before_first_model_call``: they
+modify the ``ModelRequest``, so there is no once-per-turn hook for them.
+
+The slot classifiers are pure and take a ``carry`` folded from the earlier turns'
+questions -- multi-turn state is the checkpointer's message history, re-parsed,
+not a stored slot dict (``conversation.carried_slots`` does the same fold over
+its kept ``history``). ``runner.py`` recomputes the route from the returned
+messages for the result dict rather than threading it through state.
 """
 
 from __future__ import annotations
 
+from typing import NotRequired
+
+from langchain.agents.middleware import AgentState
 from langchain_core.messages import AIMessage, HumanMessage, RemoveMessage, SystemMessage
 
 from copilot.agent.agent import _PROCUREMENT_REFUSAL_TEXT, route_question
@@ -40,6 +56,22 @@ from copilot.agent.conversation import (
     active_context_block,
 )
 from copilot.agent.slots import extract_slots
+
+
+class ResolvedState(AgentState):
+    """The one field this module adds to agent state.
+
+    Declared here, next to the hook that writes it, rather than on
+    ``create_agent(state_schema=...)`` -- middleware carries its own schema and
+    the factory merges it at compile time. Keeps a field and its writer together,
+    which matters once Phase 4 adds ``plan`` / ``sub_results`` / ``evidence_ledger``.
+
+    Why state and not context: ``resolved`` is derived per turn by ``_resolve``
+    from the message history, so the caller cannot supply it at invoke time and
+    ``context`` (static, read-only) cannot hold it.
+    """
+
+    resolved: NotRequired[dict]
 
 
 def _text(m) -> str:
@@ -124,14 +156,12 @@ def on_tool_error(exc: Exception, request) -> str | None:
 
 
 def agent_middleware() -> list:
-    """v1's pre-loop policy as [trim, guard, active-context, force-first-tool]."""
-    from langchain.agents.middleware import before_model, wrap_model_call
+    """v1's pre-loop policy as [trim, resolve, guard, active-context, force-tool]."""
+    from langchain.agents.middleware import before_agent, wrap_model_call
 
-    @before_model(name="TrimHistory")
+    @before_agent(name="TrimHistory")
     def _trim(state, runtime):
         msgs = state["messages"]
-        if not _before_first_model_call(msgs):
-            return None
         turns = _turns(msgs)
         if len(turns) <= 1:
             return None
@@ -149,23 +179,19 @@ def agent_middleware() -> list:
             return None
         return {"messages": [RemoveMessage(id=m.id) for m in drop]}
 
-    @before_model(name="Resolve")
+    @before_agent(state_schema=ResolvedState, name="Resolve")
     def _resolve(state, runtime):
         # Once per turn: the raw question + the fiscal year the slots inherit
         # from earlier turns (needs message history, so it can't ride the
         # immutable context). Tools read runtime.state["resolved"].
         msgs = state["messages"]
-        if not _before_first_model_call(msgs):
-            return None
         slots = slots_from_messages(msgs)
         return {"resolved": {"question": latest_question(msgs),
                              "fiscal_year": slots.get("fiscal_year")}}
 
-    @before_model(can_jump_to=["end"], name="RefuseAndClarifyGuard")
+    @before_agent(can_jump_to=["end"], name="RefuseAndClarifyGuard")
     def _guard(state, runtime):
         msgs = state["messages"]
-        if not _before_first_model_call(msgs):
-            return None
         q = latest_question(msgs)
         carry = carry_from_messages(msgs)
         route = route_question(q, carry=carry)

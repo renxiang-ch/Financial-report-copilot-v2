@@ -41,6 +41,12 @@ def _steps_from_messages(messages: list) -> list[dict]:
     ``content_and_artifact``); v1's ``_collect_citations`` / ``build_provenance``
     read the same keys (``citation``, ``results``, ``traversal_trace``, ...).
     An error ``ToolMessage`` has no artifact -- fall back to its text.
+
+    ``output`` is ALWAYS a dict, matching v1's ``_run_tool`` (whose error paths
+    also returned dicts). Every v1 consumer -- ``_collect_citations``,
+    ``build_provenance``, ``verify_answer``, and the eval harness's scorers --
+    does ``step["output"].get(...)`` unguarded, so a bare error string here
+    raises ``AttributeError`` deep inside frozen code.
     """
     pending: dict[str, dict] = {}
     steps: list[dict] = []
@@ -58,6 +64,8 @@ def _steps_from_messages(messages: list) -> list[dict]:
                     out = json.loads(raw)
                 except (ValueError, TypeError):
                     out = raw
+            if not isinstance(out, dict):
+                out = {"found": False, "error": str(out)}
             steps.append({"tool": base["tool"], "input": base["input"], "output": out})
     return steps
 

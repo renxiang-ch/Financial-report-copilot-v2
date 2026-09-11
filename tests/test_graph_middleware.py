@@ -67,13 +67,13 @@ def test_trim_keeps_recent_turns_and_drops_old(monkeypatch):
     mids = {m.name: m for m in agent_middleware()}
     trim = mids["TrimHistory"]
 
-    # 3 completed turns + turn 4 just starting (last msg is the new HumanMessage,
-    # model not yet called -- this is when before_model fires)
+    # 3 completed turns + turn 4 just starting -- the state `before_agent` sees
+    # at the top of a turn (checkpointer replayed history + the new question)
     msgs = []
     for i in range(1, 4):
         msgs += [_h(f"q{i}", i), _a(f"a{i}", i)]
     msgs.append(_h("q4", 4))
-    out = trim.before_model({"messages": msgs}, None)
+    out = trim.before_agent({"messages": msgs}, None)
 
     removed = {m.id for m in out["messages"] if isinstance(m, RemoveMessage)}
     assert removed == {"h1", "a1", "h2", "a2"}  # keep turns 3-4, drop 1-2
@@ -81,6 +81,33 @@ def test_trim_keeps_recent_turns_and_drops_old(monkeypatch):
 
 def test_trim_noop_for_single_turn():
     mids = {m.name: m for m in agent_middleware()}
-    out = mids["TrimHistory"].before_model(
+    out = mids["TrimHistory"].before_agent(
         {"messages": [_h("only", 1), _a("x", 1)]}, None)
     assert out is None
+
+
+def test_once_per_turn_hooks_are_before_agent():
+    """The three once-per-turn hooks must be before_agent, not before_model.
+
+    before_model fires on every model call, which is why these used to carry a
+    hand-written "first call of the turn?" guard -- and that guard was the source
+    of a silent bug (see middleware.py's module docstring).
+    """
+    mids = {m.name: m for m in agent_middleware()}
+    for name in ("TrimHistory", "Resolve", "RefuseAndClarifyGuard"):
+        m = mids[name]
+        assert type(m).before_agent is not None
+        # no before_model override -- the base class's is a no-op passthrough
+        assert "before_model" not in type(m).__dict__, f"{name} still on before_model"
+
+
+def test_resolve_writes_state_and_carries_its_own_schema():
+    mids = {m.name: m for m in agent_middleware()}
+    resolve = mids["Resolve"]
+    assert "resolved" in resolve.state_schema.__annotations__
+
+    msgs = [_h("What was Cirrus Logic's revenue in fiscal 2024?", 1), _a("$1.79B", 1),
+            _h("How dependent is it on Apple?", 2)]
+    out = resolve.before_agent({"messages": msgs}, None)
+    assert out["resolved"]["question"] == "How dependent is it on Apple?"
+    assert out["resolved"]["fiscal_year"] == 2024      # inherited from turn 1

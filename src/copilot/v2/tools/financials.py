@@ -17,6 +17,17 @@ from copilot.v2.tools.schemas import ListMetricsArgs, QueryFinancialsArgs
 _FORM = "10-K"
 
 
+def _fmt(v: float) -> str:
+    """Thousands separators without destroying precision.
+
+    ``:,.0f`` rounds EPS 6.08 to "6" -- the artifact keeps 6.08 but the model
+    only reads ``content``, so it answered "$6.00" for a question whose golden
+    value is 6.08. Integral values print without a decimal tail; everything else
+    keeps its digits.
+    """
+    return f"{v:,.0f}" if float(v).is_integer() else f"{v:,}"
+
+
 def _citation(accn: str, doc_url: str | None) -> str:
     url = doc_url or (
         "https://www.sec.gov/Archives/edgar/data/"
@@ -86,7 +97,7 @@ def query_financials(ticker: str, metric: str, fiscal_year: int | None = None):
         "citation": citation,
     }
     text = (f"{row['ticker']} {row['label']} FY{row['fiscal_year']} = "
-            f"{float(row['value']):,.0f} {row['unit']} ({citation})")
+            f"{_fmt(float(row['value']))} {row['unit']} ({citation})")
     return pack(text, artifact)
 
 

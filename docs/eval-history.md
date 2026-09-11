@@ -15,3 +15,15 @@
 | 2026-09-07 | 004 Step 3 | graph (create_agent + routing middleware, gpt-4o-mini) | ✓ | ✓ | 未跑 | — | — | 同量级 | — | 路由 middleware（`before_model` refuse 短路 + `wrap_model_call` force_tool）。router 集 12 题 `ab_compare` 对 v1_loop：**refusal 12/12**、force_tool 首轮 pin `graph_query` 确认；citations 7/12（5 处差异为 wrapper 年份范围 + 模型非确定性，非路由回归）。回归：eval_set.json 仍 30/30 citations+refusal；`pytest` 143/0。见 `docs/devlog/004` |
 | 2026-09-07 | 004 Step 4-6 (Phase 2 完成) | graph (create_agent + 6-hook middleware, gpt-4o-mini) | ✓ | ✓ | ✓ | — | 同量级 | 同量级 | — | slots/clarify/history-trim middleware + 多轮 `thread_id`+checkpointer。5 eval 集 `ab_compare` 对 v1_loop（67 组）：**refusal 0 不匹配、0 行为回归**。eval_set 30/30 cit+ref · router 7/12 cit（复跑 7–9）/12 ref · multiturn(11t) 10–11 cit/11 ref（年份继承生效：`mt_year_carries` t3 = $311,266,860 逐位对）· tier3 6/8 cit/8 ref · defects 5/6 cit/6 ref。citation 集差异全部 `retrieve_text` 广度 / `graph_query` 非确定性 / 代词范围，数处 graph 更紧。`_refused()` 改用 v1 `looks_like_refusal`。`pytest` 149/0（+6）。见 `docs/devlog/004` |
 | 2026-09-08 | 005 (Phase 1 完成) | graph (create_agent + 标准工具库, gpt-4o-mini) | ✓ | ✓ | ✓ | — | 同量级 | **~4.4K in/问**（Phase 2 ~5.5–7.8K，artifact 分流）| — | 工具层标准库：`content_and_artifact` + Pydantic schema + `ToolError` + 预制 retry/error/limit middleware + `resolve` 层 + `state_schema.resolved`。A/B 5 集：**refusal 66/67、0 行为回归**。eval_set 29/30 cit（1 处模型没内联引用）/30 ref · router 9/12 cit（复跑 7–9）/12 ref · multiturn(11t) **11/11**（引用变满）· **tier3 8/8**（引用 6→8，年份 scope 修复）· defects 5/6 cit/6 ref。`pytest` 167/0（+18）。见 `docs/devlog/005` |
+
+### 统一 scorer 口径（2026-09-11 起，`copilot.v2.eval.score`）
+
+> 以下三行是**第一次三方同尺子**的绝对分数（此前 graph 只有对 v1_loop 的 parity，从未对过标准答案）。数据集 `eval_set.json`（30 题）。指标分两块：**steps-independent** 三方可比；**steps-dependent** 仅 v1_loop / graph（generic_agent 无 tool trace，结构上无定义）。retrieval 用 `correct_judge`（judge≥2）跨实现比。
+
+| 日期 | impl | Tier1可答(17) | Tier2(10) | retrieval judge | refusal | steps-dep (strict/hit/inputs/flagged) | in-tokens | 延迟 | 备注 |
+|------|------|---|---|---|---|---|---|---|------|
+| 2026-09-11 | **generic_agent** (Codex CLI + gpt-5.6-sol, replay) | **100%** | **100%** | **2.57** | 0% (0/3)：`v1_schema_gap` 0/2 · `out_of_scope` 0/1 | — | — | 31.3s | 三道不可答全是"原始 10-K 能答、v1 schema 没有"，判错是 v1 口径所致，非能力问题。真 `undisclosed` 陷阱在 tier3（它 0/1 失败）|
+| 2026-09-11 | **v1_loop** (gpt-4o-mini) | **100%** | **100%** | **2.57** | **100%** | 100/100/100/0 | 208,695 | 3.52s | 精确复现 Phase 0b，用作新 scorer 无偏差的验收 |
+| 2026-09-11 | **graph** (create_agent + 标准工具库, gpt-4o-mini) | **100%** | **100%** | **2.57** | **100%** | 100/100/100/0 | **170,748**（−18% vs v1_loop）| **2.36s** | 跑 2 遍逐项一致。统一 scorer 抓到并修复两个 Phase 1 回归：EPS `:,.0f` 显示成 6（→`_fmt`）、`retrieve_text` `[:700]` 丢 76% 文本（→不截断，token 仅 +5.2%）。`ab_compare` multiturn 10/11 cit + 11/11 ref（唯一分歧是 eval 集自标不稳定的 compute 轮，两边同为正确值 $311,266,860）。见 `docs/devlog/006` |
+
+**结论**：eval_set 上三方在**可答题上完全打平**（Tier1/Tier2/retrieval judge 逐项相同）—— 该集**已饱和、无分辨力**。唯一差异在 refusal，而 eval_set 那 3 道**没有一道是真 `undisclosed` 陷阱**。下一步评测投入应放在**扩陷阱题**和**建 Tier 4**，而非重复跑此集。

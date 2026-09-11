@@ -71,6 +71,16 @@ def retrieve_text(runtime: ToolRuntime, ticker: str | None = None, k: int = 5,
     # TEXT goes in content, not just the artifact -- unlike the numeric tools,
     # a summary the model can't read the passages behind is useless. The
     # artifact keeps the full records (scores, section, etc.) for provenance.
+    #
+    # Passages are NOT truncated. An earlier version capped each at 700 chars,
+    # which is ~125 of a chunk's 500 tokens (10-K prose runs 5.4-5.9 chars/token,
+    # so a chunk is ~2,900 chars). Both BM25 and the dense index score the WHOLE
+    # 500-token chunk, so a chunk can rank top-5 because of a sentence at char
+    # 2,000 -- and the model was shown the first quarter, which may be about
+    # something else. Retrieval succeeded; the presentation threw away the reason
+    # it succeeded. Measured: ret_glw_business_segments judge 3 -> 1, retrieval
+    # mean 2.57 -> 2.29. If the context cost ever needs cutting, do it by
+    # relevance (drop low-similarity sentences) rather than by position.
     header = (f"{len(clean)} passage(s)"
               + (f" from {ticker}" if ticker else "")
               + (f", FY{year}" if year else "") + f" ({why}):")
@@ -78,5 +88,5 @@ def retrieve_text(runtime: ToolRuntime, ticker: str | None = None, k: int = 5,
     for i, r in enumerate(clean, 1):
         body = (r.get("text") or "").strip().replace("\n", " ")
         cite = r.get("citation") or f"accession {r.get('accn', '?')}"
-        blocks.append(f"[{i}] {cite}\n{body[:700]}")
+        blocks.append(f"[{i}] {cite}\n{body}")
     return pack(header + "\n\n" + "\n\n".join(blocks), artifact)

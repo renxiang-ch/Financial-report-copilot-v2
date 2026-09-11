@@ -1,9 +1,9 @@
 """Assemble the ``create_agent`` agent.
 
 v1's SYSTEM prompt, the standardized tool library (``copilot.v2.tools``), an
-in-memory checkpointer, ``GraphState`` (adds ``resolved``), and the middleware
-stack: ``agent_middleware()`` (v1's pre-loop policy as hooks) plus the prebuilt
-tool middleware -- ``ToolRetryMiddleware`` (retries ``ToolError.retryable``),
+in-memory checkpointer, and the middleware stack: ``agent_middleware()`` (v1's
+pre-loop policy as hooks, carrying its own state schema) plus the prebuilt tool
+middleware -- ``ToolRetryMiddleware`` (retries ``ToolError.retryable``),
 ``ToolErrorMiddleware`` (turns the rest into model-visible messages),
 ``ToolCallLimitMiddleware`` (the framework's ``MAX_ROUNDS``).
 
@@ -15,10 +15,7 @@ reads.
 
 from __future__ import annotations
 
-from typing import NotRequired
-
 from langchain.agents.middleware import (
-    AgentState,
     ToolCallLimitMiddleware,
     ToolErrorMiddleware,
     ToolRetryMiddleware,
@@ -31,13 +28,6 @@ from copilot.config import settings
 from copilot.v2.orchestration.graph.middleware import agent_middleware, on_tool_error
 from copilot.v2.tools.base import ToolError
 from copilot.v2.tools.registry import TOOLS
-
-
-class GraphState(AgentState):
-    # Resolved once per turn by the `_resolve` before_model hook: the raw
-    # question + the fiscal year slots inherited (needs message history, so it
-    # can't live on the immutable context). Tools read runtime.state["resolved"].
-    resolved: NotRequired[dict]
 
 # v1_loop's default agent model (see model_router.select_model / the eval runs).
 DEFAULT_MODEL = "gpt-4o-mini"
@@ -77,11 +67,13 @@ def build_agent(model: str = DEFAULT_MODEL, checkpointer=None):
     """Return a compiled agent. ``checkpointer=None`` -> a fresh InMemorySaver."""
     from langchain.agents import create_agent
 
+    # No `state_schema=` here: the `_resolve` middleware declares its own
+    # (`ResolvedState`) and the factory merges middleware schemas at compile
+    # time, so each state field stays next to the hook that writes it.
     return create_agent(
         model=_model(model),
         tools=TOOLS,
         system_prompt=SYSTEM,
-        state_schema=GraphState,
         middleware=[*agent_middleware(), *_tool_middleware()],
         checkpointer=checkpointer if checkpointer is not None else InMemorySaver(),
     )
