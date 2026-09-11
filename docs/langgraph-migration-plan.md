@@ -242,6 +242,28 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 **退出标准**：持久化、HITL、错误恢复、LangSmith trace 四项均有 demo + 测试；Tier 1–3 不回归。
 
+#### 3.x 执行顺序与出处（2026-09-11 定案，devlog 007；已用 docs MCP 核实）
+
+上表是 Phase 3 的**范围**；下表是**执行计划**，每项标了出处文档和验证强度。工具级错误恢复 **Phase 1 已完成**（`ToolRetryMiddleware` / `ToolErrorMiddleware` / `ToolCallLimitMiddleware`），不重做。
+
+| 序 | 项 | 出处文档 | API / 机制 | 验证 |
+|---|---|---|---|---|
+| **3.1** | `InMemorySaver` → `PostgresSaver` | `langgraph/persistence.mdx`、`checkpointers.mdx`、`langchain/short-term-memory.mdx#in-production` | `PostgresSaver.from_conn_string(DB_URI)` + `.setup()`。依赖 `langgraph-checkpoint-postgres`（**已装**），复用现有 `financial_copilot` 库 | smoke：杀进程重启，同 `thread_id` 续答 |
+| **3.2** | LangSmith 可观测 | `langchain/observability.mdx`、`langgraph/observability.mdx` | `LANGSMITH_TRACING=true` + `LANGSMITH_API_KEY` | smoke：trace 里能看到 5 个 hook + model + tools 的 span |
+| **3.3** | 模型级降级 | `langchain/middleware/built-in.mdx#model-fallback` | `ModelFallbackMiddleware`（预制，`wrap_model_call` 层）| smoke：配坏主模型看切换 |
+| **3.4** | grounding 回边 | `langchain/middleware/custom.mdx#agent-jumps` | `@after_model(can_jump_to=["model"])` 返回 `{"jump_to": "model"}`，带重试上限 | **完整 A/B**（改答案行为）|
+| **3.5** | 澄清改按需中断 | `langchain/human-in-the-loop.mdx#custom-hitl-logic`、`langgraph/interrupts.mdx` | 裸 `interrupt()` 原语（见下方修正③），依赖 3.1 | **完整 A/B** + resume 测试 |
+| 3.6 | 跨会话 `store` | `langchain/long-term-memory.mdx`、`langgraph/stores.mdx` | `runtime.store`（Phase 1 已留口子）| **推 Phase 5** —— 现在没有真实用户会话，收益是假想的 |
+| 3.7 | 回放 / 时间旅行 | `langgraph/use-time-travel.mdx`、`checkpointers.mdx#get-state-history` | `get_state_history()` → 取 `checkpoint_id` → 带 `checkpoint_id` 重跑 | 可选，看 3.2 之后还缺不缺 |
+
+**三处对上表的修正（读文档后发现）：**
+
+① **durability 模式是个要显式做的决策**，原规划没提。`exit`（最快，崩溃丢中间态）/ `async`（默认折中）/ `sync`（每步落盘）。换 `PostgresSaver` 时通过 `graph.stream(..., durability=...)` 指定。
+
+② **checkpoint 会无限增长** —— `checkpointers.mdx#checkpoints-growing-unboundedly` 有专节，多轮对话（append-heavy 通道）尤其严重。解法是 `DeltaChannel`（只存增量，`langgraph>=1.2`，beta）。另有 `persistence.mdx#postgressaver-thread_id-too-long` 的长度限制坑。
+
+③ **`HumanInTheLoopMiddleware` 不适用于我们的澄清场景 —— 推翻上表「中断/澄清」行的隐含写法。** 它的 `interrupt_on` 是**按工具名**配置的，在**工具调用前**中断（"要执行 `execute_sql` 吗？"）。我们的澄清是**回答前因问题有歧义**而中断，与工具无关。文档 `#custom-hitl-logic` 明说这类要**直接用 `interrupt()` 原语 + middleware**，即在 `_guard`（`@before_agent`）里抛出，前端 `Command(resume=…)` 继续。
+
 ---
 
 ### Phase 4 — 能力升级：回答长难问题

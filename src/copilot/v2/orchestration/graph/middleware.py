@@ -42,10 +42,18 @@ messages for the result dict rather than threading it through state.
 
 from __future__ import annotations
 
+import json
+import os
 from typing import NotRequired
 
 from langchain.agents.middleware import AgentState
-from langchain_core.messages import AIMessage, HumanMessage, RemoveMessage, SystemMessage
+from langchain_core.messages import (
+    AIMessage,
+    HumanMessage,
+    RemoveMessage,
+    SystemMessage,
+    ToolMessage,
+)
 
 from copilot.agent.agent import _PROCUREMENT_REFUSAL_TEXT, route_question
 from copilot.agent.clarify import as_text, clarification_for
@@ -55,7 +63,12 @@ from copilot.agent.conversation import (
     _approx_tokens,
     active_context_block,
 )
+from copilot.agent.grounding import verify_answer
 from copilot.agent.slots import extract_slots
+
+# One correction attempt. More risks a loop and doubles cost for an answer the
+# model already failed to source once.
+MAX_GROUNDING_RETRIES = 1
 
 
 class ResolvedState(AgentState):
@@ -72,6 +85,12 @@ class ResolvedState(AgentState):
     """
 
     resolved: NotRequired[dict]
+
+
+class GroundingState(AgentState):
+    """Correction attempts spent on the current turn, for ``_grounding_loop``."""
+
+    grounding_retries: NotRequired[int]
 
 
 def _text(m) -> str:
@@ -135,6 +154,44 @@ def _turns(messages: list) -> list[list]:
     return turns
 
 
+def steps_from_messages(messages: list) -> list[dict]:
+    """Rebuild v1's ``steps`` -- {tool, input, output} per executed tool call.
+
+    ``output`` is the tool's ``ToolMessage.artifact`` (the full structured dict
+    from ``content_and_artifact``); v1's ``_collect_citations`` /
+    ``build_provenance`` / ``verify_answer`` read the same keys. An error
+    ``ToolMessage`` has no artifact -- fall back to its text.
+
+    ``output`` is ALWAYS a dict, matching v1's ``_run_tool`` (whose error paths
+    also returned dicts). Every v1 consumer does ``step["output"].get(...)``
+    unguarded, so a bare error string here raises ``AttributeError`` deep inside
+    frozen code.
+
+    Lives here rather than in ``runner`` so the grounding hook can call it
+    without a circular import.
+    """
+    pending: dict[str, dict] = {}
+    steps: list[dict] = []
+    for m in messages:
+        if isinstance(m, AIMessage) and m.tool_calls:
+            for tc in m.tool_calls:
+                pending[tc["id"]] = {"tool": tc["name"], "input": tc.get("args", {})}
+        elif isinstance(m, ToolMessage):
+            base = pending.pop(m.tool_call_id, {"tool": m.name, "input": {}})
+            if getattr(m, "artifact", None) is not None:
+                out = m.artifact
+            else:
+                raw = m.content if isinstance(m.content, str) else json.dumps(m.content)
+                try:
+                    out = json.loads(raw)
+                except (ValueError, TypeError):
+                    out = raw
+            if not isinstance(out, dict):
+                out = {"found": False, "error": str(out)}
+            steps.append({"tool": base["tool"], "input": base["input"], "output": out})
+    return steps
+
+
 def on_tool_error(exc: Exception, request) -> str | None:
     """``ToolErrorMiddleware`` handler: disclose our ``ToolError``s, propagate the rest.
 
@@ -155,9 +212,37 @@ def on_tool_error(exc: Exception, request) -> str | None:
     return msg
 
 
+def _num(n: float) -> str:
+    """Readable figure -- ``:,g`` turns 391035000000 into ``3.91035e+11``, which
+    the model cannot match against what it wrote."""
+    return f"{n:,.0f}" if float(n).is_integer() else f"{n:,}"
+
+
+def _grounding_complaint(v: dict) -> str:
+    """What to tell the model about a failed grounding check."""
+    parts = []
+    if v["unverified_numbers"]:
+        nums = ", ".join(_num(n) for n in v["unverified_numbers"][:6])
+        parts.append(f"these figures are not traceable to any tool result: {nums}")
+    if v["unsourced_inputs"]:
+        parts.append(f"these compute inputs were never fetched: {v['unsourced_inputs'][:6]}")
+    if v["unverified_citations"]:
+        parts.append(f"these accessions were cited but never returned by a tool: "
+                     f"{v['unverified_citations'][:4]}")
+    if v["misbound_inputs"]:
+        parts.append(f"these figures are bound to the wrong company or year: "
+                     f"{v['misbound_inputs'][:4]}")
+    return (
+        "Grounding check failed on your answer -- " + "; ".join(parts) + ". "
+        "Either fetch each one with a tool and cite its accession, or remove it "
+        "and say what could not be sourced. Do not restate an unsourced number."
+    )
+
+
 def agent_middleware() -> list:
-    """v1's pre-loop policy as [trim, resolve, guard, active-context, force-tool]."""
-    from langchain.agents.middleware import before_agent, wrap_model_call
+    """v1's pre-loop policy as [trim, resolve, guard, active-context, force-tool],
+    plus the Phase 3 grounding loop-back."""
+    from langchain.agents.middleware import after_model, before_agent, wrap_model_call
 
     @before_agent(name="TrimHistory")
     def _trim(state, runtime):
@@ -223,4 +308,41 @@ def agent_middleware() -> list:
                 request = request.override(tool_choice=route["tool"])
         return handler(request)
 
-    return [_trim, _resolve, _guard, _active_context, _force_first_tool]
+    @after_model(state_schema=GroundingState, can_jump_to=["model"],
+                 name="GroundingLoop")
+    def _grounding_loop(state, runtime):
+        """Send a final answer back to the model when its figures aren't sourced.
+
+        v1 runs ``verify_answer`` *after* the loop -- it can only label a bad
+        answer, never fix it. ``after_model`` + ``can_jump_to=["model"]`` turns
+        detection into correction, which is the thing a hand-written loop could
+        not do without restructuring itself.
+
+        Fires only on a FINAL answer (an AIMessage with no tool calls); a
+        mid-loop message on its way to the tools node is not an answer yet.
+        Capped at ``MAX_GROUNDING_RETRIES`` per turn.
+        """
+        if os.getenv("COPILOT_GROUNDING_LOOP", "1") == "0":
+            return None
+        msgs = state["messages"]
+        last = msgs[-1] if msgs else None
+        if not isinstance(last, AIMessage) or last.tool_calls:
+            return None
+        if state.get("grounding_retries", 0) >= MAX_GROUNDING_RETRIES:
+            return None
+
+        turn = msgs[_last_human_idx(msgs):]
+        v = verify_answer(steps_from_messages(turn), _text(last), latest_question(msgs))
+        # `numbers_checked == 0` is "stated no checkable figure", which is not
+        # the same as passing -- but there is nothing to send back either.
+        if v["verified"] or not v["numbers_checked"]:
+            return None
+
+        return {
+            "grounding_retries": state.get("grounding_retries", 0) + 1,
+            "messages": [SystemMessage(content=_grounding_complaint(v))],
+            "jump_to": "model",
+        }
+
+    return [_trim, _resolve, _guard, _active_context, _force_first_tool,
+            _grounding_loop]

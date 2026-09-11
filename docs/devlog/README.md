@@ -24,7 +24,8 @@
 - **2026-09-07**：Phase 1（工具层）定案，见 plan「Phase 1」表 + [devlog 005](005-tool-layer-rebuild.md)。2 轮 MCP 核对 API。改用预制 `ToolRetryMiddleware`/`ToolErrorMiddleware`/`ToolCallLimitMiddleware`（不手写 `wrap_tool_call`）；resolve 结果走 `state_schema` 不是 `context`（context 只读）。加 `.mcp.json`
 - **2026-09-08**：**Phase 1 完成**（devlog 005）。新增 `copilot/v2/tools/{base,resolve,schemas,financials,retrieval,graph,compute,registry}.py` —— `content_and_artifact` 信封 + Pydantic `args_schema`（`metric` enum+validator）+ `ToolError` + `resolve` 层。`graph/`：`GraphState` 加 `resolved`、`_resolve` `@before_model` hook、3 个预制 tool middleware、`runner` 读 `ToolMessage.artifact`、删 `graph/tools.py`。踩坑：`retrieve_text` 第一版把段落塞 artifact → 模型读不到 → eval_set 退化到 24/30；`content` 改带段落全文后恢复。**A/B 5 集**：refusal 66/67、0 回归；**tier3 引用 6→8、multiturn 引用变满（年份 scope 修复达标）**；input token/问 ~4.4K（Phase 2 ~5.5–7.8K）。`pytest` 167/0（+18）
 - **2026-09-10/11**：**评测统一 + hook 归位**（devlog 006）。新增 `copilot/v2/eval/score.py` —— 一个数据集、一个 scorer、三个实现（v1_loop/graph 实跑，generic_agent replay），指标分 steps-independent（三方可比）/ steps-dependent（仅有 tool trace 的）两块。v1_loop 精确复现 Phase 0b 作为 scorer 验收。**统一 scorer 立刻抓到 2 个 parity 测不出的 Phase 1 回归**：EPS `:,.0f` 显示成 6、`retrieve_text` `[:700]` 丢 76% 检索文本（去截断后 token 仅 +5.2%，仍比 v1_loop 低 18%）。另修 `runner` 的 "step output 永远是 dict" 不变式（harness 8+ 处无保护依赖它）。middleware hook 归位：`_trim`/`_resolve`/`_guard` → `@before_agent`（框架原生"每轮一次"，手写守卫 5→2 处），`_resolve` 自带 `state_schema`，`build.py` 去 `GraphState`。**三方在 eval_set 可答题上完全打平**（Tier1/Tier2/retrieval judge 逐项 100%/100%/2.57）—— 该集已饱和。`pytest` 169/0
-- **下一步动作**：Phase 3（持久化 PostgresSaver / `ModelFallbackMiddleware` / `after_model` grounding 回边 / HITL `interrupt()` / LangSmith 可观测）。**评测优先级上移**：扩 `undisclosed` 真陷阱题（1→8~10 道）+ 建 Tier 4 —— eval_set 已无分辨力
+- **2026-09-11**：**Phase 3 开工**（devlog 007）。**3.1 PostgresSaver** —— `COPILOT_CHECKPOINTER=postgres` 时持 `ConnectionPool`（`from_conn_string` 是上下文管理器，不适合模块级单例）；**跨进程续答验证通过**：全新进程只问「How dependent is it on Apple?」，继承 CRUS + FY2024 答 87.0%。**3.3 `ModelFallbackMiddleware`**（`COPILOT_FALLBACK_MODELS`，只在异常上切）smoke 通过。**3.4 grounding 回边** —— `@after_model(can_jump_to=["model"])` 把 v1 的「事后贴标签」变成「退回重做」，4 个单测通过；但**开关 A/B 逐项相同**，现有集 `grounding_flagged` 本就为 0，**评测上是 no-op**。回归：`pytest` 173/0 · `score --impl graph` Tier1 17/17 · `ab_compare` eval_set 30/30+30/30。**3.2 卡 `LANGSMITH_API_KEY`**
+- **下一步动作**：**3.5 的设计决策** —— 澄清改真 `interrupt()` 后 `run()` 对歧义问题不再返回答案，`score`/`ab_compare` 会判为失败，而 UI 在 Phase 5.F（已 park）。要么做兼容层（中断时把澄清文本当 answer + 标志位），要么整体推 Phase 5。**评测优先级已连续三次被证明应上移**：扩 `undisclosed` 真陷阱题（1→8~10 道）+ 建 Tier 4 —— 否则 Phase 3/4 都是「做了但证明不了」
 - **阻塞项**：无
 
 ---
@@ -38,7 +39,7 @@
 | 004 | Phase 2 — Agent loop 端口（→ `create_agent` + 6 步 middleware） | done | [004](004-agentloop-port.md) | 5 eval 集 A/B 67 组：refusal 0 不匹配、0 行为回归；多轮年份继承生效；pytest 149/0 |
 | 005 | Phase 1 — 工具层标准化重构（→ `copilot/v2/tools/`） | done | [005](005-tool-layer-rebuild.md) | `content_and_artifact` + Pydantic schema + `ToolError` + 预制 retry/error/limit middleware + resolve 层 + `state_schema.resolved`。A/B 5 集 refusal 66/67、0 回归、tier3 引用 6→8 |
 | 006 | 评测统一 —— 一个数据集 / 一个 scorer / 三个实现 + middleware hook 归位 | done | [006](006-unified-eval.md) | 三方同尺子首次可比；抓到 2 个 parity 测不出的回归；三方 eval_set 可答题打平（该集已饱和）；pytest 169/0 |
-| — | Phase 3 — 框架能力成熟化（持久化 / 错误恢复 / HITL / 可观测） | planned | — | — |
+| 007 | Phase 3 — 框架能力成熟化（持久化 / 可观测 / 降级 / grounding 回边 / 按需澄清） | active | [007](007-phase3-maturity.md) | 3.1 跨进程续答 ✅ · 3.3 模型降级 ✅ · 3.4 回边代码+单测 ✅（评测上 no-op）· 3.2 卡凭据 · 3.5 设计待定；pytest 173/0 |
 | — | Phase 4 — 能力升级：长难题（指引兑现 / 管理层风格 / 增长模式） | planned | — | — |
 | — | Phase 5 — 产品化（API / 部署 / 回归闸门） | planned | — | — |
 

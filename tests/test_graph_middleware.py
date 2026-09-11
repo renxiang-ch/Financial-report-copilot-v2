@@ -101,6 +101,43 @@ def test_once_per_turn_hooks_are_before_agent():
         assert "before_model" not in type(m).__dict__, f"{name} still on before_model"
 
 
+def _grounding():
+    return {m.name: m for m in agent_middleware()}["GroundingLoop"]
+
+
+def test_grounding_loop_sends_unsourced_answer_back():
+    st = {"messages": [_h("What was Apple's revenue in FY2024?", 1),
+                       _a("Revenue was $391,035,000,000 and margin 46.2%.", 1)]}
+    out = _grounding().after_model(st, None)
+    assert out["jump_to"] == "model"
+    assert out["grounding_retries"] == 1
+    # figures must be readable, not 3.91035e+11 -- the model has to match them
+    assert "391,035,000,000" in out["messages"][0].content
+
+
+def test_grounding_loop_respects_retry_cap():
+    st = {"messages": [_h("q", 1), _a("Revenue was $391,035,000,000.", 1)],
+          "grounding_retries": 1}
+    assert _grounding().after_model(st, None) is None
+
+
+def test_grounding_loop_ignores_mid_loop_and_figureless_answers():
+    g = _grounding()
+    # an AIMessage carrying tool calls is not an answer yet
+    mid = {"messages": [_h("q", 1),
+                        _a("", 1, [{"id": "t", "name": "query_financials", "args": {}}])]}
+    assert g.after_model(mid, None) is None
+    # nothing checkable to send back
+    assert g.after_model({"messages": [_h("q", 1),
+                                       _a("I cannot determine this.", 1)]}, None) is None
+
+
+def test_grounding_loop_can_be_disabled(monkeypatch):
+    monkeypatch.setenv("COPILOT_GROUNDING_LOOP", "0")
+    st = {"messages": [_h("q", 1), _a("Revenue was $391,035,000,000.", 1)]}
+    assert _grounding().after_model(st, None) is None
+
+
 def test_resolve_writes_state_and_carries_its_own_schema():
     mids = {m.name: m for m in agent_middleware()}
     resolve = mids["Resolve"]

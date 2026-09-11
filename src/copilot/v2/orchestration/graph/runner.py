@@ -12,17 +12,19 @@ so its ``carry`` fold works, matching v1's ``route_question(q, carry=...)``.
 
 from __future__ import annotations
 
-import json
 import uuid
 from typing import Any
 
-from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
+from langchain_core.messages import AIMessage, HumanMessage
 
 from copilot.agent.agent import _collect_citations
 from copilot.agent.grounding import verify_answer
 from copilot.agent.provenance import build_provenance
 from copilot.v2.orchestration.graph.build import DEFAULT_MODEL, build_agent
-from copilot.v2.orchestration.graph.middleware import route_from_messages
+from copilot.v2.orchestration.graph.middleware import (
+    route_from_messages,
+    steps_from_messages,
+)
 
 _AGENT = None
 
@@ -32,42 +34,6 @@ def _agent():
     if _AGENT is None:
         _AGENT = build_agent()
     return _AGENT
-
-
-def _steps_from_messages(messages: list) -> list[dict]:
-    """Rebuild v1's ``steps`` -- {tool, input, output} per executed tool call.
-
-    ``output`` is the tool's ``ToolMessage.artifact`` (the full structured dict,
-    ``content_and_artifact``); v1's ``_collect_citations`` / ``build_provenance``
-    read the same keys (``citation``, ``results``, ``traversal_trace``, ...).
-    An error ``ToolMessage`` has no artifact -- fall back to its text.
-
-    ``output`` is ALWAYS a dict, matching v1's ``_run_tool`` (whose error paths
-    also returned dicts). Every v1 consumer -- ``_collect_citations``,
-    ``build_provenance``, ``verify_answer``, and the eval harness's scorers --
-    does ``step["output"].get(...)`` unguarded, so a bare error string here
-    raises ``AttributeError`` deep inside frozen code.
-    """
-    pending: dict[str, dict] = {}
-    steps: list[dict] = []
-    for m in messages:
-        if isinstance(m, AIMessage) and m.tool_calls:
-            for tc in m.tool_calls:
-                pending[tc["id"]] = {"tool": tc["name"], "input": tc.get("args", {})}
-        elif isinstance(m, ToolMessage):
-            base = pending.pop(m.tool_call_id, {"tool": m.name, "input": {}})
-            if getattr(m, "artifact", None) is not None:
-                out = m.artifact
-            else:
-                raw = m.content if isinstance(m.content, str) else json.dumps(m.content)
-                try:
-                    out = json.loads(raw)
-                except (ValueError, TypeError):
-                    out = raw
-            if not isinstance(out, dict):
-                out = {"found": False, "error": str(out)}
-            steps.append({"tool": base["tool"], "input": base["input"], "output": out})
-    return steps
 
 
 def _usage_from_messages(messages: list) -> dict:
@@ -105,7 +71,7 @@ def run(question: str, thread_id: str | None = None,
             answer = m.content if isinstance(m.content, str) else str(m.content)
             break
 
-    steps = _steps_from_messages(turn)
+    steps = steps_from_messages(turn)
     return {
         "answer": answer,
         "steps": steps,
