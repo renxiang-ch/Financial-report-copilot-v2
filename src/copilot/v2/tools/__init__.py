@@ -12,7 +12,8 @@ The five v1 tools rebuilt into a uniform library:
   from ``copilot.agent.tools`` verbatim; only the interface is rewritten.
 * ``registry`` -- the single ``TOOLS`` list the graph binds.
 
-Errors ``raise ToolError``; the graph wires ``ToolRetryMiddleware`` +
-``ToolErrorMiddleware`` + ``ToolCallLimitMiddleware`` around it. The frozen v1
+Errors ``raise ToolError``; the graph wires ``ToolErrorMiddleware`` +
+``ToolCallLimitMiddleware`` around it (no retry middleware -- see
+``graph.build._tool_middleware``). The frozen v1
 tools still live at ``copilot.agent.tools`` for ``copilot.v2.orchestration.v1_loop``.
 """

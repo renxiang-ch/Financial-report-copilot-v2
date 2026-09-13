@@ -63,8 +63,8 @@ def resolve_ticker(ticker: str | None) -> str | None:
 
     ``"No rows for SKWS"`` and ``"SKWS is not a company"`` are different facts;
     v1 measured a transposed ticker (SKWS for SWKS) becoming an authoritative
-    "no supply-chain data for Skyworks". So an unknown ticker is a retryable
-    ``ToolError`` with ``did_you_mean``, never a silent miss.
+    "no supply-chain data for Skyworks". So an unknown ticker is a
+    model-correctable ``ToolError`` with ``did_you_mean``, never a silent miss.
     """
     if not ticker:
         return None

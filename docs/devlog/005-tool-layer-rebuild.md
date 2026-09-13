@@ -102,6 +102,8 @@ plan_ref: ../langgraph-migration-plan.md#phase-1--工具层标准化重构
 
 - **`content_and_artifact`**：`@tool(response_format="content_and_artifact")` 返回 `(text, dict)` → `ToolMessage(content=text, artifact=dict)`。`content` 进模型上下文，`artifact` 只给程序（`runner.py` 读它重建 v1 形状 `steps`）。省 token，但"什么该进 content"要按工具判（见 D1）。
 - **错误处理不用手写**：`ToolRetryMiddleware(retry_on=<判 ToolError.retryable>, on_failure="error")` 放 inner + `ToolErrorMiddleware(on_error=…)` 放 outer + `ToolCallLimitMiddleware(run_limit=…)`。我们只写 `ToolError` 异常类型和 15 行 `on_tool_error` 披露策略。
+  > ⚠️ **2026-09-12 更正（devlog 007 §3.2）**：这条**当时没有验证**，而实际列表顺序是 `[retry, error]` —— retry 在 **outer**，内层 error middleware 先把异常转成 ToolMessage，**retry 从未触发**，死代码跑了整个 Phase 1/2/3。LangSmith 的 span 树抓到的。
+  > 而且**交换顺序是错的修法**：`_RETRYABLE` 三个 kind 全是确定性参数错误，机械重试同参数只会失败 3 次。**已移除 `ToolRetryMiddleware`**，字段改名 `model_correctable`，并补 `tests/test_tool_error_recovery.py`（5 个行为测试）。
 - **`state_schema` 何时才该加**：Phase 2 没加（route/slots 是 messages 的纯函数）；Phase 1 加了（`resolved` 是 middleware 每轮加工、跨节点传、messages 里没有的派生值）。判据：能从 messages 推的现算，middleware 加工要跨节点传的进 state，调用方 invoke 时就知道的静态依赖进 context。
 - **`ToolRuntime`**：`runtime: ToolRuntime` 参数（保留名，schema 里不出现），给 `.state`/`.context`/`.store`/`.tool_call_id`。取代 `InjectedState` 等散装注入。传 `args_schema` 时它仍被识别注入（`retrieve_text.args` 不含 `runtime`，但运行时能拿到 state）。
 - **横切逻辑的位置**：跨轮的（年份继承，需要完整历史）放 `_resolve` middleware，每轮一次；单次调用的（"没给年→用最新 filing"）留在工具里。别把需要历史的塞进工具。
@@ -110,6 +112,6 @@ plan_ref: ../langgraph-migration-plan.md#phase-1--工具层标准化重构
 
 ## 下一步 / 解锁了什么
 
-- **Phase 1 完成**。工具层是标准库了：`content_and_artifact` + Pydantic schema + `ToolError` + 预制 retry/error/limit middleware + `resolve` 层 + `state_schema` 的 `resolved`。
-- **解锁 Phase 3**：错误恢复 middleware 直接建在 `ToolError.retryable` 上（`ToolRetryMiddleware` 已在，可加 repair 节点 / `.with_fallbacks`）；`ToolRuntime.store` 给长期记忆；`ToolRuntime.stream_writer` 给 Phase 5 SSE 进度。
+- **Phase 1 完成**。工具层是标准库了：`content_and_artifact` + Pydantic schema + `ToolError` + 预制 ~~retry/~~error/limit middleware + `resolve` 层 + `state_schema` 的 `resolved`。
+- **解锁 Phase 3**：错误恢复 middleware 直接建在 `ToolError.retryable` 上（~~`ToolRetryMiddleware` 已在~~ —— 2026-09-12 已移除，见上方更正）；`ToolRuntime.store` 给长期记忆；`ToolRuntime.stream_writer` 给 Phase 5 SSE 进度。
 - 遗留（非阻塞）：`graph_query` 选 `trend` vs latest 的引用面差异、模型偶尔不内联引用 —— 提示词层面，非工具层。

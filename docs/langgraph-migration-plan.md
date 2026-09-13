@@ -134,7 +134,7 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 | 设计点 | 决定 | 依据 |
 |---|---|---|
 | **返回信封** 【本次】 | `@tool(response_format="content_and_artifact")` —— 返回二元组 `(给模型的紧凑文本, 完整 dict)` → 框架建成 `ToolMessage(content=…, artifact=…)`。**不**自造 `{ok,data,error}` 包装 | reference 核对：`response_format: Literal['content','content_and_artifact']`。`runner.py` 读 `ToolMessage.artifact` 重建 v1 形状 `steps`；docs 的 retrieval-metadata 例子就是这个用法（content=模型引用的段落，artifact=accession/分数/年份）|
-| **错误** 【本次，改用预制件】 | 定义 `ToolError(kind: Enum, retryable: bool, hint: str)` 当异常类型（这是我们的）。**管道用两个预制 middleware**：`ToolRetryMiddleware`（inner，`retry_on=lambda e: isinstance(e, ToolError) and e.retryable`，`on_failure="error"`，指数退避+jitter）+ `ToolErrorMiddleware`（outer，`on_error(exc, req)`：`ToolError` 非 retryable → 返回 `hint` 字符串给模型；其它异常 → 返回 `None` 传播）。取代 v1 手塞的 `recoverable` dict | reference：`ToolErrorMiddleware`（需 `langchain>=1.3.14`，当前 pin `1.4.0` ✓）、`ToolRetryMiddleware`。docs 明确 retry 放 inner + `on_failure="error"` 让异常穿到 error middleware。**修正**：不再手写 `@wrap_tool_call` |
+| **错误** 【本次，改用预制件】 | 定义 `ToolError(kind: Enum, retryable: bool, hint: str)` 当异常类型（这是我们的）。**管道用两个预制 middleware**：`ToolRetryMiddleware`（inner，`retry_on=lambda e: isinstance(e, ToolError) and e.retryable`，`on_failure="error"`，指数退避+jitter）+ `ToolErrorMiddleware`（outer，`on_error(exc, req)`：`ToolError` 非 retryable → 返回 `hint` 字符串给模型；其它异常 → 返回 `None` 传播）。取代 v1 手塞的 `recoverable` dict | reference：`ToolErrorMiddleware`（需 `langchain>=1.3.14`，当前 pin `1.4.0` ✓）、`ToolRetryMiddleware`。docs 明确 retry 放 inner + `on_failure="error"` 让异常穿到 error middleware。**修正**：不再手写 `@wrap_tool_call`。**⚠️ 2026-09-12 再修正**：实现把顺序装反（retry 在 outer）→ retry 从未触发；且这三个 kind 都是确定性参数错误，机械重试同参数无意义。**`ToolRetryMiddleware` 已移除**，`retryable` 改名 `model_correctable`。见 devlog 007 §3.2 |
 | **循环护栏** 【本次，新增】 | `ToolCallLimitMiddleware(run_limit=…, thread_limit=…, exit_behavior="continue")` —— 单工具 / 全局调用次数上限。框架版的 v1 `MAX_ROUNDS=10`，也是 Phase 4 fan-out 预算的种子 | reference：`ToolCallLimitMiddleware`。廉价安全网，顺手加 |
 | **args schema** 【本次】 | 每工具一个 Pydantic v2 `args_schema`，字段级 `Field(description=…)`；`metric` 用 `Literal[…]`（label 清单从 DB 读，同 v1 `advertised_metrics()`）。干掉现在 `_desc()` 拼字符串的 hack。简单签名的（`compute` / `list_metrics`）可退而用 `@tool(parse_docstring=True)` 解析 Google 风格 docstring | docs "Advanced schema definition"；reference `tool(parse_docstring=…)` |
 | **resolve 层** 【本次】 | `copilot/v2/tools/resolve.py`：搬 v1 `_resolve_ticker`（ticker + typo 建议）、`_year_scope` / `_latest_filing_year`（fiscal-year scoping）、单位归一。工具内部调用。**外加**：一个 `@before_model` middleware 每轮 resolve 一次，结果写进**自定义 `state_schema`** 字段（如 `state["resolved"] = {"question","fiscal_year","tickers"}`），`retrieve_text` / `graph_query` 用 `runtime.state["resolved"]` 读 | **修正**：`context` 是 invoke 时传入的**静态只读**数据（docs/runtime：user id、db 连接），middleware **写不了**它。resolve 结果是"middleware 每轮算一次、tool 读"的派生值 → 必须走 `state_schema=`。这是整个端口第一次真正需要自定义 state（理由正当）。`context_schema` 留给静态 per-run 依赖（如调用方传的 `as_of_date`）|
@@ -212,7 +212,7 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
    - `tools` 节点：`ToolNode(TOOLS, handle_tool_errors=<映射 recoverable 标志>)`，天然并行，替代 `ThreadPoolExecutor`。
    - `should_continue` 条件边：有 tool_calls → `tools`；否则 → `verify`。
    - `verify` 节点：包 `verify_answer` + `build_provenance` + `_collect_citations`，可回边到 `agent` 要求补证据（最多 N 次）。
-3. **工具接入**：直接用 Phase 1 的 `tools/registry.py::TOOLS`（已是 `@tool` + Pydantic）；`ToolNode` 的 `handle_tool_errors` 映射 Phase 1 的 `ToolError.retryable`。
+3. **工具接入**：直接用 Phase 1 的 `tools/registry.py::TOOLS`（已是 `@tool` + Pydantic）；`ToolNode` 的 `handle_tool_errors` 映射 Phase 1 的 `ToolError.model_correctable`。**外部 HTTP 源（EDGAR / 8-K）是本项目第一次真有瞬时失败可重试** —— 此时才该重新引入重试中间件，并加一个 `TRANSIENT` kind。
 4. **循环上限**：用 `graph.compile(...)` 的 `recursion_limit` + 一个显式 guard 节点，复刻 `MAX_ROUNDS=10` 的 circuit breaker。
 5. **历史/记忆**：本阶段先用 `MemorySaver` checkpointer，`thread_id = session_id`；在 `agent` 节点前挂 `trim_messages` 复刻 `conversation.py` 的 6 轮 / 3000 token 裁剪；`carried_slots` 逻辑搬进 `router` 节点。
 
@@ -235,7 +235,7 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 | 上游 LLM 失败 | try/except → 用户消息 | 节点重试 + `.with_fallbacks([model_b])` | 配主/备模型 |
 | 中断/澄清 | `clarify.py` 前置 pass | 图中 `interrupt()` 停下等分析师确认 | 把澄清从"前置"改成"按需中断"：ticker 歧义、fiscal year 假设、深度分析前确认范围 |
 | Provenance | 事后 `build_provenance` | ToolNode 包装器把证据按 reducer 累加进 state | 证据台账实时累积，深度分析时全树可追溯 |
-| 可观测性 | Langfuse callback | LangSmith 原生 trace（每节点）+ 保留 Langfuse callback | 双挂，对比；按节点看耗时/token/重试 |
+| 可观测性 | ~~Langfuse callback~~ **实际无**（`config.py` 只有 3 个配置字段，全仓库零 callback 代码）| LangSmith 原生 trace（每节点）| ~~双挂对比~~ **没有"双挂"可做**；按节点看耗时/token/重试。需 `observability.py` 桥接 `.env`→`os.environ`（见 devlog 007 §3.2 补做）|
 | 可扩展性 | 改循环体 | 加节点 / 加 subgraph / 加 tool | 为 Phase 4 的 supervisor 留接口 |
 | 流式 | 无 | `graph.stream(stream_mode="messages"/"updates")` | FastAPI 接 SSE，前端流式显示中间步骤 |
 | 回放/调试 | 无 | checkpointer 时间旅行 `get_state_history` | 加 `eval/replay.py` 从任意 checkpoint 重跑 |
@@ -244,12 +244,12 @@ v1 工具的不标准之处（重构要解决）：返回 shape 不统一（`{"f
 
 #### 3.x 执行顺序与出处（2026-09-11 定案，devlog 007；已用 docs MCP 核实）
 
-上表是 Phase 3 的**范围**；下表是**执行计划**，每项标了出处文档和验证强度。工具级错误恢复 **Phase 1 已完成**（`ToolRetryMiddleware` / `ToolErrorMiddleware` / `ToolCallLimitMiddleware`），不重做。
+上表是 Phase 3 的**范围**；下表是**执行计划**，每项标了出处文档和验证强度。工具级错误恢复 **Phase 1 已完成**（~~`ToolRetryMiddleware`~~ / `ToolErrorMiddleware` / `ToolCallLimitMiddleware`），不重做。（retry 已于 2026-09-12 移除，见 devlog 007 §3.2）
 
 | 序 | 项 | 出处文档 | API / 机制 | 验证 |
 |---|---|---|---|---|
 | **3.1** | `InMemorySaver` → `PostgresSaver` | `langgraph/persistence.mdx`、`checkpointers.mdx`、`langchain/short-term-memory.mdx#in-production` | `PostgresSaver.from_conn_string(DB_URI)` + `.setup()`。依赖 `langgraph-checkpoint-postgres`（**已装**），复用现有 `financial_copilot` 库 | smoke：杀进程重启，同 `thread_id` 续答 |
-| **3.2** | LangSmith 可观测 | `langchain/observability.mdx`、`langgraph/observability.mdx` | `LANGSMITH_TRACING=true` + `LANGSMITH_API_KEY` | smoke：trace 里能看到 5 个 hook + model + tools 的 span |
+| **3.2** | LangSmith 可观测 | `langchain/observability.mdx`、`langgraph/observability.mdx`、`/langsmith/observability-quickstart` | ~~纯环境变量零代码~~ —— SDK 读 `os.environ`，本项目 key 在 `.env`（pydantic-settings 不导出），且 `get_env_var` 是 `@lru_cache` 的。**要 `observability.py` 桥接 + 清缓存**，两条都静默失败。非 US 区还须 `LANGSMITH_ENDPOINT` | smoke：trace 里能看到 6 个 hook + model + tools 的 span |
 | **3.3** | 模型级降级 | `langchain/middleware/built-in.mdx#model-fallback` | `ModelFallbackMiddleware`（预制，`wrap_model_call` 层）| smoke：配坏主模型看切换 |
 | **3.4** | grounding 回边 | `langchain/middleware/custom.mdx#agent-jumps` | `@after_model(can_jump_to=["model"])` 返回 `{"jump_to": "model"}`，带重试上限 | **完整 A/B**（改答案行为）|
 | **3.5** | 澄清改按需中断 | `langchain/human-in-the-loop.mdx#custom-hitl-logic`、`langgraph/interrupts.mdx` | 裸 `interrupt()` 原语（见下方修正③），依赖 3.1 | **完整 A/B** + resume 测试 |
@@ -427,12 +427,12 @@ v1 的 Streamlit dashboard（`copilot/dashboard.py`，共享 / 冻结）直接�
 | 主题 | v1 自建 | LangGraph 对应 | 学到什么 |
 |---|---|---|---|
 | 状态管理 | list + dict 混合 | `create_agent` 的 `messages` + checkpointer；`state_schema=` 只加真正需要跨节点传的派生不出的东西 | 别把纯函数结果（route/slots）也塞进 state —— checkpointer 已存 messages，现算即可。状态即 schema，但最小化 |
-| 工具设计 | 5 个 shape 不一的函数 + 手塞 `recoverable` dict | `@tool(response_format="content_and_artifact")` + Pydantic `args_schema`（`Literal` 枚举）+ `raise ToolError` → 预制 `ToolRetryMiddleware`+`ToolErrorMiddleware`+`ToolCallLimitMiddleware` | 工具是 LLM 的 API：schema 严、错误类型化、给模型的文本和完整数据分开（artifact 不吃上下文）。错误/重试/限流有预制件，别手写 |
+| 工具设计 | 5 个 shape 不一的函数 + 手塞 `recoverable` dict | `@tool(response_format="content_and_artifact")` + Pydantic `args_schema`（`Literal` 枚举）+ `raise ToolError` → 预制 `ToolErrorMiddleware`+`ToolCallLimitMiddleware` | 工具是 LLM 的 API：schema 严、错误类型化、给模型的文本和完整数据分开（artifact 不吃上下文）。错误/限流有预制件，别手写 —— **但装上后要验证它真在跑**（retry 那次装反了三个 Phase 没人发现）|
 | 工具访问上下文 | 循环里手动 `inp["query"]=question` / 散落的 ticker·年份解析 | `runtime: ToolRuntime`（`.state`/`.context`/`.store`）；派生值走 `state_schema`，静态依赖走 `context_schema` | `context` 是 invoke 时传的静态只读，middleware 改不了；middleware 每轮算的 resolve 结果必须走 state。`InjectedState` 已过时 |
 | 工具调用 | 手写 dispatch + 线程池 | `bind_tools` + `ToolNode`（内建并行） | 调用/结果/错误统一成消息 |
 | 错误恢复 | `recoverable` 标志 | `handle_tool_errors` + `RetryPolicy` + fallback | 分层：工具级 / 节点级 / 模型级 |
 | 持久化 | 无 | Checkpointer（thread）+ Store（跨会话） | 断点续跑、时间旅行、崩溃恢复 |
-| 可观测性 | Langfuse callback | LangSmith 原生 span/节点 | 按节点归因耗时与失败 |
+| 可观测性 | ~~Langfuse callback~~ 实际无 | LangSmith 原生 span/节点 | 按节点归因耗时与失败 |
 | 可扩展性 | 改循环主干 | 加节点/子图/supervisor | 编排即图，增量不侵入 |
 | 人在环 | 前置澄清 pass | `interrupt()` 任意点暂停 | 澄清从"预判"变"按需" |
 | 多轮记忆 | append-only + trim | checkpointer + `trim_messages` | 记忆策略与编排解耦 |

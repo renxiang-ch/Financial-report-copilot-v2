@@ -3,9 +3,9 @@
 Three things every tool uses:
 
 * ``ToolError`` -- a typed exception. Tools ``raise`` it; the graph wires
-  ``ToolRetryMiddleware`` (retries when ``retryable``) + ``ToolErrorMiddleware``
-  (turns the rest into a model-visible ``ToolMessage``). Replaces v1's habit of
-  returning ``{"found": false, "recoverable": true, ...}`` dicts.
+  ``ToolErrorMiddleware``, which turns it into a model-visible ``ToolMessage``
+  carrying the hint. Replaces v1's habit of returning
+  ``{"found": false, "recoverable": true, ...}`` dicts.
 * ``content_and_artifact`` return shape -- ``(text_for_model, full_dict)``. The
   text is a one-line summary the model reasons over; the dict rides along as
   ``ToolMessage.artifact`` (out of the model's context) for the runner to rebuild
@@ -27,16 +27,23 @@ from langchain_core.tools import tool
 
 
 class ToolErrorKind(enum.StrEnum):
-    UNKNOWN_TICKER = "unknown_ticker"          # typo / not in DB -> retry with a real one
+    UNKNOWN_TICKER = "unknown_ticker"          # typo / not in DB -> model picks a real one
     WRONG_RELATION_SIDE = "wrong_relation_side"  # e.g. graph_query(supplier=<a customer>)
     NOT_FOUND = "not_found"                    # valid args, no such row -- terminal
     UNSUPPORTED = "unsupported"                # e.g. quarterly figures -- terminal
-    BAD_ARGUMENT = "bad_argument"              # malformed / missing arg -> retry
+    BAD_ARGUMENT = "bad_argument"              # malformed / missing arg -> model fixes it
     BAD_EXPRESSION = "bad_expression"          # compute: unparseable / unsafe -- terminal
 
 
-# Kinds the model can fix by calling again with corrected arguments.
-_RETRYABLE = {
+# Kinds the MODEL can fix by calling again with *corrected arguments*.
+#
+# Not "retryable" -- that word invites wiring this flag into a mechanical retry
+# (``ToolRetryMiddleware``), which re-runs the tool with the *same* arguments.
+# Every kind below is a deterministic argument error, so a mechanical retry fails
+# identically N times and only multiplies work. The recovery path is: disclose the
+# hint as a ``ToolMessage``, let the model call again differently. See devlog 007
+# §3.2 for the trace that caught this being wired the wrong way.
+_MODEL_CORRECTABLE = {
     ToolErrorKind.UNKNOWN_TICKER,
     ToolErrorKind.WRONG_RELATION_SIDE,
     ToolErrorKind.BAD_ARGUMENT,
@@ -46,16 +53,20 @@ _RETRYABLE = {
 class ToolError(Exception):
     """A tool failure with a machine-readable kind and a hint written for the model.
 
-    ``retryable`` defaults from ``kind`` (see ``_RETRYABLE``) but can be forced.
-    ``data`` carries structured context (``did_you_mean``, ``asked_for``, ...)
-    that the error middleware may fold into its message.
+    ``model_correctable`` defaults from ``kind`` (see ``_MODEL_CORRECTABLE``) but can
+    be forced. It means "the model can retry this itself with better arguments" --
+    *not* "safe to re-execute unchanged". ``data`` carries structured context
+    (``did_you_mean``, ``asked_for``, ...) that the error middleware folds into its
+    message.
     """
 
     def __init__(self, kind: ToolErrorKind, hint: str, *,
-                 retryable: bool | None = None, data: dict[str, Any] | None = None):
+                 model_correctable: bool | None = None,
+                 data: dict[str, Any] | None = None):
         self.kind = kind
         self.hint = hint
-        self.retryable = _RETRYABLE.__contains__(kind) if retryable is None else retryable
+        self.model_correctable = (_MODEL_CORRECTABLE.__contains__(kind)
+                                  if model_correctable is None else model_correctable)
         self.data = data or {}
         super().__init__(f"{kind.value}: {hint}")
 

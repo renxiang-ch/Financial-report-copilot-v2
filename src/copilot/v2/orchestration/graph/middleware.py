@@ -195,8 +195,7 @@ def steps_from_messages(messages: list) -> list[dict]:
 def on_tool_error(exc: Exception, request) -> str | None:
     """``ToolErrorMiddleware`` handler: disclose our ``ToolError``s, propagate the rest.
 
-    A ``ToolError`` (including a retryable one whose retries were exhausted)
-    carries a hint written for the model -- surface it so the model can correct
+    A ``ToolError`` carries a hint written for the model -- surface it so the model can correct
     the call or change approach. Anything unexpected returns ``None`` and
     propagates, halting the run rather than being hidden.
     """

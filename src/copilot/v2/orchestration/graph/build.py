@@ -3,9 +3,9 @@
 v1's SYSTEM prompt, the standardized tool library (``copilot.v2.tools``), a
 checkpointer, and the middleware stack: ``agent_middleware()`` (v1's pre-loop
 policy as hooks, carrying its own state schema) plus the prebuilt tool
-middleware -- ``ToolRetryMiddleware`` (retries ``ToolError.retryable``),
-``ToolErrorMiddleware`` (turns the rest into model-visible messages),
-``ToolCallLimitMiddleware`` (the framework's ``MAX_ROUNDS``).
+middleware -- ``ToolErrorMiddleware`` (turns a ``ToolError`` into a model-visible
+message) and ``ToolCallLimitMiddleware`` (the framework's ``MAX_ROUNDS``).
+See ``_tool_middleware`` for why there is no retry middleware.
 
 The model is built explicitly from ``copilot.config.settings`` rather than from
 an ``"openai:..."`` string, because the key lives in ``.env`` (loaded by
@@ -14,6 +14,10 @@ reads.
 
 Checkpointer selection is ``COPILOT_CHECKPOINTER=memory|postgres`` (default
 ``memory``) -- see ``_checkpointer``.
+
+LangSmith tracing is switched on by ``LANGSMITH_TRACING`` and needs no code here
+beyond ``enable_tracing()``, which exists because the key lives in ``.env`` where
+the SDK cannot see it -- see ``copilot.v2.observability``.
 """
 
 from __future__ import annotations
@@ -23,15 +27,14 @@ import os
 from langchain.agents.middleware import (
     ToolCallLimitMiddleware,
     ToolErrorMiddleware,
-    ToolRetryMiddleware,
 )
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import InMemorySaver
 
 from copilot.agent.agent import SYSTEM
 from copilot.config import settings
+from copilot.v2.observability import enable_tracing
 from copilot.v2.orchestration.graph.middleware import agent_middleware, on_tool_error
-from copilot.v2.tools.base import ToolError
 from copilot.v2.tools.registry import TOOLS
 
 # v1_loop's default agent model (see model_router.select_model / the eval runs).
@@ -111,16 +114,25 @@ def _model_fallback() -> list:
 
 
 def _tool_middleware() -> list:
-    # Order: retry INNER (runs first), error OUTER. Retry re-raises after its
-    # budget (on_failure="error") so the exhausted exception reaches the error
-    # middleware; `on_tool_error` decides disclose-vs-propagate. Limit is a
-    # separate circuit breaker.
+    """Error disclosure + a circuit breaker. Deliberately no ``ToolRetryMiddleware``.
+
+    Phase 1 wired one on ``ToolError.retryable``, and the LangSmith span tree in
+    devlog 007 §3.2 showed it nested *outside* ``ToolErrorMiddleware`` -- so the
+    inner error middleware converted every ``ToolError`` to a ``ToolMessage`` and
+    retry never saw an exception. Dead code for five A/B rounds.
+
+    Swapping the order was the wrong fix. Every kind flagged
+    ``model_correctable`` (unknown ticker, wrong relation side, bad argument) is a
+    *deterministic* argument error, and ``ToolRetryMiddleware`` re-runs the tool
+    with the same arguments: measured 3x the tool executions for an identical
+    failure, then the same disclosure. The recovery path that works is the model
+    calling again with better arguments, which disclosure already drives.
+
+    A retry middleware earns its place when a genuinely *transient* failure exists
+    to retry -- external HTTP sources in Phase 4 (EDGAR / 8-K). Everything here is
+    local Postgres.
+    """
     return [
-        ToolRetryMiddleware(
-            max_retries=2,
-            retry_on=lambda e: isinstance(e, ToolError) and e.retryable,
-            on_failure="error",
-        ),
         ToolErrorMiddleware(on_error=on_tool_error),
         ToolCallLimitMiddleware(run_limit=12, thread_limit=40, exit_behavior="continue"),
     ]
@@ -129,6 +141,12 @@ def _tool_middleware() -> list:
 def build_agent(model: str = DEFAULT_MODEL, checkpointer=None):
     """Return a compiled agent. ``checkpointer=None`` -> ``_checkpointer()``."""
     from langchain.agents import create_agent
+
+    # Bridge LANGSMITH_* from .env before the agent can run; a no-op when tracing
+    # is off. An explicit call rather than an import side effect, for the same
+    # reason `_model` constructs ChatOpenAI explicitly instead of leaning on the
+    # environment (devlog 004 D1).
+    enable_tracing()
 
     # No `state_schema=` here: the `_resolve` middleware declares its own
     # (`ResolvedState`) and the factory merges middleware schemas at compile

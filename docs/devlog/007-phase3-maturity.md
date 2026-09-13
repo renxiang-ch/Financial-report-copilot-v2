@@ -62,7 +62,25 @@ plan_ref: ../langgraph-migration-plan.md#3x-执行顺序与出处
 - 投诉文本用 `_num()` 而非 `:,g` —— 后者把 391035000000 印成 `3.91035e+11`，模型无法与自己写的对应
 - 顺带：`_steps_from_messages` 从 `runner` 移到 `middleware`（改名 `steps_from_messages`），避免 `middleware → runner` 循环 import
 
-**3.2 LangSmith** —— 纯环境变量零代码，`.env.example` 记了 `LANGSMITH_TRACING` / `LANGSMITH_API_KEY`。**无 key，未能 smoke**。
+**3.2 LangSmith** —— **"纯环境变量零代码"是错的**（本条 2026-09-12 重做，见下）。
+
+### 3.2（补做，2026-09-12）—— 零代码的前提不成立
+
+文档说 `create_agent` 自动出 trace、只需两个环境变量。**前提是 SDK 看得见那两个变量，而本项目它看不见。** 两条都**静默**失败 —— 不抛异常，trace 就是不出现：
+
+1. `config.py` 用 pydantic-settings 读 `.env`，**不导出到 `os.environ`**；`langsmith` SDK 直接读 `os.environ`。和 devlog 004 D1（`init_chat_model("openai:…")` 读不到 key）**同一个根因**。而且 `LANGSMITH_*` 连 `Settings` 字段都没有（`config.py` 在冻结清单，D3），所以 `settings` 也供不出来。
+2. **`langsmith.utils.get_env_var` 是 `@lru_cache` 的。** 任何在桥接之前问过一次"tracing 开没开"的代码，会把"没开"缓存到进程结束 —— **光桥接不够，必须清缓存**。实测：设完 env 不清缓存仍是 `False`，清完变 `True`。
+
+**新增 `src/copilot/v2/observability.py`（~110 行）**：
+
+- `enable_tracing()` —— 从 `.env` 把 4 个 `LANGSMITH_*` 键拷进 `os.environ`（**shell `export` 优先**），再 `get_env_var.cache_clear()`。幂等，文件只读一次。**`TRACING=true` 但无 key 时返回 `False` 并告警** —— 那个组合正是本模块要防的静默失败
+- `tracing_project(project, **metadata)` —— context manager，tracing 关时是 no-op（调用方无条件包）。**每道 eval 题一条 trace，带 item id**
+- 只桥接 `LANGSMITH_*`。整个 `.env` 灌进环境会顺带改变别的库怎么解析凭据
+- 复用 `config._ENV_FILE` 而不是重算 `__file__` 深度 —— `ab_compare._REPO_ROOT` 就是这么坏过一次
+
+**接线**：`build_agent()` 调一次 `enable_tracing()`（显式调用，不用 import 副作用 —— 同 004 D1 的理由）；`score.run()` 每题包 `tracing_project(f"frc-eval-{impl}", item=…, tier=…, type=…)`；`ab_compare._run_graph` 包 `frc-eval-ab`。
+
+**`.env` / `.env.example`** 各补 `LANGSMITH_PROJECT`（默认 `frc-dev`）和 **`LANGSMITH_ENDPOINT`** —— 后者非 US 区账号**必填**，否则 key 认不出、同样静默失败。
 
 ## EVAL
 
@@ -93,6 +111,48 @@ plan_ref: ../langgraph-migration-plan.md#3x-执行顺序与出处
 **完整 A/B（开 vs 关）**：defects 集两种配置**逐项相同**（4/6 cit + 6/6 ref）。
 
 **结论：现有评测集上它从不触发** —— `grounding_flagged` 在 eval_set 上 v1_loop 和 graph **本来就都是 0**，没有可抓的目标。能力有了、单测证明了，**但评测价值为零**。和检索改进撞同一堵墙：集已饱和。
+
+**3.2 —— 链路验证通过 ✅，真 smoke 仍缺 key ⏸**
+
+没有 key 也能验"桥接是否真的通到 tracer"：把 `LANGSMITH_ENDPOINT` 指向死端口 `http://127.0.0.1:9`，开 tracing 跑一次工具调用 ——
+
+```
+enable_tracing() -> True
+tool -> 1+1 = 2.0
+Failed to multipart ingest runs: ... POST http://127.0.0.1:9/runs/multipart
+```
+
+**tracer 确实创建了 run，并按桥接进去的 `LANGSMITH_ENDPOINT` 去投递。** 即：`.env` → `os.environ` → 清缓存 → SDK 认账 → langchain 发 run，五段全通，**只差真 key**。
+
+**8 个单测**（`pytest` **181/0**，+8）：默认关 / `.env` 桥接生效 / **stale `lru_cache` 被清**（那个坑的回归测试）/ shell 优先于文件 / 开但无 key 时告警且返回 `False` / 关时 `tracing_project` 是 no-op / 开时 project+metadata 正确且丢掉 `None` / `.env` 只读一次。
+
+**坑（测试侧）**：`monkeypatch` **撤销不了被测代码自己写进 `os.environ` 的值** —— `delenv(raising=False)` 在键本不存在时什么都没记录，于是 `enable_tracing()` 写的 `LANGSMITH_TRACING=true` 漏给了后面的测试，`test_v2_tools` 的工具调用**真被 POST 到 LangSmith**（403，用的是测试里的假 key）。单跑该文件不复现，只在全量套件里出现。改成手工快照/恢复 4 个键。
+
+**3.2 的副产品 —— span 树抓到 `ToolRetryMiddleware` 是死代码 🐛**
+
+接通后第一棵 trace 就显示 retry 包在 error **外面**，与 `build.py` 注释和 plan 记的 "retry inner / error outer" 相反。实测：
+
+| 顺序 | 工具体执行次数 |
+|---|---|
+| 当前 `[retry, error]`（retry 外）| **1x** —— 内层先转 ToolMessage，**retry 永不触发** |
+| 交换 `[error, retry]`（retry 内）| **3x** = 1 + 2 retries |
+
+**但交换是错的修法**：`_RETRYABLE` 三个 kind（`UNKNOWN_TICKER` / `WRONG_RELATION_SIDE` / `BAD_ARGUMENT`）**全是确定性参数错误**，机械重试同参数只会失败 3 次再披露 —— 把它"修好"会让系统严格变差。
+
+**根因是范畴错误**：`retryable` 把「**模型**换参数再调能修」接到了「**机械**重试同参数」的机制上。处置：**移除 `ToolRetryMiddleware`**；字段改名 **`model_correctable`**；新增 `tests/test_tool_error_recovery.py`（5 个端到端行为测试，用 fake model、零成本）。**验过这些测试"有牙"** —— 把 retry 以生效顺序加回去，2 个测试立刻转红。
+
+**为什么藏了三个 Phase**：`ab_compare` 只比引用 + 拒答（两种顺序都最终披露，输出一致）；173 个测试里**没有一个**验证 retry 行为，只断言 `.retryable` 的**属性值**。
+**规则（已进 008 方法论 ③）**：引入改变运行时行为的预制件时，同时补一条断言**它确实生效**的测试（"工具体执行了 N 次"，而不是"配置对象长这样"），否则它是一行昂贵的注释。
+
+**回归（2026-09-13，移除 retry 后）—— 零行为变化**
+
+| 闸门 | 结果 |
+|---|---|
+| `pytest` | **186/0**（+5）|
+| `score --impl graph` | Tier1 **17/17** · Tier2 **10/10** · judge **2.57**（2.43 回弹）· refusal **100%** · flagged 0 · 170,758 tok · 2.41s |
+| A/B 5 集 | **59/67 cit · 67/67 ref**（eval_set 29/30 · router 7/12 · tier3 **8/8** · defects 5/6 · multiturn 10/11）|
+
+全部落在已记录波动带内。**judge 第三次观测回到 2.57，坐实 ±0.14 是噪声底**（见 `eval-history.md` 新增小节）。
 
 **回归（默认配置）—— 5 个 A/B 集全跑**
 
@@ -157,5 +217,6 @@ dev-workflow 要求 EVAL "贴命令和输出，不说『应该好了』"，我�
 ## 下一步 / 解锁了什么
 
 - **3.5（interrupt 澄清）有个设计问题要先定**：改成真中断后，`runner.run()` 对歧义问题不再返回答案而是返回中断，`score` / `ab_compare` 都会当失败。而 UI 在 Phase 5.F（已 park）。**没有消费端的中断，价值是零而破坏是实的** —— 需要先决定是做兼容层（中断时把澄清文本当 answer 返回 + 标志位）还是整体推到 Phase 5。
-- 3.2 待 `LANGSMITH_API_KEY`。
+- **3.2 基础设施已完成**（`observability.py` + 接线 + 8 单测 + 链路验证），**只剩真 smoke 待 `LANGSMITH_API_KEY`**：拿到 key 后 `.env` 里 `LANGSMITH_TRACING=true`，跑一次 `run()`，验收标准是 trace 里能看到 **6 个 hook + model + tool 各自独立的 span**。⚠️ 建 key 时**确认账号 region** —— 非 US 必须同时设 `LANGSMITH_ENDPOINT`。
+- **顺带发现 plan 的一处错误**：plan 第 238 行写「保留 Langfuse callback，双挂对比」，但 `config.py` 只有 3 个 Langfuse **配置字段**，全仓库**零** Langfuse 客户端/callback 代码 —— v1 从没真接过，**没有"双挂"可做**。已改 plan。
 - 3.6 `store` 已判定推 Phase 5；3.7 replay 可选。

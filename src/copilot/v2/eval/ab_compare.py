@@ -67,11 +67,16 @@ def _run_v1(question: str, history: list[dict] | None = None) -> dict[str, Any]:
 
 
 def _run_graph(question: str, thread_id: str | None = None) -> dict[str, Any]:
+    from copilot.v2.observability import tracing_project
     from copilot.v2.orchestration.graph import run
 
     t0 = time.perf_counter()
     try:
-        r = run(question, thread_id=thread_id)
+        # Its own project: only the graph arm is traceable (v1_loop drives a raw
+        # OpenAI client, which the tracer does not see), so these traces are
+        # one-sided by nature and should not mix with the scored sweeps.
+        with tracing_project("frc-eval-ab", thread=thread_id):
+            r = run(question, thread_id=thread_id)
     except Exception as e:  # noqa: BLE001 -- record, don't crash the sweep
         return {"status": "ERROR", "reason": f"{type(e).__name__}: {e}",
                 "trace": traceback.format_exc(limit=3)}

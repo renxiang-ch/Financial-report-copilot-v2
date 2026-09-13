@@ -57,6 +57,7 @@ from copilot.v2.eval.generic_scoring import (
     _UNANSWERABLE_REASON,
     _extract_answer_number,
 )
+from copilot.v2.observability import tracing_project
 
 _REPO_ROOT = Path(__file__).resolve().parents[4]
 _RESULTS_DIR = _REPO_ROOT / "data" / "results"
@@ -178,7 +179,13 @@ def run(impl: str, dataset: str, limit: int | None = None,
         else:
             t0 = time.time()
             try:
-                got = runner(item["question"], model)
+                # One trace per item, stamped with its id, so a specific result can
+                # be opened in LangSmith later instead of re-run and counted.
+                # Its own project keeps a 30-item sweep out of the debug project.
+                with tracing_project(f"frc-eval-{impl}", item=item["id"],
+                                     tier=item.get("tier"), type=item.get("type"),
+                                     dataset=dataset):
+                    got = runner(item["question"], model)
             except Exception as e:  # noqa: BLE001 -- record, don't kill the sweep
                 got = {"answer": f"ERROR: {e}", "steps": [], "citations": [], "usage": {}}
             elapsed = time.time() - t0

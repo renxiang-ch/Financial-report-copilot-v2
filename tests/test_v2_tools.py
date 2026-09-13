@@ -32,11 +32,11 @@ def test_resolve_ticker_known_and_none():
     assert resolve.resolve_ticker(None) is None
 
 
-def test_resolve_ticker_typo_raises_retryable():
+def test_resolve_ticker_typo_is_model_correctable():
     with pytest.raises(ToolError) as ei:
         resolve.resolve_ticker("APPL")
     assert ei.value.kind is ToolErrorKind.UNKNOWN_TICKER
-    assert ei.value.retryable is True
+    assert ei.value.model_correctable is True
     assert "AAPL" in ei.value.data["did_you_mean"]
 
 
@@ -82,7 +82,7 @@ def test_query_financials_not_found_is_terminal():
     with pytest.raises(ToolError) as ei:
         _msg(query_financials, {"ticker": "AAPL", "metric": "Revenue", "fiscal_year": 1999})
     assert ei.value.kind is ToolErrorKind.NOT_FOUND
-    assert ei.value.retryable is False
+    assert ei.value.model_correctable is False
 
 
 def test_list_metrics_happy():
@@ -132,7 +132,7 @@ def test_compute_rejects_unsafe():
     with pytest.raises(ToolError) as ei:
         _msg(compute, {"expression": "__import__('os').system('x')", "variables": {}})
     assert ei.value.kind is ToolErrorKind.BAD_EXPRESSION
-    assert ei.value.retryable is False
+    assert ei.value.model_correctable is False
 
 
 # ── error middleware handler ─────────────────────────────────────────────────

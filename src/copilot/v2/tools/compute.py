@@ -94,12 +94,12 @@ def compute(expression: str, variables: dict):
     evaluated, namespace = _alias_non_identifier_vars(expression, allowed)
     rejected = _reject_unsafe(evaluated, namespace)
     if rejected:
-        raise ToolError(ToolErrorKind.BAD_EXPRESSION, rejected, retryable=False,
+        raise ToolError(ToolErrorKind.BAD_EXPRESSION, rejected, model_correctable=False,
                         data={"expression": expression})
     try:
         result = float(eval(evaluated, {"__builtins__": {}}, namespace))  # noqa: S307
     except Exception as e:  # noqa: BLE001
-        raise ToolError(ToolErrorKind.BAD_EXPRESSION, str(e), retryable=False,
+        raise ToolError(ToolErrorKind.BAD_EXPRESSION, str(e), model_correctable=False,
                         data={"expression": expression}) from e
     artifact = {"ok": True, "result": result, "expression": expression,
                 "variables": variables}
